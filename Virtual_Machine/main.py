@@ -11,8 +11,8 @@ if __name__ == '__main__':
 
     with open(abs_file_path) as file:
         original_tac_code = file.read()
-        tac_code = re.split(r'(\-\-)+', original_tac_code)[-1]
-
+        tac_code = re.split(r'(\-\-)+(\-)*', original_tac_code)[-1]
+        print(tac_code)
         code_generator = CodeOptimizer()
         # starting point of the virtual machine
         code_generator.generate_target_code(tac_code)

@@ -126,6 +126,6 @@ class CodeGenerator:
 
     def main(self, blocks) -> None:
         """
-        the starting point of code generation
+        the starting point of register allocation
         """
         pass
