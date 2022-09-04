@@ -1,3 +1,11 @@
-/* styles.css */
+button {
+  background-color: #719AB9;
+  border: none;
+  width : 10vw;
+  color: rgb(255, 254, 254);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+}
 
-/* Add styles here to customize the appearance of your app */
