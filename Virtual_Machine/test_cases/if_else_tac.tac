@@ -24,7 +24,8 @@ main:
 a = 1 INT
 - INT b
 
-@t1 = a == 1
+@t1 = a <= 1
+
 if @t1 GOTO #L1 else GOTO #L2
 #L1:
 b = 1 INT
