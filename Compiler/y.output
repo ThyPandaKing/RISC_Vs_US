@@ -1,0 +1,51 @@
+Grammar
+
+    0 $accept: value $end
+
+    1 value: ID
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    error (256)
+    ID (258) 1
+
+
+Nonterminals, with rules where they appear
+
+    $accept (4)
+        on left: 0
+    value (5)
+        on left: 1
+        on right: 0
+
+
+State 0
+
+    0 $accept: . value $end
+
+    ID  shift, and go to state 1
+
+    value  go to state 2
+
+
+State 1
+
+    1 value: ID .
+
+    $default  reduce using rule 1 (value)
+
+
+State 2
+
+    0 $accept: value . $end
+
+    $end  shift, and go to state 3
+
+
+State 3
+
+    0 $accept: value $end .
+
+    $default  accept
