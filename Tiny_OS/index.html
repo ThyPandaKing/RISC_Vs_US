@@ -5,15 +5,82 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
     <link href="./styles.css" rel="stylesheet">
-    <title>Hello World!</title>
+    <title>RISC_VS_US</title>
   </head>
-  <body>
-    <h1>Hello World!</h1>
-    We are using Node.js <span id="node-version"></span>,
-    Chromium <span id="chrome-version"></span>,
-    and Electron <span id="electron-version"></span>.
-    <button type="button">Click Me!</button>
-    <!-- You can also require other files to run in this process -->
-    <script src="./renderer.js"></script>
+  <body style ="background:#04090e; ">
+    <div style="display: flex;">
+      <div style="
+                    height: 7vh;
+                    flex: 1;
+                    background: #0F2F47;
+                    display: flex;
+                    justify-content: center;
+                    align-items:center;
+                    color: white;
+                    font-size: 25px;
+                  ">
+        Nav Bar
+      </div>
+      <button type="button">Clear</button>
+    </div>
+    <div style="height: 90vh; display: flex;">
+      <div>
+        <div style="
+              height: 30vh;
+              width:60vw;
+              flex: 1;
+              background: #1F1B18;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              color: white;
+              font-size: 32px;
+            ">
+          OUTPUT
+        </div>
+        <script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+          var editor = ace.edit("editor");
+          editor.setTheme("ace/theme/monokai");
+          editor.session.setMode("ace/mode/javascript");
+        </script>
+        <div style="
+                    height: 30vh;
+                    flex: 1;
+                    background-color: #404040;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color: white;
+                    font-size: 32px;
+                  ">
+          TERMINAL
+        </div>
+        <div style="
+                  height: 30vh;
+                  background: black;
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  color: white;
+                  font-size: 32px;
+                ">
+          KEYBOARD
+        </div>
+      </div>
+      <div style="
+                  background: #3B4F6D;
+                  flex: 1;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  color: rgb(255, 255, 255);
+                  font-size: 32px;
+                ">
+        TEXT EDITOR
+      </div>
+    </div>
+
   </body>
 </html>
