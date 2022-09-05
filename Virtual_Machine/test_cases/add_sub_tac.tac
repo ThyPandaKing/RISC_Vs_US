@@ -19,11 +19,10 @@ main:
 - INT a
 a = 2 INT
 - INT b
-b = - 3 INT
+b = 3 INT
 - INT c
 
 c = a + b INT
-c = a - b INT
 return 0 INT
 
 end:

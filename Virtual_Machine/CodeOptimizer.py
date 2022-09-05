@@ -49,7 +49,7 @@ class CodeOptimizer:
         """
 
         # remove '- INT a' type of statements
-        tac_code = re.sub(r'\- .*', '', tac_code)
+        # tac_code = re.sub(r'\- .*', '', tac_code)
 
         modified_tac = ''
         for line in tac_code.splitlines():
