@@ -35,6 +35,7 @@ digit [0-9]
 "+"                         { return ADD; }
 "-"                         { return SUBTRACT; }
 "/"                         { return DIVIDE; }
+"%"                         { return MODULO;}
 "*"                         { return MULTIPLY; }
 
 

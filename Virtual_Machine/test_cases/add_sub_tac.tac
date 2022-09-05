@@ -24,7 +24,6 @@ b = - 3 INT
 
 c = a + b INT
 c = a - b INT
-
 return 0 INT
 
 end:
