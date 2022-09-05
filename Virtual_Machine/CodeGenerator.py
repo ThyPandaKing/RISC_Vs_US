@@ -12,6 +12,9 @@
 """
 
 
+import re
+
+
 class CodeGenerator:
 
     available_registers = [
@@ -157,14 +160,37 @@ class CodeGenerator:
         returns a register based on
         the allocation algorithm
         """
-        return ''
+
+        for reg in self.register_descriptor:
+            if(self.register_descriptor[reg] == variable):
+                return reg
+
+        for reg in self.register_descriptor:
+            if(self.register_descriptor[reg] is None):
+                return reg
+
+        register = self.available_registers[self.rr_registers_index]
+        self.spill_register(register)
+        self.rr_registers_index = (
+            self.rr_registers_index+1) % len(self.available_registers)
+
+        return register
 
     def spill_register(self, register) -> None:
         """
         handles the logic of spilling
         a register
         """
-        pass
+
+        variable = self.register_descriptor[register]
+
+        if(self.address_descriptor[variable] is not None):
+            try:
+                self.address_descriptor[variable]["registers"].remove(register)
+                if(len(self.address_descriptor[variable]["registers"]) == 0):
+                    self.text_segment += ''
+            except KeyError or ValueError:
+                print("Error: register not present in address descriptor")
 
     def main(self, blocks) -> None:
         """
