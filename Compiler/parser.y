@@ -25,7 +25,17 @@
 }
 
 
-%token <node> 
+%token <node> INT RETURN NUMBER ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER
+
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr postfix_expr primary_expr unary_expr unary_op const assign
+
+%right ASSIGN
+%left OR
+%left AND
+%left EQ NE
+%left LE GE LT GT
+%left ADD SUBTRACT
+%left MULTIPLY DIVIDE MODULO
 
 %%
 
@@ -73,7 +83,7 @@ data_type       :   INT
                
  
 /* Expressions */
-    expr      	:   expr ADD expr 
+expr      	    :   expr ADD expr 
                     | expr SUBTRACT expr 
                     | expr MULTIPLY expr 
                     | expr DIVIDE expr 
