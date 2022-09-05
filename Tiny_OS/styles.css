@@ -1,4 +1,4 @@
-button {
+.button1 {
   background-color: #719AB9;
   border: none;
   width : 10vw;
@@ -9,3 +9,60 @@ button {
   font-size: 20px;
 }
 
+.button2 {
+  background-color: #393532;
+  color: white;
+  width : 5vw;
+  height : 6vh;
+  /*border-radius: 8px;*/
+  margin-left: 0.4vw;
+  margin-top: 1vh;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.button3 {
+  background-color: #393532;
+  color: white;
+  width : 5vw;
+  height : 6vh;
+  margin-left: 0.4vw;
+  margin-top: 1vh;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.button4 {
+  background-color: #393532;
+  color: white;
+  width : 20.8vw;
+  height : 6vh;
+  margin-left: 0.65vw;
+  margin-top: 1vh;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.button5 {
+  background-color: #393532;
+  color: white;
+  width : 10.2vw;
+  height : 6vh;
+  /* border-radius: 8px;*/
+  margin-left: 0.65vw;
+  margin-top: 1vh;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.button6 {
+  background-color: #393532;
+  color: white;
+  width : 5vw;
+  height : 6vh;
+  /*border-radius: 8px;*/
+  margin-left: 0.4vw;
+  margin-top: 1vh;
+  font-weight: bold;
+  font-size: 16px;
+}
