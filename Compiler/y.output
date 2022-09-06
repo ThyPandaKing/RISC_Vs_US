@@ -2,10 +2,6 @@ Terminals unused in grammar
 
     LEFTSHIFT
     RIGHTSHIFT
-    BITAND
-    BITOR
-    NEGATION
-    XOR
     STR
     PRINT
     SCAN
@@ -64,23 +60,27 @@ Grammar
    35     | expr AND expr
    36     | expr OR expr
    37     | expr MODULO expr
-   38     | unary_expr
-   39     | primary_expr
+   38     | expr BITAND expr
+   39     | expr BITOR expr
+   40     | expr XOR expr
+   41     | unary_expr
+   42     | primary_expr
 
-   40 unary_expr: unary_op primary_expr
+   43 unary_expr: unary_op primary_expr
 
-   41 primary_expr: ID
-   42             | const
-   43             | OC expr CC
+   44 primary_expr: ID
+   45             | const
+   46             | OC expr CC
 
-   44 unary_op: ADD
-   45         | SUBTRACT
-   46         | NOT
+   47 unary_op: ADD
+   48         | SUBTRACT
+   49         | NOT
+   50         | NEGATION
 
-   47 const: INT_NUM
-   48      | CHARACTER
+   51 const: INT_NUM
+   52      | CHARACTER
 
-   49 assign: ID ASSIGN expr
+   53 assign: ID ASSIGN expr
 
 
 Terminals, with rules where they appear
@@ -91,8 +91,8 @@ Terminals, with rules where they appear
     CHAR <node> (259) 24
     FLOAT <node> (260) 23
     RETURN <node> (261) 21
-    INT_NUM <node> (262) 20 47
-    ID <node> (263) 6 10 11 15 19 20 41 49
+    INT_NUM <node> (262) 20 51
+    ID <node> (263) 6 10 11 15 19 20 44 53
     LEFTSHIFT <node> (264)
     RIGHTSHIFT <node> (265)
     LE <node> (266) 29
@@ -103,20 +103,20 @@ Terminals, with rules where they appear
     LT <node> (271) 31
     AND <node> (272) 35
     OR <node> (273) 36
-    NOT <node> (274) 46
-    ADD <node> (275) 25 44
-    SUBTRACT <node> (276) 26 45
+    NOT <node> (274) 49
+    ADD <node> (275) 25 47
+    SUBTRACT <node> (276) 26 48
     DIVIDE <node> (277) 28
     MULTIPLY <node> (278) 27
     MODULO <node> (279) 37
-    BITAND <node> (280)
-    BITOR <node> (281)
-    NEGATION <node> (282)
-    XOR <node> (283)
+    BITAND <node> (280) 38
+    BITOR <node> (281) 39
+    NEGATION <node> (282) 50
+    XOR <node> (283) 40
     STR <node> (284)
-    CHARACTER <node> (285) 48
-    CC <node> (286) 6 43
-    OC <node> (287) 6 43
+    CHARACTER <node> (285) 52
+    CC <node> (286) 6 46
+    OC <node> (287) 6 46
     CS <node> (288) 11 20
     OS <node> (289) 11 20
     CF <node> (290) 4
@@ -126,7 +126,7 @@ Terminals, with rules where they appear
     SCOL <node> (294) 15 16 17 18 19 20
     PRINT <node> (295)
     SCAN <node> (296)
-    ASSIGN (297) 15 49
+    ASSIGN (297) 15 53
 
 
 Nonterminals, with rules where they appear
@@ -170,22 +170,22 @@ Nonterminals, with rules where they appear
         on left: 22 23 24
         on right: 6 10 11 15 19 20
     expr <node> (56)
-        on left: 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39
-        on right: 15 17 21 25 26 27 28 29 30 31 32 33 34 35 36 37 43 49
+        on left: 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42
+        on right: 15 17 21 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 46 53
     unary_expr <node> (57)
-        on left: 40
-        on right: 38
+        on left: 43
+        on right: 41
     primary_expr <node> (58)
-        on left: 41 42 43
-        on right: 39 40
-    unary_op <node> (59)
         on left: 44 45 46
-        on right: 40
+        on right: 42 43
+    unary_op <node> (59)
+        on left: 47 48 49 50
+        on right: 43
     const <node> (60)
-        on left: 47 48
-        on right: 42
+        on left: 51 52
+        on right: 45
     assign <node> (61)
-        on left: 49
+        on left: 53
         on right: 16
 
 
@@ -284,22 +284,23 @@ State 10
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
     $default  reduce using rule 13 (stmt_list)
 
-    stmt_list     go to state 20
-    stmt          go to state 21
-    declaration   go to state 22
-    return_stmt   go to state 23
-    data_type     go to state 24
-    expr          go to state 25
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
-    assign        go to state 30
+    stmt_list     go to state 21
+    stmt          go to state 22
+    declaration   go to state 23
+    return_stmt   go to state 24
+    data_type     go to state 25
+    expr          go to state 26
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+    assign        go to state 31
 
 
 State 11
@@ -308,7 +309,7 @@ State 11
 
     $default  reduce using rule 5 ($@1)
 
-    $@1  go to state 31
+    $@1  go to state 32
 
 
 State 12
@@ -316,92 +317,101 @@ State 12
    21 return_stmt: RETURN . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 33
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 34
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 13
 
-   47 const: INT_NUM .
+   51 const: INT_NUM .
 
-    $default  reduce using rule 47 (const)
+    $default  reduce using rule 51 (const)
 
 
 State 14
 
-   41 primary_expr: ID .
-   49 assign: ID . ASSIGN expr
+   44 primary_expr: ID .
+   53 assign: ID . ASSIGN expr
 
-    ASSIGN  shift, and go to state 34
+    ASSIGN  shift, and go to state 35
 
-    $default  reduce using rule 41 (primary_expr)
+    $default  reduce using rule 44 (primary_expr)
 
 
 State 15
 
-   46 unary_op: NOT .
+   49 unary_op: NOT .
 
-    $default  reduce using rule 46 (unary_op)
+    $default  reduce using rule 49 (unary_op)
 
 
 State 16
 
-   44 unary_op: ADD .
+   47 unary_op: ADD .
 
-    $default  reduce using rule 44 (unary_op)
+    $default  reduce using rule 47 (unary_op)
 
 
 State 17
 
-   45 unary_op: SUBTRACT .
+   48 unary_op: SUBTRACT .
 
-    $default  reduce using rule 45 (unary_op)
+    $default  reduce using rule 48 (unary_op)
 
 
 State 18
 
-   48 const: CHARACTER .
+   50 unary_op: NEGATION .
 
-    $default  reduce using rule 48 (const)
+    $default  reduce using rule 50 (unary_op)
 
 
 State 19
 
-   43 primary_expr: OC . expr CC
+   52 const: CHARACTER .
 
-    INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
-    NOT        shift, and go to state 15
-    ADD        shift, and go to state 16
-    SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
-
-    expr          go to state 35
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    $default  reduce using rule 52 (const)
 
 
 State 20
 
-    4 func: func_prefix OF stmt_list . CF
+   46 primary_expr: OC . expr CC
 
-    CF  shift, and go to state 36
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    NOT        shift, and go to state 15
+    ADD        shift, and go to state 16
+    SUBTRACT   shift, and go to state 17
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    expr          go to state 36
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 21
+
+    4 func: func_prefix OF stmt_list . CF
+
+    CF  shift, and go to state 37
+
+
+State 22
 
    12 stmt_list: stmt . stmt_list
 
@@ -414,48 +424,49 @@ State 21
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
     $default  reduce using rule 13 (stmt_list)
 
-    stmt_list     go to state 37
-    stmt          go to state 21
-    declaration   go to state 22
-    return_stmt   go to state 23
-    data_type     go to state 24
-    expr          go to state 25
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
-    assign        go to state 30
+    stmt_list     go to state 38
+    stmt          go to state 22
+    declaration   go to state 23
+    return_stmt   go to state 24
+    data_type     go to state 25
+    expr          go to state 26
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+    assign        go to state 31
 
 
-State 22
+State 23
 
    14 stmt: declaration .
 
     $default  reduce using rule 14 (stmt)
 
 
-State 23
+State 24
 
    18 stmt: return_stmt . SCOL
 
-    SCOL  shift, and go to state 38
+    SCOL  shift, and go to state 39
 
 
-State 24
+State 25
 
    15 stmt: data_type . ID ASSIGN expr SCOL
    19 declaration: data_type . ID SCOL
    20            | data_type . ID OS INT_NUM CS SCOL
 
-    ID  shift, and go to state 39
+    ID  shift, and go to state 40
 
 
-State 25
+State 26
 
    17 stmt: expr . SCOL
    25 expr: expr . ADD expr
@@ -471,79 +482,85 @@ State 25
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    OR        shift, and go to state 47
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
-    SCOL      shift, and go to state 53
-
-
-State 26
-
-   38 expr: unary_expr .
-
-    $default  reduce using rule 38 (expr)
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    OR        shift, and go to state 48
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
+    SCOL      shift, and go to state 57
 
 
 State 27
 
-   39 expr: primary_expr .
+   41 expr: unary_expr .
 
-    $default  reduce using rule 39 (expr)
+    $default  reduce using rule 41 (expr)
 
 
 State 28
 
-   40 unary_expr: unary_op . primary_expr
+   42 expr: primary_expr .
 
-    INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
-
-    primary_expr  go to state 54
-    const         go to state 29
+    $default  reduce using rule 42 (expr)
 
 
 State 29
 
-   42 primary_expr: const .
+   43 unary_expr: unary_op . primary_expr
 
-    $default  reduce using rule 42 (primary_expr)
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    primary_expr  go to state 58
+    const         go to state 30
 
 
 State 30
 
-   16 stmt: assign . SCOL
+   45 primary_expr: const .
 
-    SCOL  shift, and go to state 55
+    $default  reduce using rule 45 (primary_expr)
 
 
 State 31
 
-    6 func_prefix: data_type ID $@1 . OC param_list CC
+   16 stmt: assign . SCOL
 
-    OC  shift, and go to state 56
+    SCOL  shift, and go to state 59
 
 
 State 32
 
-   41 primary_expr: ID .
+    6 func_prefix: data_type ID $@1 . OC param_list CC
 
-    $default  reduce using rule 41 (primary_expr)
+    OC  shift, and go to state 60
 
 
 State 33
+
+   44 primary_expr: ID .
+
+    $default  reduce using rule 44 (primary_expr)
+
+
+State 34
 
    21 return_stmt: RETURN expr .
    25 expr: expr . ADD expr
@@ -559,44 +576,51 @@ State 33
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    OR        shift, and go to state 47
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    OR        shift, and go to state 48
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
 
     $default  reduce using rule 21 (return_stmt)
 
 
-State 34
+State 35
 
-   49 assign: ID ASSIGN . expr
+   53 assign: ID ASSIGN . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 57
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 61
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
-State 35
+State 36
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -611,325 +635,404 @@ State 35
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
-   43 primary_expr: OC expr . CC
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
+   46 primary_expr: OC expr . CC
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    OR        shift, and go to state 47
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
-    CC        shift, and go to state 58
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    OR        shift, and go to state 48
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
+    CC        shift, and go to state 62
 
 
-State 36
+State 37
 
     4 func: func_prefix OF stmt_list CF .
 
     $default  reduce using rule 4 (func)
 
 
-State 37
+State 38
 
    12 stmt_list: stmt stmt_list .
 
     $default  reduce using rule 12 (stmt_list)
 
 
-State 38
+State 39
 
    18 stmt: return_stmt SCOL .
 
     $default  reduce using rule 18 (stmt)
 
 
-State 39
+State 40
 
    15 stmt: data_type ID . ASSIGN expr SCOL
    19 declaration: data_type ID . SCOL
    20            | data_type ID . OS INT_NUM CS SCOL
 
-    OS      shift, and go to state 59
-    SCOL    shift, and go to state 60
-    ASSIGN  shift, and go to state 61
-
-
-State 40
-
-   29 expr: expr LE . expr
-
-    INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
-    NOT        shift, and go to state 15
-    ADD        shift, and go to state 16
-    SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
-
-    expr          go to state 62
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    OS      shift, and go to state 63
+    SCOL    shift, and go to state 64
+    ASSIGN  shift, and go to state 65
 
 
 State 41
 
-   30 expr: expr GE . expr
+   29 expr: expr LE . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 63
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 66
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 42
 
-   33 expr: expr EQ . expr
+   30 expr: expr GE . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 64
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 67
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 43
 
-   34 expr: expr NE . expr
+   33 expr: expr EQ . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 65
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 68
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 44
 
-   32 expr: expr GT . expr
+   34 expr: expr NE . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 66
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 69
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 45
 
-   31 expr: expr LT . expr
+   32 expr: expr GT . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 67
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 70
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 46
 
-   35 expr: expr AND . expr
+   31 expr: expr LT . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 68
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 71
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 47
 
-   36 expr: expr OR . expr
+   35 expr: expr AND . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 69
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 72
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 48
 
-   25 expr: expr ADD . expr
+   36 expr: expr OR . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 70
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 73
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 49
 
-   26 expr: expr SUBTRACT . expr
+   25 expr: expr ADD . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 71
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 74
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 50
 
-   28 expr: expr DIVIDE . expr
+   26 expr: expr SUBTRACT . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 72
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 75
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 51
 
-   27 expr: expr MULTIPLY . expr
+   28 expr: expr DIVIDE . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 73
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 76
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 52
 
-   37 expr: expr MODULO . expr
+   27 expr: expr MULTIPLY . expr
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 74
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 77
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
 State 53
+
+   37 expr: expr MODULO . expr
+
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    NOT        shift, and go to state 15
+    ADD        shift, and go to state 16
+    SUBTRACT   shift, and go to state 17
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    expr          go to state 78
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+
+
+State 54
+
+   38 expr: expr BITAND . expr
+
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    NOT        shift, and go to state 15
+    ADD        shift, and go to state 16
+    SUBTRACT   shift, and go to state 17
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    expr          go to state 79
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+
+
+State 55
+
+   39 expr: expr BITOR . expr
+
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    NOT        shift, and go to state 15
+    ADD        shift, and go to state 16
+    SUBTRACT   shift, and go to state 17
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    expr          go to state 80
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+
+
+State 56
+
+   40 expr: expr XOR . expr
+
+    INT_NUM    shift, and go to state 13
+    ID         shift, and go to state 33
+    NOT        shift, and go to state 15
+    ADD        shift, and go to state 16
+    SUBTRACT   shift, and go to state 17
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
+
+    expr          go to state 81
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
+
+
+State 57
 
    17 stmt: expr SCOL .
 
     $default  reduce using rule 17 (stmt)
 
 
-State 54
+State 58
 
-   40 unary_expr: unary_op primary_expr .
+   43 unary_expr: unary_op primary_expr .
 
-    $default  reduce using rule 40 (unary_expr)
+    $default  reduce using rule 43 (unary_expr)
 
 
-State 55
+State 59
 
    16 stmt: assign SCOL .
 
     $default  reduce using rule 16 (stmt)
 
 
-State 56
+State 60
 
     6 func_prefix: data_type ID $@1 OC . param_list CC
 
@@ -939,12 +1042,12 @@ State 56
 
     $default  reduce using rule 9 (param_list)
 
-    param_list  go to state 75
-    param       go to state 76
-    data_type   go to state 77
+    param_list  go to state 82
+    param       go to state 83
+    data_type   go to state 84
 
 
-State 57
+State 61
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -959,66 +1062,73 @@ State 57
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
-   49 assign: ID ASSIGN expr .
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
+   53 assign: ID ASSIGN expr .
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    OR        shift, and go to state 47
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    OR        shift, and go to state 48
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
 
-    $default  reduce using rule 49 (assign)
-
-
-State 58
-
-   43 primary_expr: OC expr CC .
-
-    $default  reduce using rule 43 (primary_expr)
+    $default  reduce using rule 53 (assign)
 
 
-State 59
+State 62
+
+   46 primary_expr: OC expr CC .
+
+    $default  reduce using rule 46 (primary_expr)
+
+
+State 63
 
    20 declaration: data_type ID OS . INT_NUM CS SCOL
 
-    INT_NUM  shift, and go to state 78
+    INT_NUM  shift, and go to state 85
 
 
-State 60
+State 64
 
    19 declaration: data_type ID SCOL .
 
     $default  reduce using rule 19 (declaration)
 
 
-State 61
+State 65
 
    15 stmt: data_type ID ASSIGN . expr SCOL
 
     INT_NUM    shift, and go to state 13
-    ID         shift, and go to state 32
+    ID         shift, and go to state 33
     NOT        shift, and go to state 15
     ADD        shift, and go to state 16
     SUBTRACT   shift, and go to state 17
-    CHARACTER  shift, and go to state 18
-    OC         shift, and go to state 19
+    NEGATION   shift, and go to state 18
+    CHARACTER  shift, and go to state 19
+    OC         shift, and go to state 20
 
-    expr          go to state 79
-    unary_expr    go to state 26
-    primary_expr  go to state 27
-    unary_op      go to state 28
-    const         go to state 29
+    expr          go to state 86
+    unary_expr    go to state 27
+    primary_expr  go to state 28
+    unary_op      go to state 29
+    const         go to state 30
 
 
-State 62
+State 66
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1034,17 +1144,20 @@ State 62
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 29 (expr)
 
 
-State 63
+State 67
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1060,17 +1173,20 @@ State 63
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 30 (expr)
 
 
-State 64
+State 68
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1086,21 +1202,24 @@ State 64
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 33 (expr)
 
 
-State 65
+State 69
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1116,21 +1235,24 @@ State 65
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 34 (expr)
 
 
-State 66
+State 70
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1146,17 +1268,20 @@ State 66
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 32 (expr)
 
 
-State 67
+State 71
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1172,17 +1297,20 @@ State 67
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 31 (expr)
 
 
-State 68
+State 72
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1198,23 +1326,29 @@ State 68
    35     | expr AND expr .
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
 
     $default  reduce using rule 35 (expr)
 
 
-State 69
+State 73
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1230,24 +1364,30 @@ State 69
    36     | expr . OR expr
    36     | expr OR expr .
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
 
     $default  reduce using rule 36 (expr)
 
 
-State 70
+State 74
 
    25 expr: expr . ADD expr
    25     | expr ADD expr .
@@ -1263,15 +1403,18 @@ State 70
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 25 (expr)
 
 
-State 71
+State 75
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1287,15 +1430,18 @@ State 71
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
 
     $default  reduce using rule 26 (expr)
 
 
-State 72
+State 76
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1311,11 +1457,14 @@ State 72
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
     $default  reduce using rule 28 (expr)
 
 
-State 73
+State 77
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1331,11 +1480,14 @@ State 73
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
     $default  reduce using rule 27 (expr)
 
 
-State 74
+State 78
 
    25 expr: expr . ADD expr
    26     | expr . SUBTRACT expr
@@ -1351,42 +1503,153 @@ State 74
    36     | expr . OR expr
    37     | expr . MODULO expr
    37     | expr MODULO expr .
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
     $default  reduce using rule 37 (expr)
 
 
-State 75
+State 79
+
+   25 expr: expr . ADD expr
+   26     | expr . SUBTRACT expr
+   27     | expr . MULTIPLY expr
+   28     | expr . DIVIDE expr
+   29     | expr . LE expr
+   30     | expr . GE expr
+   31     | expr . LT expr
+   32     | expr . GT expr
+   33     | expr . EQ expr
+   34     | expr . NE expr
+   35     | expr . AND expr
+   36     | expr . OR expr
+   37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   38     | expr BITAND expr .
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
+
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+
+    $default  reduce using rule 38 (expr)
+
+
+State 80
+
+   25 expr: expr . ADD expr
+   26     | expr . SUBTRACT expr
+   27     | expr . MULTIPLY expr
+   28     | expr . DIVIDE expr
+   29     | expr . LE expr
+   30     | expr . GE expr
+   31     | expr . LT expr
+   32     | expr . GT expr
+   33     | expr . EQ expr
+   34     | expr . NE expr
+   35     | expr . AND expr
+   36     | expr . OR expr
+   37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   39     | expr BITOR expr .
+   40     | expr . XOR expr
+
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    XOR       shift, and go to state 56
+
+    $default  reduce using rule 39 (expr)
+
+
+State 81
+
+   25 expr: expr . ADD expr
+   26     | expr . SUBTRACT expr
+   27     | expr . MULTIPLY expr
+   28     | expr . DIVIDE expr
+   29     | expr . LE expr
+   30     | expr . GE expr
+   31     | expr . LT expr
+   32     | expr . GT expr
+   33     | expr . EQ expr
+   34     | expr . NE expr
+   35     | expr . AND expr
+   36     | expr . OR expr
+   37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
+   40     | expr XOR expr .
+
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+
+    $default  reduce using rule 40 (expr)
+
+
+State 82
 
     6 func_prefix: data_type ID $@1 OC param_list . CC
     7 param_list: param_list . COMMA param
 
-    CC     shift, and go to state 80
-    COMMA  shift, and go to state 81
+    CC     shift, and go to state 87
+    COMMA  shift, and go to state 88
 
 
-State 76
+State 83
 
     8 param_list: param .
 
     $default  reduce using rule 8 (param_list)
 
 
-State 77
+State 84
 
    10 param: data_type . ID
    11      | data_type . ID OS CS COLON INT ID
 
-    ID  shift, and go to state 82
+    ID  shift, and go to state 89
 
 
-State 78
+State 85
 
    20 declaration: data_type ID OS INT_NUM . CS SCOL
 
-    CS  shift, and go to state 83
+    CS  shift, and go to state 90
 
 
-State 79
+State 86
 
    15 stmt: data_type ID ASSIGN expr . SCOL
    25 expr: expr . ADD expr
@@ -1402,31 +1665,37 @@ State 79
    35     | expr . AND expr
    36     | expr . OR expr
    37     | expr . MODULO expr
+   38     | expr . BITAND expr
+   39     | expr . BITOR expr
+   40     | expr . XOR expr
 
-    LE        shift, and go to state 40
-    GE        shift, and go to state 41
-    EQ        shift, and go to state 42
-    NE        shift, and go to state 43
-    GT        shift, and go to state 44
-    LT        shift, and go to state 45
-    AND       shift, and go to state 46
-    OR        shift, and go to state 47
-    ADD       shift, and go to state 48
-    SUBTRACT  shift, and go to state 49
-    DIVIDE    shift, and go to state 50
-    MULTIPLY  shift, and go to state 51
-    MODULO    shift, and go to state 52
-    SCOL      shift, and go to state 84
+    LE        shift, and go to state 41
+    GE        shift, and go to state 42
+    EQ        shift, and go to state 43
+    NE        shift, and go to state 44
+    GT        shift, and go to state 45
+    LT        shift, and go to state 46
+    AND       shift, and go to state 47
+    OR        shift, and go to state 48
+    ADD       shift, and go to state 49
+    SUBTRACT  shift, and go to state 50
+    DIVIDE    shift, and go to state 51
+    MULTIPLY  shift, and go to state 52
+    MODULO    shift, and go to state 53
+    BITAND    shift, and go to state 54
+    BITOR     shift, and go to state 55
+    XOR       shift, and go to state 56
+    SCOL      shift, and go to state 91
 
 
-State 80
+State 87
 
     6 func_prefix: data_type ID $@1 OC param_list CC .
 
     $default  reduce using rule 6 (func_prefix)
 
 
-State 81
+State 88
 
     7 param_list: param_list COMMA . param
 
@@ -1434,77 +1703,77 @@ State 81
     CHAR   shift, and go to state 5
     FLOAT  shift, and go to state 6
 
-    param      go to state 85
-    data_type  go to state 77
+    param      go to state 92
+    data_type  go to state 84
 
 
-State 82
+State 89
 
    10 param: data_type ID .
    11      | data_type ID . OS CS COLON INT ID
 
-    OS  shift, and go to state 86
+    OS  shift, and go to state 93
 
     $default  reduce using rule 10 (param)
 
 
-State 83
+State 90
 
    20 declaration: data_type ID OS INT_NUM CS . SCOL
 
-    SCOL  shift, and go to state 87
+    SCOL  shift, and go to state 94
 
 
-State 84
+State 91
 
    15 stmt: data_type ID ASSIGN expr SCOL .
 
     $default  reduce using rule 15 (stmt)
 
 
-State 85
+State 92
 
     7 param_list: param_list COMMA param .
 
     $default  reduce using rule 7 (param_list)
 
 
-State 86
+State 93
 
    11 param: data_type ID OS . CS COLON INT ID
 
-    CS  shift, and go to state 88
+    CS  shift, and go to state 95
 
 
-State 87
+State 94
 
    20 declaration: data_type ID OS INT_NUM CS SCOL .
 
     $default  reduce using rule 20 (declaration)
 
 
-State 88
+State 95
 
    11 param: data_type ID OS CS . COLON INT ID
 
-    COLON  shift, and go to state 89
+    COLON  shift, and go to state 96
 
 
-State 89
+State 96
 
    11 param: data_type ID OS CS COLON . INT ID
 
-    INT  shift, and go to state 90
+    INT  shift, and go to state 97
 
 
-State 90
+State 97
 
    11 param: data_type ID OS CS COLON INT . ID
 
-    ID  shift, and go to state 91
+    ID  shift, and go to state 98
 
 
-State 91
+State 98
 
    11 param: data_type ID OS CS COLON INT ID .
 
