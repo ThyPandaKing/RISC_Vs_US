@@ -296,12 +296,68 @@ class CodeGenerator:
 
                         self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    # elif(line[2] == '-'):
-                    #     self.text_segment += "sub " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
-                    # elif(line[2] == '*'):
-                    #     self.text_segment += "mul " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
-                    # elif(line[2] == '/'):
-                    #     self.text_segment += "sub " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
+                    elif(line[3] == Operators.Minus.value):
+                        lhs = self.get_register(line[0])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(lhs[0], line[0])
+
+                        op1 = self.get_register(line[2])
+                        if(op1[1] == 1):
+                            offset = self.address_descriptor[line[2]]['offset']
+                            self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op1[0], line[2])
+
+                        op2 = self.get_register(line[4])
+                        if(op2[1] == 1):
+                            offset = self.address_descriptor[line[4]]['offset']
+                            self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op2[0], line[4])
+
+                        self.text_segment += f"sub {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.Mul.value):
+                        lhs = self.get_register(line[0])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(lhs[0], line[0])
+
+                        op1 = self.get_register(line[2])
+                        if(op1[1] == 1):
+                            offset = self.address_descriptor[line[2]]['offset']
+                            self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op1[0], line[2])
+
+                        op2 = self.get_register(line[4])
+                        if(op2[1] == 1):
+                            offset = self.address_descriptor[line[4]]['offset']
+                            self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op2[0], line[4])
+
+                        self.text_segment += f"mul {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                    
+                    elif(line[3] == Operators.Div.value):
+                        lhs = self.get_register(line[0])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(lhs[0], line[0])
+
+                        op1 = self.get_register(line[2])
+                        if(op1[1] == 1):
+                            offset = self.address_descriptor[line[2]]['offset']
+                            self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op1[0], line[2])
+
+                        op2 = self.get_register(line[4])
+                        if(op2[1] == 1):
+                            offset = self.address_descriptor[line[4]]['offset']
+                            self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
+                        self.update_descriptors(op2[0], line[4])
+
+                        self.text_segment += f"div {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
@@ -320,15 +376,13 @@ class CodeGenerator:
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
                         self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                    else:
-                        self.update_descriptors(lhs[0], line[0])
+                    self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
                         if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
-                            rhs = self.get_register(line[2])
-                            self.text_segment += f"addi {rhs[0]}, x0, {line[2]}\n"
-                            offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"sw {rhs[0]}, {-offset}(x8)\n"
                             self.text_segment += f"addi {lhs[0]}, x0, {line[2]}\n"
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
 
         print(self.text_segment)
+        print(self.register_descriptor)
