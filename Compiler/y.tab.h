@@ -1,9 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.5.1.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,14 +30,11 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
-
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 0
+# define YYDEBUG 1
 #endif
 #if YYDEBUG
 extern int yydebug;
@@ -49,15 +45,107 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ID = 258
+    INT = 258,
+    CHAR = 259,
+    FLOAT = 260,
+    RETURN = 261,
+    INT_NUM = 262,
+    ID = 263,
+    LEFTSHIFT = 264,
+    RIGHTSHIFT = 265,
+    LE = 266,
+    GE = 267,
+    EQ = 268,
+    NE = 269,
+    GT = 270,
+    LT = 271,
+    AND = 272,
+    OR = 273,
+    NOT = 274,
+    ADD = 275,
+    SUBTRACT = 276,
+    DIVIDE = 277,
+    MULTIPLY = 278,
+    MODULO = 279,
+    BITAND = 280,
+    BITOR = 281,
+    NEGATION = 282,
+    XOR = 283,
+    STR = 284,
+    CHARACTER = 285,
+    CC = 286,
+    OC = 287,
+    CS = 288,
+    OS = 289,
+    CF = 290,
+    OF = 291,
+    COMMA = 292,
+    COLON = 293,
+    SCOL = 294,
+    PRINT = 295,
+    SCAN = 296,
+    ASSIGN = 297
   };
 #endif
 /* Tokens.  */
-#define ID 258
+#define INT 258
+#define CHAR 259
+#define FLOAT 260
+#define RETURN 261
+#define INT_NUM 262
+#define ID 263
+#define LEFTSHIFT 264
+#define RIGHTSHIFT 265
+#define LE 266
+#define GE 267
+#define EQ 268
+#define NE 269
+#define GT 270
+#define LT 271
+#define AND 272
+#define OR 273
+#define NOT 274
+#define ADD 275
+#define SUBTRACT 276
+#define DIVIDE 277
+#define MULTIPLY 278
+#define MODULO 279
+#define BITAND 280
+#define BITOR 281
+#define NEGATION 282
+#define XOR 283
+#define STR 284
+#define CHARACTER 285
+#define CC 286
+#define OC 287
+#define CS 288
+#define OS 289
+#define CF 290
+#define OF 291
+#define COMMA 292
+#define COLON 293
+#define SCOL 294
+#define PRINT 295
+#define SCAN 296
+#define ASSIGN 297
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+
+union YYSTYPE
+{
+#line 28 "parser.y" /* yacc.c:1909  */
+
+    struct node { 
+        char lexeme[100];
+        int line_number;
+        char type[100];
+    } node;
+
+#line 146 "y.tab.h" /* yacc.c:1909  */
+};
+
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
