@@ -1,1 +1,3 @@
-Hihbjbj
+int main(){
+    return 0;
+}
