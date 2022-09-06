@@ -47,39 +47,66 @@ class CodeGenerator:
         'bool': 1,
     }
 
-    arithmetic_operators = set("+ - * / % && || > < >= <= ! != = ==".split())
+    operators = set("+ - * / % && || > < >= <= ! != = ==".split())
 
     def __init__(self) -> None:
         self.rr_registers_index = 0    # pointer for round robin register fetch
         self.register_descriptor = self.default_reg_des.copy()  # register descriptor
         self.address_descriptor = {}    # address descriptor
+        self.text_segment = '.section .text\n'
 
     def get_data_type(self, instruction) -> str:
         """
         function to get the data type
         of an instruction
         """
-        return ''
+        return instruction.split(' ')[-1].lower()
 
     def is_binary_arithmetic(self, instruction) -> bool:
         """
         function that returns true if instruction
         is a binary arithmetic instruction
         """
-        return False
+        if(len(instruction.split(' ')) != 6):
+            return False
+        if(len(set(instruction.split(' ')).intersection(self.operators)) != 2):
+            return False
+        return True
 
     def is_assignment(self, instruction) -> bool:
         """
         function that returns true if instruction
         is an assignment instruction
         """
-        return False
+        split = instruction.split(' ')
+        if(len(split) != 4):
+            return False
+        if(split[1] != '='):
+            return False
+        return True
+
+    def is_unary_assignment(self, instruction) -> bool:
+        """
+        function that returns true if instruction
+        is an assignment instruction containing
+        a unary minus in the operand
+        """
+        split = instruction.split(' ')
+        if(len(split) != 5):
+            return False
+        if(split[1] != '='):
+            return False
+        if(split[2] != '-'):
+            return False
+        return True
 
     def is_if_statement(self, instruction) -> bool:
         """
         function that returns true if instruction
         is an if statement
         """
+        if(instruction.startswith('if')):
+            return True
         return False
 
     def is_return_statement(self, instruction) -> bool:
@@ -87,6 +114,8 @@ class CodeGenerator:
         function that returns true if instruction
         is a return statement
         """
+        if(instruction.startswith('return')):
+            return True
         return False
 
     def is_input_statement(self, instruction) -> bool:
@@ -108,6 +137,19 @@ class CodeGenerator:
         function that returns true if value
         is a constant
         """
+        # check character
+        if value[0] == '\'':
+            return True
+        # check int
+        if value.isdigit():
+            return True
+        # check float
+        if self.isfloat(value):
+            return True
+        # check string
+        if value[0] == '\"' and value[-1] == '\"':
+            return True
+        # not a constant
         return False
 
     def get_register(self, variable) -> str:
@@ -117,7 +159,7 @@ class CodeGenerator:
         """
         return ''
 
-    def spil_register(self, register) -> None:
+    def spill_register(self, register) -> None:
         """
         handles the logic of spilling
         a register
@@ -128,4 +170,13 @@ class CodeGenerator:
         """
         the starting point of register allocation
         """
-        pass
+
+        # TODO: complete this
+        for block in blocks:
+            for line in block:
+                if(line.endswith(':')):
+                    line = line.replace('#', '__')
+                    self.text_segment += line+'\n'
+                elif(line.startswith('.global')):
+                    self.text_segment += line+'\n'
+                # elif()
