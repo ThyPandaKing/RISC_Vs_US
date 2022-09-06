@@ -25,9 +25,9 @@
 }
 
 
-%token <node> INT RETURN NUMBER ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER
+%token <node> INT CHAR FLOAT RETURN NUMBER ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER INT_NUM FLOAT_NUM OC CC OF CF OS CS COLON COMMMA
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr postfix_expr primary_expr unary_expr unary_op const assign
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign
 
 %right ASSIGN
 %left OR
@@ -98,11 +98,6 @@ expr      	    :   expr ADD expr
                     | expr MODULO expr 
                     | unary_expr 
                     | primary_expr 
-                    | postfix_expr
-                    ;
- 
-postfix_expr    :   func_call 
-                    | arr
                     ;
  
 unary_expr      :   unary_op postfix_expr 
