@@ -384,5 +384,57 @@ class CodeGenerator:
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
 
+                elif(self.is_if_statement(line)):
+                    line=line.split(' ')
+
+
         print(self.text_segment)
         print(self.register_descriptor)
+
+"""
+.global main
+
+main:
+
+- INT a
+a = 1 INT
+- INT b
+
+@_t0 = a - 1
+if @_t0 <= 0 GOTO ___L0 else GOTO ___L1
+___L0:
+- INT @t0
+@t0 = 1 INT
+GOTO ___L2
+___L1:
+- INT @t0
+@t0 = 0 INT
+___L2:
+
+if @t1 GOTO #L1 else GOTO #L2
+#L1:
+b = 1 INT
+
+#L2:
+@_t1 = a - 2
+if @_t1 == 0 GOTO ___L3 else GOTO ___L4
+___L3:
+- INT @t2
+@t2 = 1 INT
+GOTO ___L5
+___L4:
+- INT @t2
+@t2 = 0 INT
+___L5:
+if @t2 == 2 GOTO #L3 else GOTO #L4
+
+#L3:
+b = 2 INT
+
+#L4:
+b = 0 INT
+
+return 0 INT
+
+end:
+"""
