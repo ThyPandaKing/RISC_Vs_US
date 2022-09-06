@@ -4,16 +4,6 @@ from CodeGenerator import CodeGenerator
 
 class CodeOptimizer:
 
-    operators = set("+ - * / % && || > < >= <= ! != = ==".split())
-    relational_operators = set("> < >= <= ! != ==".split())
-
-    datatype_sizes = {
-        'int': 4,
-        'float': 4,
-        'char': 1,
-        'bool': 4,
-    }
-
     def __init__(self):
         self.blocks = []
         self.label_index = 0
@@ -48,9 +38,6 @@ class CodeOptimizer:
         by reading the tac code
         """
 
-        # remove '- INT a' type of statements
-        # tac_code = re.sub(r'\- .*', '', tac_code)
-
         modified_tac = ''
         for line in tac_code.splitlines():
             if(self.is_condition_statement(line)):
@@ -59,18 +46,17 @@ class CodeOptimizer:
                 t0 = self.get_new_temp()
                 left_operand = line.split()[2]
                 right_operand = line.split()[4]
-                replacement_str = t0+' = '+left_operand+' - '+right_operand+'\n'
+                replacement_str = f"{t0} = {left_operand} - {right_operand}\n"
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
-                replacement_str += 'if '+t0+' '+relop+' 0 GOTO '+l0+' else GOTO '+l1+'\n'
-                replacement_str += l0+':\n'
-                replacement_str += temp+' = 1\n'
-                replacement_str += 'GOTO '+l2+'\n'
-                replacement_str += l1+':\n'
-                replacement_str += temp+' = 0\n'
-                replacement_str += l2+':\n'
-
+                replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
+                replacement_str += f"{l0}:\n"
+                replacement_str += f"{temp} = 1\n"
+                replacement_str += f"GOTO {l2}\n"
+                replacement_str += f"{l1}:\n"
+                replacement_str += f"{temp} = 0\n"
+                replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
             else:
                 modified_tac += line+'\n'

@@ -14,9 +14,8 @@
 """
 
 
-from ast import Assign
-import re
 import enum
+
 
 class Operators(enum.Enum):
     Plus = '+'
@@ -34,6 +33,14 @@ class Operators(enum.Enum):
     NotEq = '!='
     Eq = '=='
     Assign = '='
+
+
+class Datatypes(enum.Enum):
+    INT = 'int'
+    FLOAT = 'float'
+    BOOL = 'bool'
+    CHAR = 'char'
+
 
 class CodeGenerator:
 
@@ -76,7 +83,7 @@ class CodeGenerator:
         self.rr_registers_index = 0    # pointer for round robin register fetch
         self.register_descriptor = self.default_reg_des.copy()  # register descriptor
         self.address_descriptor = {}    # address descriptor
-        self.text_segment = '.section .text\n'
+        self.text_segment = '.section\n.text\n'
         self.offset = 4     # for stack pointer (spill)
 
     def get_data_type(self, instruction) -> str:
@@ -98,15 +105,19 @@ class CodeGenerator:
         return True
 
     def update_descriptors(self, register, variable):
+        """
+        updates register descriptor and
+        address descriptor
+        """
         if(self.address_descriptor[variable] is not None):
             self.address_descriptor[variable]['registers'] = register
         else:
-            self.address_descriptor[variable]={
+            self.address_descriptor[variable] = {
                 'offset': self.offset,
                 'registers': register
             }
             self.offset += 4
-        
+
         self.register_descriptor[register] = variable
 
     def is_declaration(self, instruction) -> bool:
@@ -178,7 +189,7 @@ class CodeGenerator:
         """
         return False
 
-    def is_constant(self, value):
+    def is_constant(self, value) -> tuple[bool, str]:
         """
         function that returns true if value
         is a constant
@@ -198,27 +209,27 @@ class CodeGenerator:
         # not a constant
         return (False, '')
 
-    def get_register(self, variable):
+    def get_register(self, variable) -> tuple[str, int]:
         """
         returns a register based on
         the allocation algorithm
         takes care of spilling
         """
-
+        # check if the variable is already in some register
         for reg in self.register_descriptor:
             if(self.register_descriptor[reg] == variable):
-                return (reg,0)
-
+                return (reg, 0)
+        # check for an empty register
         for reg in self.register_descriptor:
             if(self.register_descriptor[reg] is None):
-                return (reg,1)
-
+                return (reg, 1)
+        # spill a register according to rr_registers_index
         register = self.available_registers[self.rr_registers_index]
         self.spill_register(register)
         self.rr_registers_index = (
             self.rr_registers_index+1) % len(self.available_registers)
 
-        return (register,1)
+        return (register, 1)
 
     def spill_register(self, register) -> None:
         """
@@ -228,22 +239,24 @@ class CodeGenerator:
 
         variable = self.register_descriptor[register]
 
+        # update address descriptor
         if(self.address_descriptor[variable] is not None):
             try:
-                self.address_descriptor[variable]["registers"]=None
-                self.text_segment += 'sw {}, {}(x8)\n'.format(register, -self.address_descriptor[variable]["offset"])
+                self.address_descriptor[variable]["registers"] = None
+                self.text_segment += f"sw {register}, {-self.address_descriptor[variable]['offset']}(x8)\n"
             except KeyError or ValueError:
                 # should not reach here
                 print("Error: register not present in address descriptor")
         else:
-            self.address_descriptor[variable]={
+            self.address_descriptor[variable] = {
                 'offset': self.offset,
                 'registers': None
             }
-            self.text_segment+='sw {}, {}(x8)\n'.format(register, -self.offset)
-            self.offset+=4
+            self.text_segment += f"sw {register}, {-self.offset}(x8)\n"
+            self.offset += 4
 
-        self.register_descriptor[register]=None
+        # update register descriptor
+        self.register_descriptor[register] = None
 
     def main(self, blocks) -> None:
         """
@@ -253,11 +266,11 @@ class CodeGenerator:
         # TODO: complete this
         for block in blocks:
             for line in block.splitlines():
-                if( line.endswith(':') ):
+                if(line.endswith(':')):
                     line = line.replace('#', '__')
                     self.text_segment += line+'\n'
 
-                elif( line.startswith('.global') ):
+                elif(line.startswith('.global')):
                     self.text_segment += line+'\n'
 
                 elif(self.is_binary_arithmetic(line)):
@@ -266,22 +279,22 @@ class CodeGenerator:
                         lhs = self.get_register(line[0])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += 'lw {}, {}(x8)\n'.format(lhs[0], -offset)
+                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                         self.update_descriptors(lhs[0], line[0])
 
                         op1 = self.get_register(line[2])
                         if(op1[1] == 1):
                             offset = self.address_descriptor[line[2]]['offset']
-                            self.text_segment += 'lw {}, {}(x8)\n'.format(op1[0], -offset)
+                            self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
                         self.update_descriptors(op1[0], line[2])
 
                         op2 = self.get_register(line[4])
                         if(op2[1] == 1):
                             offset = self.address_descriptor[line[4]]['offset']
-                            self.text_segment += 'lw {}, {}(x8)\n'.format(op2[0], -offset)
+                            self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
                         self.update_descriptors(op2[0], line[4])
 
-                        self.text_segment += 'add {}, {}, {}\n'.format(lhs[0], op1[0], op2[0])
+                        self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
                     # elif(line[2] == '-'):
                     #     self.text_segment += "sub " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
@@ -289,11 +302,11 @@ class CodeGenerator:
                     #     self.text_segment += "mul " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
                     # elif(line[2] == '/'):
                     #     self.text_segment += "sub " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
-               
+
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
-                    if(line[1] == 'INT' or line[1] == 'BOOL'):
-                        self.text_segment += 'sw x0, {}(x8)\n'.format(-self.offset)
+                    if(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.BOOL.value):
+                        self.text_segment += f"sw x0, {-self.offset}(x8)\n"
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
                             'registers': None
@@ -302,25 +315,20 @@ class CodeGenerator:
 
                 elif(self.is_assignment(line)):
                     line = line.split(' ')
-                    constant, type = self.is_constant(line[2])
+                    constant, datatype = self.is_constant(line[2])
                     lhs = self.get_register(line[0])
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
-                        self.text_segment += 'lw {}, {}(x8)\n'.format(lhs[0], -offset)
+                        self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                     else:
                         self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
-                        if(type == 'int' or type == 'bool'):
-                            rhs=self.get_register(line[2])
-                            self.text_segment+='addi {}, x0, {}\n'.format(rhs[0],line[2])
-                            offset=self.address_descriptor[line[0]]['offset']
-                            self.text_segment += 'sw {}, {}(x8)\n'.format(rhs[0], -offset)
-                            self.text_segment += 'addi {}, x0, {}\n'.format(lhs[0], line[2])
+                        if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
+                            rhs = self.get_register(line[2])
+                            self.text_segment += f"addi {rhs[0]}, x0, {line[2]}\n"
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"sw {rhs[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"addi {lhs[0]}, x0, {line[2]}\n"
 
-
-                           
-
-        
         print(self.text_segment)
-                # elif()
