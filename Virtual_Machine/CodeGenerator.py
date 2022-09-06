@@ -14,8 +14,26 @@
 """
 
 
+from ast import Assign
 import re
+import enum
 
+class Operators(enum.Enum):
+    Plus = '+'
+    Minus = '-'
+    Mul = '*'
+    Div = '/'
+    Mod = '%'
+    LAnd = '&&'
+    LOr = '||'
+    Gre = '>'
+    Less = '<'
+    GreEq = '>='
+    LessEq = '<='
+    Not = '!'
+    NotEq = '!='
+    Eq = '=='
+    Assign = '='
 
 class CodeGenerator:
 
@@ -78,13 +96,6 @@ class CodeGenerator:
         if(len(set(instruction.split(' ')).intersection(self.operators)) != 2):
             return False
         return True
-    
-    # def get_operator(self, instruction) -> str:
-    #     """
-    #     function to get the operator in a binary 
-    #     arithmetic statement
-    #     """
-    #     if()
 
     def update_descriptors(self, register, variable):
         if(self.address_descriptor[variable] is not None):
@@ -100,7 +111,8 @@ class CodeGenerator:
 
     def is_declaration(self, instruction) -> bool:
         """
-        
+        returns true if the instruction is a
+        variable declaration instruction
         """
         split = instruction.split(' ')
         if(len(split) != 3 or split[0] != '-'):
@@ -219,7 +231,7 @@ class CodeGenerator:
         if(self.address_descriptor[variable] is not None):
             try:
                 self.address_descriptor[variable]["registers"]=None
-                self.text_segment += 'sw '+register+', {}(x8)\n'.format(-self.address_descriptor[variable]["offset"])
+                self.text_segment += 'sw {}, {}(x8)\n'.format(register, -self.address_descriptor[variable]["offset"])
             except KeyError or ValueError:
                 # should not reach here
                 print("Error: register not present in address descriptor")
@@ -228,7 +240,7 @@ class CodeGenerator:
                 'offset': self.offset,
                 'registers': None
             }
-            self.text_segment+='sw '+register+', {}(x8)\n'.format(-self.offset)
+            self.text_segment+='sw {}, {}(x8)\n'.format(register, -self.offset)
             self.offset+=4
 
         self.register_descriptor[register]=None
@@ -241,34 +253,35 @@ class CodeGenerator:
         # TODO: complete this
         for block in blocks:
             for line in block.splitlines():
-                if(line.endswith(':')):
+                if( line.endswith(':') ):
                     line = line.replace('#', '__')
                     self.text_segment += line+'\n'
-                elif(line.startswith('.global')):
+
+                elif( line.startswith('.global') ):
                     self.text_segment += line+'\n'
+
                 elif(self.is_binary_arithmetic(line)):
-                    print('1')
                     line = line.split(' ')
-                    if(line[3] == '+'):
+                    if(line[3] == Operators.Plus.value):
                         lhs = self.get_register(line[0])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += "lw " + lhs[0] + ', -' + str(offset) + '(x8)\n'
+                            self.text_segment += 'lw {}, {}(x8)\n'.format(lhs[0], -offset)
                         self.update_descriptors(lhs[0], line[0])
 
                         op1 = self.get_register(line[2])
                         if(op1[1] == 1):
                             offset = self.address_descriptor[line[2]]['offset']
-                            self.text_segment += "lw " + op1[0] + ', -' + str(offset) + '(x8)\n'
+                            self.text_segment += 'lw {}, {}(x8)\n'.format(op1[0], -offset)
                         self.update_descriptors(op1[0], line[2])
 
                         op2 = self.get_register(line[4])
                         if(op2[1] == 1):
                             offset = self.address_descriptor[line[4]]['offset']
-                            self.text_segment += "lw " + op2[0] + ', -' + str(offset) + '(x8)\n'
+                            self.text_segment += 'lw {}, {}(x8)\n'.format(op2[0], -offset)
                         self.update_descriptors(op2[0], line[4])
 
-                        self.text_segment += "add " + lhs[0] + ", " + op1[0] + ", " + op2[0] + '\n'
+                        self.text_segment += 'add {}, {}, {}\n'.format(lhs[0], op1[0], op2[0])
 
                     # elif(line[2] == '-'):
                     #     self.text_segment += "sub " + self.get_register(line.split(' ')[0]) + " ," + self.get_register(line.split(' ')[2]) + " ," + self.get_register(line.split(' ')[4])
@@ -280,7 +293,7 @@ class CodeGenerator:
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
                     if(line[1] == 'INT' or line[1] == 'BOOL'):
-                        self.text_segment += "sw x0, -" + str(self.offset) + "(x8)\n"
+                        self.text_segment += 'sw x0, {}(x8)\n'.format(-self.offset)
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
                             'registers': None
@@ -288,13 +301,12 @@ class CodeGenerator:
                         self.offset += 4
 
                 elif(self.is_assignment(line)):
-                    print('2')
                     line = line.split(' ')
                     constant, type = self.is_constant(line[2])
                     lhs = self.get_register(line[0])
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
-                        self.text_segment += "lw " + lhs[0] + ', -' + str(offset) + '(x8)\n'
+                        self.text_segment += 'lw {}, {}(x8)\n'.format(lhs[0], -offset)
                     else:
                         self.update_descriptors(lhs[0], line[0])
 
@@ -303,8 +315,8 @@ class CodeGenerator:
                             rhs=self.get_register(line[2])
                             self.text_segment+='addi {}, x0, {}\n'.format(rhs[0],line[2])
                             offset=self.address_descriptor[line[0]]['offset']
-                            self.text_segment += "sw {}, ".format(rhs[0]) + str(-offset) + "(x8)\n"
-                            self.text_segment += 'addi ' + lhs[0] + ', x0, ' + line[2] + '\n'
+                            self.text_segment += 'sw {}, {}(x8)\n'.format(rhs[0], -offset)
+                            self.text_segment += 'addi {}, x0, {}\n'.format(lhs[0], line[2])
 
 
                            
