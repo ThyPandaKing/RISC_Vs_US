@@ -36,10 +36,14 @@
 %right ASSIGN
 %left OR
 %left AND
+%left BITOR
+%left XOR
+%left BITAND
 %left EQ NE
 %left LE GE LT GT
 %left ADD SUBTRACT
 %left MULTIPLY DIVIDE MODULO
+%left NEGATION
 
 %%
 
@@ -50,10 +54,10 @@ func_list       :   func_list func  {}
                     ;
 
 func            :   func_prefix OF stmt_list CF {
-                        tac.push_back("end:\n");
+                        tac.push_back("end:");
                     }
  
-func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":\n");} OC param_list CC {
+func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":");} OC param_list CC {
                         strcpy($$.lexeme, $2.lexeme);
                     }
  
@@ -74,7 +78,7 @@ stmt   		    :   declaration
                     | data_type ID ASSIGN expr SCOL {
                         sprintf($$.lexeme, "@t%d", variable_count);
                         variable_count++;
-                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type) + "\n");
+                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
                     }
                     | assign SCOL 
                     | expr SCOL 
@@ -90,7 +94,7 @@ declaration     :   data_type ID SCOL {
                     ;
                    
 return_stmt     :   RETURN expr {
-                        tac.push_back("return " + string($2.lexeme) + " " + string($2.type) + "\n");
+                        tac.push_back("return " + string($2.lexeme) + " " + string($2.type));
                     }
                     ;
  
@@ -107,28 +111,118 @@ data_type       :   INT {
                
  
 /* Expressions */
-expr      	    :   expr ADD expr 
-                    | expr SUBTRACT expr 
-                    | expr MULTIPLY expr 
-                    | expr DIVIDE expr 
-                    | expr LE expr 
-                    | expr GE expr 
-                    | expr LT expr 
-                    | expr GT expr 
-                    | expr EQ expr 
-                    | expr NE expr 
-                    | expr AND expr 
-                    | expr OR expr 
-                    | expr MODULO expr 
-                    | unary_expr 
+expr      	    :   expr ADD expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr SUBTRACT expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr MULTIPLY expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr DIVIDE expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr LE expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr GE expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr LT expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr GT expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr EQ expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr NE expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr AND expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr OR expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr MODULO expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr BITAND expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr BITOR expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | expr XOR expr {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                    }
+                    | unary_expr {
+                        strcpy($$.type, $1.type);
+                        sprintf($$.lexeme, "%s", $1.lexeme);
+                    }
                     | primary_expr {
                             strcpy($$.type, $1.type);
                             strcpy($$.lexeme, $1.lexeme);
                         }
                     ;
+
+// OP              :   ADD {
+
+//                     }
+//                     | SUBTRACT
+//                     | MULTIPLY
+//                     | DIVIDE
+//                     | LE
+//                     | GE
+//                     | LT
+//                     | GT
+//                     | EQ
+//                     | NE
+//                     | AND
+//                     | OR
+//                     | MODULO
+//                     | BITAND
+//                     | BITOR
+//                     | XOR
+//                     ;
  
 unary_expr      :   unary_op primary_expr {
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type) + "\n");
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
                     }
                     ;
  
@@ -150,6 +244,7 @@ primary_expr    :   ID {
 unary_op        :   ADD 
                     | SUBTRACT 
                     | NOT
+                    | NEGATION
                     ;
  
 const           :   INT_NUM {
@@ -170,7 +265,7 @@ assign          :   ID ASSIGN expr {
                         // strcpy($1.type, get_type($1.lexeme));
                         sprintf($$.lexeme, "@t%d", variable_count);
                         variable_count++;
-                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + string($1.type) + "\n");
+                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + string($1.type));
                     }
 
 %%

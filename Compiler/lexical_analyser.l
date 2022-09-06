@@ -38,6 +38,7 @@ digit [0-9]
 "/"                         { strcpy(yylval.node.lexeme, yytext); return DIVIDE; }
 "%"                         { strcpy(yylval.node.lexeme, yytext); return MODULO;}
 "*"                         { strcpy(yylval.node.lexeme, yytext); return MULTIPLY; }
+"="                         { strcpy(yylval.node.lexeme, yytext); return ASSIGN; }
 
 
 "&"			                { strcpy(yylval.node.lexeme, yytext); return BITAND; }
