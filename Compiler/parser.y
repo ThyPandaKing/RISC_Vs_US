@@ -13,6 +13,7 @@
     
     #include <iostream>
     #include <string>
+    #include <unordered_map>
 
     using namespace std;
 
@@ -21,8 +22,18 @@
     int yywrap();
     int yytext();
 
+    bool check_declaration(string variable);
+
+    struct var_info {
+        string data_type;
+        int line_number; 
+    };
     vector<string> tac;
+    unordered_map<string, struct var_info> symbol_table;
     int variable_count = 0;
+    vector<string> sem_errors;
+
+    extern int countn;
 %}
 
 %union{
@@ -88,10 +99,12 @@ stmt   		    :   declaration
 declaration     :   data_type ID SCOL {
                         strcpy($2.type, $1.type);
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
+                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
                     }
                     | data_type ID ASSIGN expr SCOL {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
+                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
                     }
                     ;
                    
@@ -167,28 +180,10 @@ expr      	    :   expr ADD expr {
                         sprintf($$.lexeme, "%s", $1.lexeme);
                     }
                     | primary_expr {
-                            strcpy($$.type, $1.type);
-                            strcpy($$.type, $1.type);
-                            strcpy($$.lexeme, $1.lexeme);
-                        }
-
-// operator        :   ADD 
-//                     | SUBTRACT
-//                     | MULTIPLY
-//                     | DIVIDE
-//                     | LE
-//                     | GE
-//                     | LT
-//                     | GT
-//                     | EQ
-//                     | NE
-//                     | AND
-//                     | OR
-//                     | MODULO
-//                     | BITAND
-//                     | BITOR
-//                     | XOR
-//                     ;
+                        strcpy($$.type, $1.type);
+                        strcpy($$.type, $1.type);
+                        strcpy($$.lexeme, $1.lexeme);
+                    }
  
 unary_expr      :   unary_op primary_expr {
                         // strcpy($$.type, $2.type);
@@ -197,23 +192,20 @@ unary_expr      :   unary_op primary_expr {
                     ;
  
 primary_expr    :   ID {
-                        // strcpy($1.type, get_type($1.lexeme));
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
-                        variable_count++;
-                        
-                        strcpy($$.type, $1.type);
+                        if(check_declaration(string($1.lexeme))){
+                            strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
+                            sprintf($$.lexeme, "@t%d", variable_count++);
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                        }
                     }
                     | const {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
-                        variable_count++;
-                        
                         strcpy($$.type, $1.type);
+                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
                     }
                     | OC expr CC {
-                        strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $1.lexeme);
+                        strcpy($$.type, $2.type);
+                        strcpy($$.lexeme, $2.lexeme);
                     }
                     ;
  
@@ -225,23 +217,17 @@ unary_op        :   ADD
  
 const           :   INT_NUM {
                         strcpy($$.type, "INT");
-                        // $$.lexeme = "@t" + variable_count;
-                        // variable_count++;
-                        // tac.push_back($$.lexeme + " = " + $1.lexeme + " " + $$.type + "\n);
+                        strcpy($$.lexeme, $1.lexeme);
                     }
                     | CHARACTER {
                         strcpy($$.type, "CHAR");
-                        // $$.lexeme = "@t" + variable_count;
-                        // variable_count++;
-                        // tac.push_back($$.lexeme + " = " + $1.lexeme + " " + $$.type + "\n);
+                        strcpy($$.lexeme, $1.lexeme);
                     }
                     ;
                    
 assign          :   ID ASSIGN expr {
-                        // strcpy($1.type, get_type($1.lexeme));
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + string($1.type));
+                        check_declaration(string($1.lexeme));
+                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
                     }
 
 %%
@@ -251,6 +237,18 @@ int main(int argc, char *argv[]) {
     yyparse();
     for(auto x: tac)
         cout << x << endl;
+    for(auto item: sem_errors)
+        cout << item << endl;
+    for(auto item: symbol_table)
+        cout << item.first << "-->" << item.second.data_type << endl;
+}
+
+bool check_declaration(string variable){
+    if(symbol_table.find(variable) == symbol_table.end()){
+        sem_errors.push_back("Variable not declared in line " + to_string(countn+1) + " before usage.");
+        return false;
+    }
+    return true;
 }
 
 void yyerror(const char* msg) {
