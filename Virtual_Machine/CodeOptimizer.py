@@ -4,6 +4,9 @@ from CodeGenerator import CodeGenerator
 
 class CodeOptimizer:
 
+    operators = set("+ - * / % && || > < >= <= ! != = ==".split())
+    relational_operators = set("> < >= <= ! != ==".split())
+
     def __init__(self):
         self.blocks = []
         self.label_index = 0
@@ -15,7 +18,7 @@ class CodeOptimizer:
         is a condition statement
         """
         split = instruction.split(' ')
-        if(len(split) != 5):
+        if(len(split) != 6):
             return False
         if(len(set(split).intersection(self.relational_operators)) == 1 and
                 split[1] == '='):
@@ -52,17 +55,25 @@ class CodeOptimizer:
                 l2 = self.get_new_label()
                 replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
                 replacement_str += f"{l0}:\n"
-                replacement_str += f"{temp} = 1\n"
+                replacement_str += f"{temp} = 1 INT\n"
                 replacement_str += f"GOTO {l2}\n"
                 replacement_str += f"{l1}:\n"
-                replacement_str += f"{temp} = 0\n"
+                replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
             else:
                 modified_tac += line+'\n'
 
-        block_lines = ''
+        final_tac=''
         for line in modified_tac.splitlines():
+            if(re.search(r'^@t.+',line) is not None):
+                final_tac+=f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
+            final_tac+=line+'\n'
+
+        print(final_tac)
+        
+        block_lines = ''
+        for line in final_tac.splitlines():
             if(line.startswith('.global')):
                 block_lines += line
             elif line.strip() == '' or line.strip() == 'end:':
@@ -84,7 +95,7 @@ class CodeOptimizer:
             self.blocks.append(block_lines)
 
         # printing the generated blocks
-        print(*self.blocks, sep='\n----------------\n')
+        # print(*self.blocks, sep='\n----------------\n')
 
         self.optimize()
 

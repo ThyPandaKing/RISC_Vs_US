@@ -1,3 +1,19 @@
+## Tiny OS
+
+### Getting Started
+
+### About the OS
+
+
+
+### Authors
+1. Debeshee Das
+2. Aditya Sharma
+3. Sai Srujan
+* Sowmya
+
+
+
 # electron-quick-start
 
 **Clone and run for a quick way to see Electron in action.**
