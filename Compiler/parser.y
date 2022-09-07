@@ -5,6 +5,11 @@
     #include <vector>
     #include <string.h>
     // #include "lex.yy.c"
+
+    #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
+                                        sprintf($$.lexeme, "@t%d", variable_count);\
+                                        variable_count++;\
+                                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
     
     #include <iostream>
     #include <string>
@@ -75,11 +80,6 @@ stmt_list       :   stmt stmt_list
                     ;
  
 stmt   		    :   declaration 
-                    | data_type ID ASSIGN expr SCOL {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
-                    }
                     | assign SCOL 
                     | expr SCOL 
                     | return_stmt SCOL 
@@ -87,9 +87,11 @@ stmt   		    :   declaration
  
 declaration     :   data_type ID SCOL {
                         strcpy($2.type, $1.type);
+                        tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                     }
-                    | data_type ID OS INT_NUM CS SCOL {
-                        strcpy($2.type, $1.type);
+                    | data_type ID ASSIGN expr SCOL {
+                        tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
+                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
                     }
                     ;
                    
@@ -112,98 +114,65 @@ data_type       :   INT {
  
 /* Expressions */
 expr      	    :   expr ADD expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr SUBTRACT expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr MULTIPLY expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr DIVIDE expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr LE expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr GE expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr LT expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr GT expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr EQ expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr NE expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr AND expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr OR expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr MODULO expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr BITAND expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr BITOR expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr XOR expr {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + $$.type);
+                        add_tac($$, $1, $2, $3)
                     }
                     | unary_expr {
+                        strcpy($$.type, $1.type);
                         strcpy($$.type, $1.type);
                         sprintf($$.lexeme, "%s", $1.lexeme);
                     }
                     | primary_expr {
                             strcpy($$.type, $1.type);
+                            strcpy($$.type, $1.type);
                             strcpy($$.lexeme, $1.lexeme);
                         }
-                    ;
 
-// OP              :   ADD {
-
-//                     }
+// operator        :   ADD 
 //                     | SUBTRACT
 //                     | MULTIPLY
 //                     | DIVIDE
@@ -222,18 +191,25 @@ expr      	    :   expr ADD expr {
 //                     ;
  
 unary_expr      :   unary_op primary_expr {
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        // strcpy($$.type, $2.type);
+                        // tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
                     }
                     ;
  
 primary_expr    :   ID {
                         // strcpy($1.type, get_type($1.lexeme));
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
+                        variable_count++;
+                        
                         strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $1.lexeme);
                     }
                     | const {
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
+                        variable_count++;
+                        
                         strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $1.lexeme);
                     }
                     | OC expr CC {
                         strcpy($$.type, $1.type);
