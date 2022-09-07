@@ -1,5 +1,8 @@
 run: parser
-	./parser < input.txt
+	@echo "Filename: "; \
+	read FILENAME; \
+	echo "Filename is ", $${FILENAME};\
+	./parser < $${FILENAME}
 
 parser: y.tab.c lex.yy.c y.tab.h
 	g++ -w y.tab.c lex.yy.c -lfl -o parser
