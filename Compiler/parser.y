@@ -4,7 +4,6 @@
     #include <ctype.h>
     #include <vector>
     #include <string.h>
-    // #include "lex.yy.c"
 
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
                                         sprintf($$.lexeme, "@t%d", variable_count);\
@@ -13,6 +12,7 @@
     
     #include <iostream>
     #include <string>
+    #include <unordered_map>
 
     using namespace std;
 
@@ -21,8 +21,21 @@
     int yywrap();
     int yytext();
 
+    bool check_declaration(string variable);
+
+    struct var_info {
+        string data_type;
+        int line_number; 
+    };
     vector<string> tac;
+    unordered_map<string, struct var_info> symbol_table;
     int variable_count = 0;
+    int label_counter = 0;
+    vector<string> sem_errors;
+
+    stack<int> loop_continue, loop_break;
+
+    extern int countn;
 %}
 
 %union{
@@ -30,13 +43,18 @@
         char lexeme[100];
         int line_number;
         char type[100];
+        char if_body[5];
+        char elif_body[5];
+		char else_body[5];
+        char loop_body[5];
+        char parentNext[5];
     } node;
 }
 
 
-%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN
+%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt for_loop_stmt while_loop_stmt
 
 %right ASSIGN
 %left OR
@@ -83,15 +101,31 @@ stmt   		    :   declaration
                     | assign SCOL 
                     | expr SCOL 
                     | return_stmt SCOL 
-                    ;
+                    | if_stmt
+                    | BREAK SCOL {
+                        if(!loop_break.empty()){
+                            tac.push_back("GOTO L" + to_string(loop_break.top()));
+                        }
+                    }
+                    | CONTINUE SCOL {
+                        if(!loop_continue.empty()){
+                            tac.push_back("GOTO L" + to_string(loop_continue.top()));
+                        }
+                    }
+                    | if_stmt 
+                    | while_loop_stmt 
+                    | for_loop_stmt
+                    ;       
  
 declaration     :   data_type ID SCOL {
                         strcpy($2.type, $1.type);
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
+                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
                     }
                     | data_type ID ASSIGN expr SCOL {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
+                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
                     }
                     ;
                    
@@ -167,10 +201,10 @@ expr      	    :   expr ADD expr {
                         sprintf($$.lexeme, "%s", $1.lexeme);
                     }
                     | primary_expr {
-                            strcpy($$.type, $1.type);
-                            strcpy($$.type, $1.type);
-                            strcpy($$.lexeme, $1.lexeme);
-                        }
+                        strcpy($$.type, $1.type);
+                        strcpy($$.type, $1.type);
+                        strcpy($$.lexeme, $1.lexeme);
+                    }
  
 unary_expr      :   unary_op primary_expr {
                         // strcpy($$.type, $2.type);
@@ -179,23 +213,20 @@ unary_expr      :   unary_op primary_expr {
                     ;
  
 primary_expr    :   ID {
-                        // strcpy($1.type, get_type($1.lexeme));
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
-                        variable_count++;
-                        
-                        strcpy($$.type, $1.type);
+                        if(check_declaration(string($1.lexeme))){
+                            strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
+                            sprintf($$.lexeme, "@t%d", variable_count++);
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                        }
                     }
                     | const {
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme));
-                        variable_count++;
-                        
                         strcpy($$.type, $1.type);
+                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
                     }
                     | OC expr CC {
-                        strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $1.lexeme);
+                        strcpy($$.type, $2.type);
+                        strcpy($$.lexeme, $2.lexeme);
                     }
                     ;
  
@@ -207,24 +238,86 @@ unary_op        :   ADD
  
 const           :   INT_NUM {
                         strcpy($$.type, "INT");
-                        // $$.lexeme = "@t" + variable_count;
-                        // variable_count++;
-                        // tac.push_back($$.lexeme + " = " + $1.lexeme + " " + $$.type + "\n);
+                        strcpy($$.lexeme, $1.lexeme);
                     }
                     | CHARACTER {
                         strcpy($$.type, "CHAR");
-                        // $$.lexeme = "@t" + variable_count;
-                        // variable_count++;
-                        // tac.push_back($$.lexeme + " = " + $1.lexeme + " " + $$.type + "\n);
+                        strcpy($$.lexeme, $1.lexeme);
                     }
                     ;
                    
 assign          :   ID ASSIGN expr {
-                        // strcpy($1.type, get_type($1.lexeme));
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + string($1.type));
+                        check_declaration(string($1.lexeme));
+                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
                     }
+
+if_stmt         :   IF  {
+                        sprintf($1.parentNext, "L%d", label_counter++);
+                    } 
+                    OC expr CC { 
+                        tac.push_back("if ( " + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "L%d", label_counter++);
+                        sprintf($4.else_body, "L%d", label_counter++); 
+                        tac.push_back("LABEL " + string($4.if_body) + " :");
+                    } 
+                    OF stmt_list CF {  
+                        tac.push_back("GOTO " + string($1.parentNext));
+                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                    } 
+                    elif_stmt  else_stmt {   
+                        tac.push_back("LABEL " + string($1.parentNext) + ":");
+                    }
+                    ;        
+
+elif_stmt       :   ELIF {
+                        string str = tac[tac.size()-2].substr(5);
+                        char* hold = const_cast<char*>(str.c_str());
+                        sprintf($1.parentNext, "%s", hold);
+                    } 
+                    OC expr CC {
+                        // sprintf(icg[ic_idx++], "\nif (%s != 0) GOTO L%d else GOTO L%d\n", $4.token, label, label+1);
+                        tac.push_back("if (" + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "L%d", label_counter++);
+                        sprintf($4.else_body, "L%d", label_counter++); 
+                        tac.push_back("LABEL " + string($4.if_body) + ":");
+                    } 
+                    OF stmt_list CF {
+                        tac.push_back("GOTO " + string($1.parentNext));
+                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                    } 
+                    elif_stmt  
+                    |
+                    ;
+
+else_stmt       :   ELSE OF stmt_list CF
+                    |
+                    ;                    
+
+while_loop_stmt :   WHILE {
+                        sprintf($1.loop_body, "L%d", label++); 
+                        loop_continue.push(label);
+                        tac.push_back("\nLABEL L" + string($1.loop_body) + ":\n");
+                    } 
+                    OC expr CC 
+                    {
+                        sprintf($4.if_body, "L%d", label++); 
+
+                        push(&loop_break, label);
+                        sprintf($4.else_body, "L%d", label++); 
+
+                        tac.push_back("\nif " + string($4.token) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body) + "\n");
+                        tac.push_back("\nLABEL " + string($4.if_body) + ":\n");
+                        
+                    } 
+                    OF stmt_list CF    
+                    {
+                        tac.push_back("GOTO " + string($1.loop_body) + "\n");
+                        tac.push_back("\nLABEL " + string($4.else_body) + ":\n");
+                        loop_continue.pop();
+                        loop_break.pop();
+                    }
+
+for_loop_stmt   :   FOR OC assign SCOL expr SCOL assign CC OF stmt_list CF
 
 %%
 
@@ -233,6 +326,18 @@ int main(int argc, char *argv[]) {
     yyparse();
     for(auto x: tac)
         cout << x << endl;
+    for(auto item: sem_errors)
+        cout << item << endl;
+    for(auto item: symbol_table)
+        cout << item.first << "-->" << item.second.data_type << endl;
+}
+
+bool check_declaration(string variable){
+    if(symbol_table.find(variable) == symbol_table.end()){
+        sem_errors.push_back("Variable not declared in line " + to_string(countn+1) + " before usage.");
+        return false;
+    }
+    return true;
 }
 
 void yyerror(const char* msg) {

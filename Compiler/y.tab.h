@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
@@ -84,7 +88,14 @@ extern int yydebug;
     SCOL = 294,
     PRINT = 295,
     SCAN = 296,
-    ASSIGN = 297
+    SWITCH = 297,
+    CASE = 298,
+    BREAK = 299,
+    DEFAULT = 300,
+    IF = 301,
+    ELIF = 302,
+    ELSE = 303,
+    ASSIGN = 304
   };
 #endif
 /* Tokens.  */
@@ -127,24 +138,35 @@ extern int yydebug;
 #define SCOL 294
 #define PRINT 295
 #define SCAN 296
-#define ASSIGN 297
+#define SWITCH 297
+#define CASE 298
+#define BREAK 299
+#define DEFAULT 300
+#define IF 301
+#define ELIF 302
+#define ELSE 303
+#define ASSIGN 304
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 28 "parser.y" /* yacc.c:1909  */
+#line 39 "parser.y"
 
     struct node { 
         char lexeme[100];
         int line_number;
         char type[100];
+        char if_body[5];
+        char elif_body[5];
+		char else_body[5];
+        // char loop_body[5];
+        char parentNext[5];
     } node;
 
-#line 146 "y.tab.h" /* yacc.c:1909  */
-};
+#line 168 "y.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
