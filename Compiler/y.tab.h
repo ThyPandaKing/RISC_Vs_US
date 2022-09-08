@@ -88,7 +88,14 @@ extern int yydebug;
     SCOL = 294,
     PRINT = 295,
     SCAN = 296,
-    ASSIGN = 297
+    SWITCH = 297,
+    CASE = 298,
+    BREAK = 299,
+    DEFAULT = 300,
+    IF = 301,
+    ELIF = 302,
+    ELSE = 303,
+    ASSIGN = 304
   };
 #endif
 /* Tokens.  */
@@ -131,7 +138,14 @@ extern int yydebug;
 #define SCOL 294
 #define PRINT 295
 #define SCAN 296
-#define ASSIGN 297
+#define SWITCH 297
+#define CASE 298
+#define BREAK 299
+#define DEFAULT 300
+#define IF 301
+#define ELIF 302
+#define ELSE 303
+#define ASSIGN 304
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -143,9 +157,14 @@ union YYSTYPE
         char lexeme[100];
         int line_number;
         char type[100];
+        char if_body[5];
+        char elif_body[5];
+		char else_body[5];
+        // char loop_body[5];
+        char parentNext[5];
     } node;
 
-#line 149 "y.tab.h"
+#line 168 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
