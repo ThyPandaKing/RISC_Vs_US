@@ -4,7 +4,6 @@
     #include <ctype.h>
     #include <vector>
     #include <string.h>
-    // #include "lex.yy.c"
 
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
                                         sprintf($$.lexeme, "@t%d", variable_count);\
@@ -31,6 +30,7 @@
     vector<string> tac;
     unordered_map<string, struct var_info> symbol_table;
     int variable_count = 0;
+    int label_counter = 0;
     vector<string> sem_errors;
 
     extern int countn;
@@ -41,13 +41,18 @@
         char lexeme[100];
         int line_number;
         char type[100];
+        char if_body[5];
+        char elif_body[5];
+		char else_body[5];
+        // char loop_body[5];
+        char parentNext[5];
     } node;
 }
 
 
-%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN
+%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt
 
 %right ASSIGN
 %left OR
@@ -94,7 +99,25 @@ stmt   		    :   declaration
                     | assign SCOL 
                     | expr SCOL 
                     | return_stmt SCOL 
+                    | if_stmt
                     ;
+
+// switch_stmt     :   SWITCH OC ID CC OF case_stmt_list default_stmt CF
+//                     ;
+
+// case_stmt_list  :   case_stmt
+//                     |
+//                     ;
+
+// case_stmt       :   CASE const COLON stmt_list break_stmt
+
+// break_stmt      :   BREAK
+//                     |
+//                     ;
+
+// default_stmt    :   DEFAULT COLON stmt_list
+//                     |
+//                     ;          
  
 declaration     :   data_type ID SCOL {
                         strcpy($2.type, $1.type);
@@ -229,6 +252,48 @@ assign          :   ID ASSIGN expr {
                         check_declaration(string($1.lexeme));
                         tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
                     }
+
+if_stmt         :   IF  {
+                        sprintf($1.parentNext, "L%d", label_counter++);
+                    } 
+                    OC expr CC { 
+                        tac.push_back("if ( " + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "L%d", label_counter++);
+                        sprintf($4.else_body, "L%d", label_counter++); 
+                        tac.push_back("LABEL " + string($4.if_body) + " :");
+                    } 
+                    OF stmt_list CF {  
+                        tac.push_back("GOTO " + string($1.parentNext));
+                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                    } 
+                    elif_stmt  else_stmt {   
+                        tac.push_back("LABEL " + string($1.parentNext) + ":");
+                    }
+                    ;        
+
+elif_stmt       :   ELIF {
+                        string str = tac[tac.size()-2].substr(5);
+                        char* hold = const_cast<char*>(str.c_str());
+                        sprintf($1.parentNext, "%s", hold);
+                    } 
+                    OC expr CC {
+                        // sprintf(icg[ic_idx++], "\nif (%s != 0) GOTO L%d else GOTO L%d\n", $4.token, label, label+1);
+                        tac.push_back("if (" + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "L%d", label_counter++);
+                        sprintf($4.else_body, "L%d", label_counter++); 
+                        tac.push_back("LABEL " + string($4.if_body) + ":");
+                    } 
+                    OF stmt_list CF {
+                        tac.push_back("GOTO " + string($1.parentNext));
+                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                    } 
+                    elif_stmt  
+                    |
+                    ;
+
+else_stmt       :   ELSE OF stmt_list CF
+                    |
+                    ;                    
 
 %%
 

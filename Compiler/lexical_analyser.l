@@ -15,6 +15,13 @@ digit [0-9]
 "int"                       { strcpy(yylval.node.lexeme, yytext); return INT; }
 "char"                      { strcpy(yylval.node.lexeme, yytext); return CHAR; }
 "return"                    { strcpy(yylval.node.lexeme, yytext); return RETURN; }
+"switch"                    { strcpy(yylval.node.lexeme, yytext); return SWITCH; }
+"case"                      { strcpy(yylval.node.lexeme, yytext); return CASE; }
+"break"                     { strcpy(yylval.node.lexeme, yytext); return BREAK; }
+"default"                   { strcpy(yylval.node.lexeme, yytext); return DEFAULT; }
+"if"                        { strcpy(yylval.node.lexeme, yytext); return IF; }
+"elif"                      { strcpy(yylval.node.lexeme, yytext); return ELIF; }
+"else"                      { strcpy(yylval.node.lexeme, yytext); return ELSE; }
 [-]?{digit}+                { strcpy(yylval.node.lexeme, yytext); return INT_NUM; }
 {alpha}({alpha}|{digit})*   { strcpy(yylval.node.lexeme, yytext); return ID; }
 
