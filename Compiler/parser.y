@@ -171,24 +171,6 @@ expr      	    :   expr ADD expr {
                             strcpy($$.type, $1.type);
                             strcpy($$.lexeme, $1.lexeme);
                         }
-
-// operator        :   ADD 
-//                     | SUBTRACT
-//                     | MULTIPLY
-//                     | DIVIDE
-//                     | LE
-//                     | GE
-//                     | LT
-//                     | GT
-//                     | EQ
-//                     | NE
-//                     | AND
-//                     | OR
-//                     | MODULO
-//                     | BITAND
-//                     | BITOR
-//                     | XOR
-//                     ;
  
 unary_expr      :   unary_op primary_expr {
                         // strcpy($$.type, $2.type);
