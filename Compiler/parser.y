@@ -305,7 +305,7 @@ while_loop_stmt :   WHILE {
                         push(&loop_break, label);
                         sprintf($4.else_body, "L%d", label++); 
 
-                        tac.push_back("\nif " + string($4.token) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body) + "\n");
+                        tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body) + "\n");
                         tac.push_back("\nLABEL " + string($4.if_body) + ":\n");
                         
                     } 
@@ -317,7 +317,31 @@ while_loop_stmt :   WHILE {
                         loop_break.pop();
                     }
 
-for_loop_stmt   :   FOR OC assign SCOL expr SCOL assign CC OF stmt_list CF
+for_loop_stmt   :   FOR OC assign SCOL {
+                        sprintf($1.loop_body, "L%d", label++); 
+                        loop_continue.push(label);
+                        tac.push_back("\nLABEL L" + string($1.loop_body) + ":\n");
+                    } 
+                    expr SCOL {
+                        sprintf($6.if_body, "L%d", label++); 
+
+                        push(&loop_break, label);
+                        sprintf($6.else_body, "L%d", label++); 
+
+                        tac.push_back("\nif " + string($6.lexeme) + " GOTO " + string($6.if_body) + " else GOTO " + string($6.else_body) + "\n");
+                    }
+                    assign CC {
+                        printf($9.loop_body, "L%d", label++); 
+                        tac.push_back("\nLABEL L" + string($9.loop_body) + ":\n");
+                        tac.push_back("GOTO " + string($1.loop_body) + "\n");
+                        tac.push_back("\nLABEL " + string($4.if_body) + ":\n");
+                    }
+                    OF stmt_list CF {
+                        tac.push_back("GOTO " + string($9.loop_body) + "\n");
+                        tac.push_back("\nLABEL " + string($4.else_body) + ":\n");
+                        loop_continue.pop();
+                        loop_break.pop();
+                    }
 
 %%
 
@@ -344,3 +368,6 @@ void yyerror(const char* msg) {
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
+
+
+// Prepend # to label names
