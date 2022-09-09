@@ -1,0 +1,5 @@
+int main(){
+  /*Write your code here*/
+  cout<<"yo\n";
+  return -1;
+}
