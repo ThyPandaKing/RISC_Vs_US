@@ -30,7 +30,8 @@
                   ">
       Nav Bar
     </div>
-    <button class="button1" type="button">Clear</button>
+    <button class="button1" type="button" onclick="save_file()">Save</button>
+    <button class="button1" type="button" onclick="clear_file()">Clear</button>
   </div>
   <div style="height: 90vh; display: flex;">
 
@@ -123,12 +124,9 @@
   return -1;
 }</div>
   </div>
+
   <script src="./Text-Editor/ace.js" type="text/javascript" charset="utf-8"></script>
-  <script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/cobalt");
-    editor.session.setMode("ace/mode/c_cpp");
-  </script>
+  <script src="./Text-Editor/editor_functions.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>
