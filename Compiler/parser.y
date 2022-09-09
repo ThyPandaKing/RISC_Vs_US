@@ -32,6 +32,8 @@
     int variable_count = 0;
     int label_counter = 0;
     vector<string> sem_errors;
+    int temp_index;
+    int temp_label;
 
     extern int countn;
 %}
@@ -46,13 +48,16 @@
 		char else_body[5];
         // char loop_body[5];
         char parentNext[5];
+        char case_body[5];
+        char id[5];
+        char temp[5];
     } node;
 }
 
 
 %token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list break_stmt
 
 %right ASSIGN
 %left OR
@@ -100,24 +105,8 @@ stmt   		    :   declaration
                     | expr SCOL 
                     | return_stmt SCOL 
                     | if_stmt
+                    | switch_stmt
                     ;
-
-// switch_stmt     :   SWITCH OC ID CC OF case_stmt_list default_stmt CF
-//                     ;
-
-// case_stmt_list  :   case_stmt
-//                     |
-//                     ;
-
-// case_stmt       :   CASE const COLON stmt_list break_stmt
-
-// break_stmt      :   BREAK
-//                     |
-//                     ;
-
-// default_stmt    :   DEFAULT COLON stmt_list
-//                     |
-//                     ;          
  
 declaration     :   data_type ID SCOL {
                         strcpy($2.type, $1.type);
@@ -293,7 +282,62 @@ elif_stmt       :   ELIF {
 
 else_stmt       :   ELSE OF stmt_list CF
                     |
-                    ;                    
+                    ;       
+
+switch_stmt     :   SWITCH {
+                        int temp_label = label_counter;
+                        sprintf($1.parentNext, "L%d", label_counter++);
+                    } 
+                    OC ID {
+                        temp_index = variable_count;
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + string($4.lexeme));
+                    } 
+                    CC OF case_stmt_list {
+                        // strcpy($8.id, $4.lexeme);
+                        // strcpy($8.parentNext, $1.parentNext);
+                    }
+                    default_stmt CF {
+                        tac.push_back("Label " + string($1.parentNext));
+                    }
+                    ;
+
+case_stmt_list  :   case_stmt case_stmt_list {
+                        strcpy($1.id, $$.id);
+                        strcpy($1.parentNext, $$.parentNext);
+                    }
+                    |
+                    ;
+
+case_stmt       :   CASE {
+                        // tac.push_back("LABEL " + string($4.if_body) + ":");
+                    } 
+                    OC const {
+                        char* hold = const_cast<char*>(to_string(variable_count).c_str());
+                        sprintf($4.temp, "%s", hold);
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + $4.lexeme);
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp));
+                        tac.push_back("if ( @t" + to_string(variable_count-1) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
+                        tac.push_back("Label L" + to_string(label_counter) + ":");
+                        sprintf($4.case_body, "L%d", label_counter++);
+                        sprintf($4.parentNext, "L%d", label_counter++);
+                    }
+                    CC COLON stmt_list {
+                        // tac.push_back("Label " + string($4.parentNext) + ":");
+                    } 
+                    break_stmt {
+                        strcpy($10.parentNext, $$.parentNext);
+                        tac.push_back("Label " + string($4.parentNext) + ":");
+                    }
+
+break_stmt      :   BREAK SCOL {
+                        tac.push_back("GOTO L" + to_string(temp_label));
+                    }
+                    |
+                    ;
+
+default_stmt    :   DEFAULT COLON stmt_list
+                    |
+                    ;                       
 
 %%
 
