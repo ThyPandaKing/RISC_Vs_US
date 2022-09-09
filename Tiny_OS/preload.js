@@ -11,18 +11,14 @@ window.addEventListener ('DOMContentLoaded', () => {
   return -1;
 }`;
 
-    console.log (code.value);
     const myCode = code.value == '' ? defaultCode : code.value;
 
     ipcRenderer.send ('saveCode', myCode);
   });
 
-  // const replaceText = (selector, text) => {
-  //   const element = document.getElementById(selector)
-  //   if (element) element.innerText = text
-  // }
+  let runButton = document.getElementById('runButton');
 
-  // for (const type of ['chrome', 'node', 'electron']) {
-  //   replaceText(`${type}-version`, process.versions[type])
-  // }
+  runButton.addEventListener('click', ()=> {
+      ipcRenderer.send('runCode', '../User/userCode.txt');
+  });
 });

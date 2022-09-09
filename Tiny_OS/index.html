@@ -30,8 +30,9 @@
                   ">
       Nav Bar
     </div>
-    <!-- <button class="button1" type="button" onclick="save_file()">Save</button> -->
+
     <button class="button1" type="button" id="saveButton">Save</button>
+    <button class="button1" type="button" id="runButton">Run</button>
     <button class="button1" type="button" onclick="clear_file()">Clear</button>
   </div>
   <div style="height: 90vh; display: flex;">
@@ -129,12 +130,12 @@
   <script src="./Text-Editor/editor_functions.js" type="text/javascript" charset="utf-8"></script>
   <input type="hidden" name="hiddenCodeWriter" style="display: none;" id="hiddenCodeWriter">
   <script>
-  var editor = ace.edit('editor');
+    var editor = ace.edit('editor');
     editor.setTheme('ace/theme/cobalt');
     editor.session.setMode('ace/mode/c_cpp');
-  editor.getSession().on("change", function () {
-      let code = document.getElementById('hiddenCodeWriter');
-    code.value = editor.getSession().getValue();
+    editor.getSession().on("change", function () {
+    let code = document.getElementById('hiddenCodeWriter');
+        code.value = editor.getSession().getValue();
     });
   </script>
 </body>

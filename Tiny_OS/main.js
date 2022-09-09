@@ -1,7 +1,11 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, ipcMain} = require ('electron');
 const path = require ('path');
-var fs = require ('fs');
+const fse = require ('fs-extra');
+const {exec} = require ('child_process');
+var child = require ('child_process').execFile;
+var executablePath = 'D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe';
+
 
 function createWindow () {
   // Create the browser window.
@@ -23,15 +27,39 @@ function createWindow () {
 
 ipcMain.on ('saveCode', (event, myCode) => {
   console.log (myCode);
-  fs.writeFile ('../User/userCode.txt', myCode, function (err) {
-    if (err) throw err;
-    console.log ('Saved!');
+
+  fse.outputFile ('../User/userCode.txt', myCode, err => {
+    if (err) {
+      console.log (err);
+    } else {
+      console.log ('The file has been saved!');
+    }
   });
 });
 
-// function hi(){
-//   console.log("hey");
-// }
+ipcMain.on ('runCode', (event, filePath) => {
+  exec ("D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe", [], (err, stdout, stderr) => {
+    if (err) {
+      console.error (`exec error: ${err}`);
+      return;
+    }
+    if (stderr) {
+      console.error (`std exec error: ${stderr}`);
+      return;
+    }
+    console.log(stdout);
+  });
+
+  // child ('./a.exe', function (err, data) {
+  // if (err) {
+  //   console.error (err);
+  //   return;
+  // }
+
+//   console.log (data.toString ());
+// });
+
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -55,5 +83,3 @@ app.on ('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-// export {hi};
