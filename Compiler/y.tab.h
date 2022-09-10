@@ -154,7 +154,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 42 "parser.y" /* yacc.c:1909  */
+#line 44 "parser.y" /* yacc.c:1909  */
 
     struct node { 
         char lexeme[100];
@@ -165,9 +165,12 @@ union YYSTYPE
 		char else_body[5];
         char loop_body[5];
         char parentNext[5];
+        char case_body[5];
+        char id[5];
+        char temp[5];
     } node;
 
-#line 171 "y.tab.h" /* yacc.c:1909  */
+#line 174 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
