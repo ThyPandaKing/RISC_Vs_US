@@ -13,6 +13,7 @@
     #include <iostream>
     #include <string>
     #include <unordered_map>
+    #include <stack>
 
     using namespace std;
 
@@ -35,6 +36,8 @@
     int temp_index;
     int temp_label;
 
+    stack<int> loop_continue, loop_break;
+
     extern int countn;
 %}
 
@@ -46,7 +49,7 @@
         char if_body[5];
         char elif_body[5];
 		char else_body[5];
-        // char loop_body[5];
+        char loop_body[5];
         char parentNext[5];
         char case_body[5];
         char id[5];
@@ -55,9 +58,9 @@
 }
 
 
-%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE
+%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list break_stmt
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt
 
 %right ASSIGN
 %left OR
@@ -105,6 +108,18 @@ stmt   		    :   declaration
                     | expr SCOL 
                     | return_stmt SCOL 
                     | if_stmt
+                    | while_loop_stmt 
+                    | for_loop_stmt
+                    | BREAK SCOL {
+                        if(!loop_break.empty()){
+                            tac.push_back("GOTO L" + to_string(loop_break.top()));
+                        }
+                    }
+                    | CONTINUE SCOL {
+                        if(!loop_continue.empty()){
+                            tac.push_back("GOTO L" + to_string(loop_continue.top()));
+                        }
+                    }     
                     | switch_stmt
                     ;
  
@@ -286,6 +301,7 @@ else_stmt       :   ELSE OF stmt_list CF
 
 switch_stmt     :   SWITCH {
                         int temp_label = label_counter;
+                        loop_break.push(temp_label);
                         sprintf($1.parentNext, "L%d", label_counter++);
                     } 
                     OC ID {
@@ -298,6 +314,7 @@ switch_stmt     :   SWITCH {
                     }
                     default_stmt CF {
                         tac.push_back("Label " + string($1.parentNext));
+                        loop_break.pop();
                     }
                     ;
 
@@ -323,21 +340,63 @@ case_stmt       :   CASE {
                     }
                     CC COLON stmt_list {
                         // tac.push_back("Label " + string($4.parentNext) + ":");
-                    } 
-                    break_stmt {
-                        strcpy($10.parentNext, $$.parentNext);
                         tac.push_back("Label " + string($4.parentNext) + ":");
-                    }
-
-break_stmt      :   BREAK SCOL {
-                        tac.push_back("GOTO L" + to_string(temp_label));
-                    }
-                    |
-                    ;
+                    } 
 
 default_stmt    :   DEFAULT COLON stmt_list
                     |
                     ;                       
+
+while_loop_stmt :   WHILE {
+                        sprintf($1.loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
+                        tac.push_back("\nLABEL " + string($1.loop_body) + ":");
+                    } 
+                    OC expr CC 
+                    {
+                        sprintf($4.if_body, "L%d", label_counter++); 
+
+                        loop_break.push(label_counter);
+                        sprintf($4.else_body, "L%d", label_counter++); 
+
+                        tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body));
+                        tac.push_back("\nLABEL " + string($4.if_body) + ":");
+                        
+                    } 
+                    OF stmt_list CF    
+                    {
+                        tac.push_back("GOTO " + string($1.loop_body));
+                        tac.push_back("\nLABEL " + string($4.else_body) + ":");
+                        loop_continue.pop();
+                        loop_break.pop();
+                    }
+
+for_loop_stmt   :   FOR OC assign SCOL {
+                        sprintf($1.loop_body, "L%d", label_counter++); 
+                        tac.push_back("\nLABEL " + string($1.loop_body) + ":");
+                    } 
+                    expr SCOL {  
+                        sprintf($6.if_body, "L%d", label_counter++); 
+
+                        loop_break.push(label_counter);
+                        sprintf($6.else_body, "L%d", label_counter++); 
+
+                        tac.push_back("\nif " + string($6.lexeme) + " GOTO " + string($6.if_body) + " else GOTO " + string($6.else_body));
+
+                        sprintf($6.loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
+                        tac.push_back("\nLABEL " + string($6.loop_body) + ":");
+                    }
+                    assign CC {
+                        tac.push_back("GOTO " + string($1.loop_body));
+                        tac.push_back("\nLABEL " + string($6.if_body) + ":");
+                    }
+                    OF stmt_list CF {
+                        tac.push_back("GOTO " + string($6.loop_body));
+                        tac.push_back("\nLABEL " + string($6.else_body) + ":");
+                        loop_continue.pop();
+                        loop_break.pop();
+                    }
 
 %%
 
@@ -364,3 +423,6 @@ void yyerror(const char* msg) {
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
+
+
+// Prepend # to label names
