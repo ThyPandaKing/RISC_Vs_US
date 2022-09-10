@@ -294,8 +294,8 @@ else_stmt       :   ELSE OF stmt_list CF
                     ;                    
 
 while_loop_stmt :   WHILE {
-                        sprintf($1.loop_body, "L%d", label_counter++); 
-                        loop_continue.push(label_counter);
+                        sprintf($1.loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
                         tac.push_back("\nLABEL " + string($1.loop_body) + ":");
                     } 
                     OC expr CC 
@@ -311,7 +311,6 @@ while_loop_stmt :   WHILE {
                     } 
                     OF stmt_list CF    
                     {
-                        cout << "stmt" << endl;
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\nLABEL " + string($4.else_body) + ":");
                         loop_continue.pop();
@@ -320,7 +319,6 @@ while_loop_stmt :   WHILE {
 
 for_loop_stmt   :   FOR OC assign SCOL {
                         sprintf($1.loop_body, "L%d", label_counter++); 
-                        loop_continue.push(label_counter);
                         tac.push_back("\nLABEL " + string($1.loop_body) + ":");
                     } 
                     expr SCOL {  
@@ -330,7 +328,9 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         sprintf($6.else_body, "L%d", label_counter++); 
 
                         tac.push_back("\nif " + string($6.lexeme) + " GOTO " + string($6.if_body) + " else GOTO " + string($6.else_body));
-                        sprintf($6.loop_body, "L%d", label_counter++); 
+
+                        sprintf($6.loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
                         tac.push_back("\nLABEL " + string($6.loop_body) + ":");
                     }
                     assign CC {

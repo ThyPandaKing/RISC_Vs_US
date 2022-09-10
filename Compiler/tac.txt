@@ -3,28 +3,47 @@ main:
 - INT i
 i = @t0 INT
 @t1 = 0 INT
-i = @t1 INT
+- INT j
+j = @t1 INT
+@t2 = 0 INT
+i = @t2 INT
 
 LABEL L0:
-@t2 = i INT
-@t3 = 4 INT
-@t4 = @t2 < @t3 INT
+@t3 = i INT
+@t4 = 4 INT
+@t5 = @t3 < @t4 INT
 
-if @t4 GOTO L1 else GOTO L2
+if @t5 GOTO L1 else GOTO L2
 
 LABEL L3:
-@t5 = i INT
-@t6 = 1 INT
-@t7 = @t5 + @t6 INT
-i = @t7 INT
+@t6 = i INT
+@t7 = 1 INT
+@t8 = @t6 + @t7 INT
+i = @t8 INT
 GOTO L0
 
 LABEL L1:
-GOTO L1
+
+LABEL L4:
+@t9 = j INT
+@t10 = 7 INT
+@t11 = @t9 < @t10 INT
+
+if @t11 GOTO L5 else GOTO L6
+
+LABEL L5:
+@t12 = 5 INT
+j = @t12 INT
+GOTO L6
+GOTO L4
+
+LABEL L6:
+GOTO L3
 GOTO L3
 
 LABEL L2:
-@t8 = 0 INT
-return @t8 INT
+@t13 = 0 INT
+return @t13 INT
 end:
+j-->INT
 i-->INT

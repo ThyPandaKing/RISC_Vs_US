@@ -586,7 +586,7 @@ static const yytype_uint16 yyrline[] =
      180,   183,   186,   189,   192,   195,   198,   203,   209,   215,
      222,   227,   233,   234,   235,   236,   239,   243,   249,   254,
      257,   263,   254,   272,   277,   284,   272,   289,   292,   293,
-     296,   302,   296,   321,   326,   336,   321
+     296,   302,   296,   320,   324,   336,   320
 };
 #endif
 
@@ -1896,8 +1896,8 @@ yyreduce:
   case 70:
 #line 296 "parser.y" /* yacc.c:1646  */
     {
-                        sprintf((yyvsp[0].node).loop_body, "L%d", label_counter++); 
-                        loop_continue.push(label_counter);
+                        sprintf((yyvsp[0].node).loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
                         tac.push_back("\nLABEL " + string((yyvsp[0].node).loop_body) + ":");
                     }
 #line 1904 "y.tab.c" /* yacc.c:1646  */
@@ -1921,27 +1921,25 @@ yyreduce:
   case 72:
 #line 313 "parser.y" /* yacc.c:1646  */
     {
-                        cout << "stmt" << endl;
                         tac.push_back("GOTO " + string((yyvsp[-8].node).loop_body));
                         tac.push_back("\nLABEL " + string((yyvsp[-5].node).else_body) + ":");
                         loop_continue.pop();
                         loop_break.pop();
                     }
-#line 1931 "y.tab.c" /* yacc.c:1646  */
+#line 1930 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 321 "parser.y" /* yacc.c:1646  */
+#line 320 "parser.y" /* yacc.c:1646  */
     {
                         sprintf((yyvsp[-3].node).loop_body, "L%d", label_counter++); 
-                        loop_continue.push(label_counter);
                         tac.push_back("\nLABEL " + string((yyvsp[-3].node).loop_body) + ":");
                     }
-#line 1941 "y.tab.c" /* yacc.c:1646  */
+#line 1939 "y.tab.c" /* yacc.c:1646  */
     break;
 
   case 74:
-#line 326 "parser.y" /* yacc.c:1646  */
+#line 324 "parser.y" /* yacc.c:1646  */
     {  
                         sprintf((yyvsp[-1].node).if_body, "L%d", label_counter++); 
 
@@ -1949,7 +1947,9 @@ yyreduce:
                         sprintf((yyvsp[-1].node).else_body, "L%d", label_counter++); 
 
                         tac.push_back("\nif " + string((yyvsp[-1].node).lexeme) + " GOTO " + string((yyvsp[-1].node).if_body) + " else GOTO " + string((yyvsp[-1].node).else_body));
-                        sprintf((yyvsp[-1].node).loop_body, "L%d", label_counter++); 
+
+                        sprintf((yyvsp[-1].node).loop_body, "L%d", label_counter); 
+                        loop_continue.push(label_counter++);
                         tac.push_back("\nLABEL " + string((yyvsp[-1].node).loop_body) + ":");
                     }
 #line 1956 "y.tab.c" /* yacc.c:1646  */
