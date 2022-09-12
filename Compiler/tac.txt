@@ -1,34 +1,24 @@
-main:
+testFunf:
+- INT z
 @t0 = 1 INT
-- INT b
-b = @t0 INT
-@t1 = b
-@t2 = 1
-@t3 = @t1 == @t2
-if ( @t3 != 0) GOTO L1 else GOTO L2
-Label L1:
-@t4 = b INT
-@t5 = 1 INT
-@t6 = @t4 + @t5 INT
-b = @t6 INT
-GOTO L0
-Label L2:
-@t7 = 2
-@t8 = @t1 == @t7
-if ( @t8 != 0) GOTO L3 else GOTO L4
-Label L3:
-@t9 = b INT
-@t10 = 2 INT
-@t11 = @t9 + @t10 INT
-b = @t11 INT
-GOTO L0
-Label L4:
-@t12 = b INT
-@t13 = 3 INT
-@t14 = @t12 + @t13 INT
-b = @t14 INT
-Label L0
-@t15 = 0 INT
-return @t15 INT
+z = @t0 INT
+@t1 = 2 INT
+return @t1 INT
 end:
+
+main:
+@t2 = 1 INT
+- INT b
+b = @t2 INT
+@t3 = b INT
+@param 0 @t3 INT
+@t4 = b INT
+@param 1 @t4 INT
+@t5 = @call testFunf 1
+b = @t5 INT
+@t6 = 0 INT
+return @t6 INT
+end:
+
 b-->INT
+z-->INT

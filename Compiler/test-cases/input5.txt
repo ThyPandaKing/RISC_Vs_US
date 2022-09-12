@@ -1,14 +1,11 @@
+int testFunf(int a){
+    int z;
+    z = 1;
+    return 2;
+}
+
 int main(){
     int b = 1;
-    switch(b){
-        case(1):
-            b = b + 1;
-            break;
-        case(2):
-            b = b + 2;
-            break;
-        default:
-            b = b + 3;
-    }
+    b = testFunf(b, b);
     return 0;
 }
