@@ -39,6 +39,29 @@
     stack<int> loop_continue, loop_break;
 
     extern int countn;
+
+    typedef struct node{
+        char* id;
+        char* data_type;
+        int size;
+        char* type;     // category : keyword K; variable V; Constant C; Functions V
+        int line_number;
+    } func_symbol_table; // 100 entries allowed as of now
+
+    int func_ind = 0;
+    int func_arg = 0;
+    int func_arg_ind = 0;
+    int param_ind = 0;
+    char curr_func_name[50];
+    int curr_func_ind = 0;
+
+    struct func_table{
+        char name[50];
+        char type[50];
+        int num_of_param;
+        int count;
+        func_symbol_table st[1000];
+    }func_table[50];
 %}
 
 %union{
@@ -54,13 +77,14 @@
         char case_body[5];
         char id[5];
         char temp[5];
+        int nParams;
     } node;
 }
 
 
 %token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
 
 %right ASSIGN
 %left OR
@@ -76,27 +100,55 @@
 
 %%
 
-Program         :   func_list   {}
+Program         :   func_list {}
  
-func_list       :   func_list func  {}
+func_list       :   func_list func {}
                     |
                     ;
 
-func            :   func_prefix OF stmt_list CF {
-                        tac.push_back("end:");
+func            :   {
+                        func_table[func_ind].count = 0;
+                    }
+                    func_prefix OF stmt_list CF {
+                        func_ind++; 
+                        tac.push_back("end:\n");
                     }
  
-func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":");} OC param_list CC {
+func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":"); sprintf(curr_func_name, "%s", $2.lexeme);} OC param_list CC {
+
                         strcpy($$.lexeme, $2.lexeme);
+                        
+                        sprintf(func_table[func_ind].name, "%s" ,$2.lexeme);
+                        sprintf(func_table[func_ind].type, "%s", $1.type);
+                        func_table[func_ind].num_of_param = $5.nParams;
+
+
+                        // checking for duplicate function names
+                        for(int i=0; i<func_ind; i++){
+                            if(strcmp(func_table[i].name, func_table[func_ind].name) == 0){
+                                printf("Error: Duplicate function name %s", func_table[func_ind].name);
+                            }
+                        }
                     }
  
-param_list      :   param_list COMMA param 
-                    | param  
-                    |
+param_list      :   param_list COMMA param {
+                        $$.nParams = $1.nParams + 1;
+                    }
+                    | param {
+                        $$.nParams = $1.nParams;
+                    }
+                    | {
+                        $$.nParams = 0;
+                    }
                     ;
  
-param           :   data_type ID 
-                    | data_type ID OS CS COLON INT ID
+param           :   data_type ID {
+                        $$.nParams = 1;
+                        strcpy($$.lexeme, $2.lexeme);
+                    }
+                    | data_type ID OS CS COLON INT ID {
+                        $$.nParams = 1;                        
+                    }
                     ;
  
 stmt_list       :   stmt stmt_list 
@@ -211,6 +263,20 @@ expr      	    :   expr ADD expr {
                         strcpy($$.type, $1.type);
                         strcpy($$.lexeme, $1.lexeme);
                     }
+                    | postfix_expr {
+                        strcpy($$.type, $1.type);
+                        sprintf($$.lexeme, "%s", $1.lexeme);
+                    }
+
+postfix_expr    :   func_call {
+                        strcpy($$.type, $1.type);
+                        sprintf($$.lexeme, "%s", $1.lexeme);
+                    }
+                    // | arr {
+                    //     sprintf($$.type, $1.type);
+                    //     sprintf($$.lexeme, "%s", $1.lexeme);
+                    // }
+                    ;
  
 unary_expr      :   unary_op primary_expr {
                         // strcpy($$.type, $2.type);
@@ -397,6 +463,51 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         loop_continue.pop();
                         loop_break.pop();
                     }
+
+func_call       :   ID OC arg_list CC  {
+                        sprintf($$.lexeme, $1.lexeme);        
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        variable_count++;
+
+                        // checking if function is declared
+                        bool flag = false;
+                        int ind = -1;
+                        for(int i=0; i<func_ind; i++){
+                            if((strcmp(func_table[i].name, $1.lexeme) == 0) || (strcmp(curr_func_name, $1.lexeme)==0)){
+                                ind = i;
+                                curr_func_ind = i;
+                                flag = true;
+                                break;
+                            }
+                        }
+                    
+                        if(!flag && (strcmp(curr_func_name, $1.lexeme)!=0)){
+                            printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
+                        }
+                        tac.push_back(string($$.lexeme) + " = @call " + string($1.lexeme) + " " + to_string(func_table[ind].num_of_param));
+                    
+                        param_ind = 0;
+                        func_arg_ind = 0;
+                        func_arg = 0;
+                    }
+                    ;
+
+arg_list        :   arg COMMA arg_list
+                    | arg {}
+                    | {}
+                    ;
+
+arg             :   expr {
+                        // check argument types
+                        tac.push_back("@param " + to_string(param_ind++) + " " + string($1.lexeme) + " " + string($1.type));
+
+                        // if(strcmp($1.type, func_table[curr_func_ind].st[func_arg_ind++].data_type) != 0){
+                        //     printf("Error in function call %s: variable type is not matched", func_table[curr_func_ind].name);
+                        //     exit(0);
+                        // }
+                        func_arg++;
+                    }
+                    ;
 
 %%
 
