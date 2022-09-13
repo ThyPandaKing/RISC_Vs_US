@@ -5,6 +5,12 @@ const fse = require ('fs-extra');
 const {exec} = require ('child_process');
 var child = require ('child_process').execFile;
 var executablePath = 'D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe';
+const console = require('console');
+app.console = new console.Console(process.stdout, process.stderr);
+
+// Enable live reload for all the files inside your project directory
+require('electron-reload')('./');
+console.log('hi')
 
 
 function createWindow () {
@@ -38,7 +44,7 @@ ipcMain.on ('saveCode', (event, myCode) => {
 });
 
 ipcMain.on ('runCode', (event, filePath) => {
-  exec ("D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe", [], (err, stdout, stderr) => {
+  exec ("./parser < ../User/userCode.txt", [], (err, stdout, stderr) => {
     if (err) {
       console.error (`exec error: ${err}`);
       return;
