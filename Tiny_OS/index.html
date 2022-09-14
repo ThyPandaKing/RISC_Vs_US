@@ -37,8 +37,8 @@
   </div>
   <div style="height: 90vh; display: flex;">
 
-    <div style="width: 75vh;">
-      <div style="
+    <div  style="width: 75vh;">
+      <div id="display" style="
                   height: 30vh;
                   flex: 1;
                   background: #1F1B18;
@@ -48,8 +48,9 @@
                   color: white;
                   font-size: 32px;
                 ">
-        OUTPUT
+      <canvas id="canvas" style="width: 100%; height: 100%; padding: 0;margin: 0;"></canvas>
       </div>
+      
       <div style="
                         height: 30vh;
                         flex: 1;
@@ -138,6 +139,7 @@
         code.value = editor.getSession().getValue();
     });
   </script>
+  <script src="./Virtual_Display/read_mem.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>
