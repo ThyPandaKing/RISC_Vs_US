@@ -1,8 +1,8 @@
 // const fs = require('fs')
 var display_div = document.getElementById("display")
 
-const NUM_OF_ROW_PIXELS = 3
-const NUM_OF_COL_PIXELS = 2
+const NUM_OF_ROW_PIXELS = 358
+const NUM_OF_COL_PIXELS = 128
 
 var row = new Array(NUM_OF_COL_PIXELS)
 for (let i = 0; i < row.length; i++) {
@@ -14,22 +14,25 @@ for (let i = 0; i < row.length; i++) {
         row[i][j] = 0
     }
 }
-var pixel = "<svg >"
+
+var pixel = '<div>';
 for (let i = 0; i < row.length; i++) {
+    pixel =
+      pixel + '<div style="display:flex;">';
     for (let j = 0; j < row[i].length; j++) {
-        // x = j*0.78 
-        // y = i*0.26
-
-        x = j*9
-        y = i*9
-        // pixel = pixel+'<rect x = "' + x+'" y = "' + y + '" width="0.26" height="0.78" style="padding:"0.5px"; fill:rgb(0,0,255);" />'
-        
-        pixel = pixel+'<rect x = "' + x+'" y = "' + y + '" width="9" height="9" style="padding:"0.5px"; fill:rgb(0,0,255);" />'
-
-        console.log("i=", i, "j=", j, "x=", x, "y=", y)
+        if(j==10)
+           pixel =
+             pixel +
+             '<div style="width:0.139vw;height:0.23vh;background:white;"></div>';
+           
+       else    
+        pixel =
+          pixel +
+          '<div style="width:0.139vw;height:0.23vh;background:black;"></div>';
     }
+    pixel=pixel+'</div>'
 }
-pixel = pixel + '</svg>'
+pixel = pixel + '</div>'
 
 // for(var i = 0; i< 100; i++){
 //     // x = x + "<p " + ">Heading " + i + "</p>"
@@ -80,3 +83,25 @@ document.getElementById("display").innerHTML = pixel
 
 
 console.log('hello')
+
+
+
+// var pixel = '<svg width="1000" height="1000">';
+// for (let i = 0; i < row.length; i++) {
+//     for (let j = 0; j < row[i].length; j++) {
+//         x = j*0.76
+//         y = i*0.28
+
+//         //x = j*9
+//         //y = i*9
+//         pixel =
+//           pixel +
+//           '<rect x = "' +x +'" y = "' +y +
+//           '" width="0.76" height="0.28" style="fill:blue;stroke:white;stroke-width:0.1"  />';
+        
+//        // pixel = pixel+'<rect x = "' + x+'" y = "' + y + '" width="0.76" height="0.28" style="padding:"0.5px"; fill:rgb(0,0,255);" />'
+
+//         console.log("i=", i, "j=", j, "x=", x, "y=", y)
+//     }
+// }
+// pixel = pixel + '</svg>'
