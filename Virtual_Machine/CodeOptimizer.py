@@ -5,7 +5,7 @@ from CodeGenerator import CodeGenerator
 class CodeOptimizer:
 
     operators = set("+ - * / % && || > < >= <= ! != = ==".split())
-    relational_operators = set("> < >= <= ! != ==".split())
+    relational_operators = set("> < >= <= != ==".split())
 
     def __init__(self):
         self.blocks = []
@@ -64,14 +64,14 @@ class CodeOptimizer:
             else:
                 modified_tac += line+'\n'
 
-        final_tac=''
+        final_tac = ''
         for line in modified_tac.splitlines():
-            if(re.search(r'^@t.+',line) is not None):
-                final_tac+=f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
-            final_tac+=line+'\n'
+            if(re.search(r'^@t.+', line) is not None):
+                final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
+            final_tac += line+'\n'
 
         print(final_tac)
-        
+
         block_lines = ''
         for line in final_tac.splitlines():
             if(line.startswith('.global')):
