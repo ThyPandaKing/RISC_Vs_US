@@ -164,12 +164,12 @@ stmt   		    :   declaration
                     | for_loop_stmt
                     | BREAK SCOL {
                         if(!loop_break.empty()){
-                            tac.push_back("GOTO L" + to_string(loop_break.top()));
+                            tac.push_back("GOTO #L" + to_string(loop_break.top()));
                         }
                     }
                     | CONTINUE SCOL {
                         if(!loop_continue.empty()){
-                            tac.push_back("GOTO L" + to_string(loop_continue.top()));
+                            tac.push_back("GOTO #L" + to_string(loop_continue.top()));
                         }
                     }     
                     | switch_stmt
@@ -324,20 +324,20 @@ assign          :   ID ASSIGN expr {
                     }
 
 if_stmt         :   IF  {
-                        sprintf($1.parentNext, "L%d", label_counter++);
+                        sprintf($1.parentNext, "#L%d", label_counter++);
                     } 
                     OC expr CC { 
-                        tac.push_back("if ( " + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
-                        sprintf($4.if_body, "L%d", label_counter++);
-                        sprintf($4.else_body, "L%d", label_counter++); 
-                        tac.push_back("LABEL " + string($4.if_body) + " :");
+                        tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "#L%d", label_counter++);
+                        sprintf($4.else_body, "#L%d", label_counter++); 
+                        tac.push_back(string($4.if_body) + ":");
                     } 
                     OF stmt_list CF {  
                         tac.push_back("GOTO " + string($1.parentNext));
-                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                        tac.push_back(string($4.else_body) + ":");
                     } 
                     elif_stmt  else_stmt {   
-                        tac.push_back("LABEL " + string($1.parentNext) + ":");
+                        tac.push_back(string($1.parentNext) + ":");
                     }
                     ;        
 
@@ -348,14 +348,14 @@ elif_stmt       :   ELIF {
                     } 
                     OC expr CC {
                         // sprintf(icg[ic_idx++], "\nif (%s != 0) GOTO L%d else GOTO L%d\n", $4.token, label, label+1);
-                        tac.push_back("if (" + string($4.lexeme) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
-                        sprintf($4.if_body, "L%d", label_counter++);
-                        sprintf($4.else_body, "L%d", label_counter++); 
-                        tac.push_back("LABEL " + string($4.if_body) + ":");
+                        tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
+                        sprintf($4.if_body, "#L%d", label_counter++);
+                        sprintf($4.else_body, "#L%d", label_counter++); 
+                        tac.push_back(string($4.if_body) + ":");
                     } 
                     OF stmt_list CF {
                         tac.push_back("GOTO " + string($1.parentNext));
-                        tac.push_back("LABEL " + string($4.else_body) + ":");
+                        tac.push_back(string($4.else_body) + ":");
                     } 
                     elif_stmt  
                     |
@@ -368,7 +368,7 @@ else_stmt       :   ELSE OF stmt_list CF
 switch_stmt     :   SWITCH {
                         int temp_label = label_counter;
                         loop_break.push(temp_label);
-                        sprintf($1.parentNext, "L%d", label_counter++);
+                        sprintf($1.parentNext, "#L%d", label_counter++);
                     } 
                     OC ID {
                         temp_index = variable_count;
@@ -392,17 +392,17 @@ case_stmt_list  :   case_stmt case_stmt_list {
                     ;
 
 case_stmt       :   CASE {
-                        // tac.push_back("LABEL " + string($4.if_body) + ":");
+                        // tac.push_back(string($4.if_body) + ":");
                     } 
                     OC const {
                         char* hold = const_cast<char*>(to_string(variable_count).c_str());
                         sprintf($4.temp, "%s", hold);
                         tac.push_back("@t" + to_string(variable_count++) + " = " + $4.lexeme);
                         tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp));
-                        tac.push_back("if ( @t" + to_string(variable_count-1) + " != 0) GOTO L" + to_string(label_counter) + " else GOTO L" + to_string(label_counter+1));
-                        tac.push_back("Label L" + to_string(label_counter) + ":");
-                        sprintf($4.case_body, "L%d", label_counter++);
-                        sprintf($4.parentNext, "L%d", label_counter++);
+                        tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
+                        tac.push_back("Label #L" + to_string(label_counter) + ":");
+                        sprintf($4.case_body, "#L%d", label_counter++);
+                        sprintf($4.parentNext, "#L%d", label_counter++);
                     }
                     CC COLON stmt_list {
                         // tac.push_back("Label " + string($4.parentNext) + ":");
@@ -414,52 +414,52 @@ default_stmt    :   DEFAULT COLON stmt_list
                     ;                       
 
 while_loop_stmt :   WHILE {
-                        sprintf($1.loop_body, "L%d", label_counter); 
+                        sprintf($1.loop_body, "#L%d", label_counter); 
                         loop_continue.push(label_counter++);
-                        tac.push_back("\nLABEL " + string($1.loop_body) + ":");
+                        tac.push_back("\n" + string($1.loop_body) + ":");
                     } 
                     OC expr CC 
                     {
-                        sprintf($4.if_body, "L%d", label_counter++); 
+                        sprintf($4.if_body, "#L%d", label_counter++); 
 
                         loop_break.push(label_counter);
-                        sprintf($4.else_body, "L%d", label_counter++); 
+                        sprintf($4.else_body, "#L%d", label_counter++); 
 
                         tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body));
-                        tac.push_back("\nLABEL " + string($4.if_body) + ":");
+                        tac.push_back("\n" + string($4.if_body) + ":");
                         
                     } 
                     OF stmt_list CF    
                     {
                         tac.push_back("GOTO " + string($1.loop_body));
-                        tac.push_back("\nLABEL " + string($4.else_body) + ":");
+                        tac.push_back("\n" + string($4.else_body) + ":");
                         loop_continue.pop();
                         loop_break.pop();
                     }
 
 for_loop_stmt   :   FOR OC assign SCOL {
-                        sprintf($1.loop_body, "L%d", label_counter++); 
-                        tac.push_back("\nLABEL " + string($1.loop_body) + ":");
+                        sprintf($1.loop_body, "#L%d", label_counter++); 
+                        tac.push_back("\n" + string($1.loop_body) + ":");
                     } 
                     expr SCOL {  
-                        sprintf($6.if_body, "L%d", label_counter++); 
+                        sprintf($6.if_body, "#L%d", label_counter++); 
 
                         loop_break.push(label_counter);
-                        sprintf($6.else_body, "L%d", label_counter++); 
+                        sprintf($6.else_body, "#L%d", label_counter++); 
 
                         tac.push_back("\nif " + string($6.lexeme) + " GOTO " + string($6.if_body) + " else GOTO " + string($6.else_body));
 
-                        sprintf($6.loop_body, "L%d", label_counter); 
+                        sprintf($6.loop_body, "#L%d", label_counter); 
                         loop_continue.push(label_counter++);
-                        tac.push_back("\nLABEL " + string($6.loop_body) + ":");
+                        tac.push_back("\n" + string($6.loop_body) + ":");
                     }
                     assign CC {
                         tac.push_back("GOTO " + string($1.loop_body));
-                        tac.push_back("\nLABEL " + string($6.if_body) + ":");
+                        tac.push_back("\n" + string($6.if_body) + ":");
                     }
                     OF stmt_list CF {
                         tac.push_back("GOTO " + string($6.loop_body));
-                        tac.push_back("\nLABEL " + string($6.else_body) + ":");
+                        tac.push_back("\n" + string($6.else_body) + ":");
                         loop_continue.pop();
                         loop_break.pop();
                     }
@@ -518,8 +518,8 @@ int main(int argc, char *argv[]) {
         cout << x << endl;
     for(auto item: sem_errors)
         cout << item << endl;
-    for(auto item: symbol_table)
-        cout << item.first << "-->" << item.second.data_type << endl;
+    /* for(auto item: symbol_table)
+        cout << item.first << "-->" << item.second.data_type << endl; */
 }
 
 bool check_declaration(string variable){
