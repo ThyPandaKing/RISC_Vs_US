@@ -6,7 +6,6 @@ const {exec} = require ('child_process');
 var child = require ('child_process').execFile;
 var executablePath = 'D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe';
 
-
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow ({
@@ -38,27 +37,25 @@ ipcMain.on ('saveCode', (event, myCode) => {
 });
 
 ipcMain.on ('runCode', (event, filePath) => {
-  exec ("D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe", [], (err, stdout, stderr) => {
+  // exec ("./parser < ../User/userCode.txt", [], (err, stdout, stderr) => {
+  //   if (err) {
+  //     console.error (`exec error: ${err}`);
+  //     return;
+  //   }
+  //   if (stderr) {
+  //     console.error (`std exec error: ${stderr}`);
+  //     return;
+  //   }
+  //   console.log(stdout);
+  // });
+
+  child ('./parser < ../User/userCode.txt', function (err, data) {
     if (err) {
-      console.error (`exec error: ${err}`);
+      console.error (err);
       return;
     }
-    if (stderr) {
-      console.error (`std exec error: ${stderr}`);
-      return;
-    }
-    console.log(stdout);
+    console.log (data.toString ());
   });
-
-  // child ('./a.exe', function (err, data) {
-  // if (err) {
-  //   console.error (err);
-  //   return;
-  // }
-
-//   console.log (data.toString ());
-// });
-
 });
 
 // This method will be called when Electron has finished
