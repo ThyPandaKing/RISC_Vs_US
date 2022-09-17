@@ -227,6 +227,11 @@ class CodeGenerator:
         function that returns true if value
         is a constant
         """
+        if(value[0] == '-'):
+            value = value[1:]
+        if(len(value) == 0):
+            return (False, '')
+
         # check character
         if value[0] == '\'':
             return (True, 'string')
@@ -329,10 +334,6 @@ class CodeGenerator:
         # TODO: complete this
         for block in blocks:
             for line in block.splitlines():
-                try:
-                    print(self.address_descriptor['b'])
-                except KeyError:
-                    pass
                 if(line.endswith(':')):
                     line = line.replace('#', '__')
                     self.text_segment += line+'\n'
@@ -469,15 +470,16 @@ class CodeGenerator:
                     if(constant):
                         # INT and BOOL
                         if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
-                            self.text_segment += f"addi {lhs[0]}, x0, {-line[3]}\n"
+                            self.text_segment += f"addi {lhs[0]}, x0, {-int(line[3])}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
-                            self.update_symbol_table()
+                            self.update_symbol_table(line[0],Datatypes.INT)
                         # CHAR
                         elif(datatype == Datatypes.CHAR.value):
                             self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_symbol_table(line[0],Datatypes.CHAR)
                     else:
                         rhs_datatype = line[-1].lower()
                         # INT, BOOL and CHAR

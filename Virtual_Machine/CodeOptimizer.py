@@ -6,6 +6,7 @@ class CodeOptimizer:
 
     operators = set("+ - * / % && || > < >= <= ! != = ==".split())
     relational_operators = set("> < >= <= != ==".split())
+    logical_operators = set("&& || !".split())
 
     def __init__(self):
         self.blocks = []
@@ -13,7 +14,7 @@ class CodeOptimizer:
         self.temp_index = 0
         self.register_allocation = CodeGenerator()
 
-    def is_condition_statement(self, instruction):
+    def is_condition_statement(self, instruction) -> bool:
         """
         returns true if the given instruction
         is a condition statement
@@ -26,6 +27,19 @@ class CodeOptimizer:
             return True
         return False
 
+    def is_logical_statement(self, instruction) -> bool:
+        """
+        returns true if the given instruction
+        is a condition statement
+        """
+        split = instruction.split(' ')
+        if(len(split) != 6):
+            return False
+        if(len(set(split).intersection(self.logical_operators)) == 1 and
+                split[1] == '='):
+            return True
+        return False
+    
     def get_new_temp(self) -> str:
         temp = '@_t'+str(self.temp_index)
         self.temp_index += 1
@@ -62,6 +76,12 @@ class CodeOptimizer:
                 replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+            # elif(self.is_logical_statement(line)):
+            #     line = line.split(' ')
+            #     logicalop = line[3]
+            #     lhs = line[0]
+            #     op1 = line[2]
+            #     op2 = line[4]
             else:
                 modified_tac += line+'\n'
 
