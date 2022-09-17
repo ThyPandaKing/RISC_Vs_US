@@ -1,0 +1,14 @@
+// if-elif-else
+int main(){
+    int a = 1;
+    if(a == 1) {
+        a = a + 1;
+    }
+    elif(a == 2) {
+        a = a + 2;
+    }
+    else {
+        a = a + 3;
+    }
+    return 0;
+}

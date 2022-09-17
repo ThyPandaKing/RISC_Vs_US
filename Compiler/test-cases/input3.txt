@@ -1,0 +1,9 @@
+// arithmetic and assignment operations test
+int main(){
+    int b = 1;
+    int c = 2;
+    int a = b - c;
+    a = (b + c) + c;
+    a = (b - c) / c;
+    return 0;
+}
