@@ -222,7 +222,7 @@ class CodeGenerator:
         except ValueError:
             return False
 
-    def is_constant(self, value) -> tuple[bool, str]:
+    def is_constant(self, value) -> "tuple[bool, str]":
         """
         function that returns true if value
         is a constant
@@ -242,7 +242,7 @@ class CodeGenerator:
         # not a constant
         return (False, '')
 
-    def get_register(self, variable) -> tuple[str, int]:
+    def get_register(self, variable) -> "tuple[str, int]":
         """
         returns a register based on
         the allocation algorithm
@@ -302,6 +302,24 @@ class CodeGenerator:
             self.symbol_table[subject] = {
                 'datatype': datatype
             }
+    
+    def spill_all_registers(self) -> None:
+        """
+        function that spills all registers
+        at the end of each block
+        """
+
+        self.text_segment += '# ---- end of block ----\n'
+        for var, val in self.address_descriptor.items():
+            reg=val['registers']
+            if(reg is not None):
+                offset = self.address_descriptor[var]['offset']
+                self.address_descriptor[var]['registers']=None
+                self.text_segment += f"sw {reg}, {-offset}(x8)\n"
+        
+        self.text_segment += '# ---- end of spill ----\n'
+        
+        self.register_descriptor = self.default_reg_des.copy()
 
     def main(self, blocks) -> None:
         """
@@ -311,6 +329,10 @@ class CodeGenerator:
         # TODO: complete this
         for block in blocks:
             for line in block.splitlines():
+                try:
+                    print(self.address_descriptor['b'])
+                except KeyError:
+                    pass
                 if(line.endswith(':')):
                     line = line.replace('#', '__')
                     self.text_segment += line+'\n'
@@ -331,19 +353,19 @@ class CodeGenerator:
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                        self.update_descriptors(lhs[0], line[0])
+                            self.update_descriptors(lhs[0], line[0])
                             
                         op1 = self.get_register(line[2])
                         if(op1[1] == 1):
                             offset = self.address_descriptor[line[2]]['offset']
                             self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
-                        self.update_descriptors(op1[0], line[2])
+                            self.update_descriptors(op1[0], line[2])
                 
                         op2 = self.get_register(line[4])
                         if(op2[1] == 1):
                             offset = self.address_descriptor[line[4]]['offset']
                             self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
-                        self.update_descriptors(op2[0], line[4])
+                            self.update_descriptors(op2[0], line[4])
 
                     if(line[3] == Operators.Plus.value):
                         self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
@@ -393,7 +415,7 @@ class CodeGenerator:
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
                         self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                    self.update_descriptors(lhs[0], line[0])
+                        self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
                         # INT and BOOL
@@ -442,7 +464,7 @@ class CodeGenerator:
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
                         self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                    self.update_descriptors(lhs[0], line[0])
+                        self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
                         # INT and BOOL
@@ -488,24 +510,88 @@ class CodeGenerator:
                 elif(self.is_if_statement_without_relop(line)):
                     line = line.split(' ')
                     datatype = self.symbol_table[line[1]]['datatype']
-                    # print('4654564545646546',datatype,line[1])
                     if(datatype == Datatypes.INT or datatype == Datatypes.BOOL
                             or datatype == Datatypes.CHAR):
-                        # print('111111111111111111',datatype,line[1])
                         lhs = self.get_register(line[1])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[1]]['offset']
                             self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                        self.update_descriptors(lhs[0], line[1])
+                            self.update_descriptors(lhs[0], line[1])
 
                         self.text_segment += f"bne {lhs[0]}, x0, {line[3]}\n"
-                        self.text_segment += f"beq {lhs[0]}, x0, {line[6]}\n"
-                    # print('afasfasfa asfdadsfdfsa')
+                        self.text_segment += f"beq x0, x0, {line[6]}\n"
                 
-                # elif(self.is_if_statement_with_relop(line)):
+                elif(self.is_if_statement_with_relop(line)):
+                    line=line.split(' ')
+                    datatype = self.symbol_table[line[1]]['datatype']
+                    relop = line[2]
+                    if(datatype == Datatypes.INT or datatype == Datatypes.BOOL
+                            or datatype == Datatypes.CHAR):
+                        lhs = self.get_register(line[1])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_descriptors(lhs[0], line[1])
 
+                        if(relop == '=='):
+                            self.text_segment += f"beq {lhs[0]}, x0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '!='):
+                            self.text_segment += f"bne {lhs[0]}, x0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '<'):
+                            self.text_segment += f"blt {lhs[0]}, x0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '>='):
+                            self.text_segment += f"bge {lhs[0]}, x0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '<='):
+                            self.text_segment += f"bge x0, {lhs[0]}, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '>'):
+                            self.text_segment += f"blt x0, {lhs[0]}, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+            
+            # spill all here
+            if(block!=blocks[-1]):
+                self.spill_all_registers()
 
         print(self.text_segment)
         # print(self.register_descriptor)
-        # print(self.address_descriptor)
+        print(self.address_descriptor)
         # print(self.symbol_table)
+
+"""
+main:
+- INT @t0
+@t0 = 2 INT
+- INT a
+a = @t0 INT
+- INT @t1
+@t1 = 5 INT
+- INT b
+b = @t1 INT
+- INT @t2
+@t2 = a INT
+- INT @t3
+@t3 = 3 INT
+- INT @_t0
+@_t0 = @t2 - @t3 INT
+if @_t0 == 0 GOTO ___L100 else GOTO ___L101
+___L100:
+- INT @t4
+@t4 = 1 INT
+GOTO ___L102
+___L101:
+@t4 = 0 INT
+___L102:
+if @t4 GOTO __L1 else GOTO __L2
+__L1:
+- INT @t5
+@t5 = 12 INT
+b = @t5 INT
+GOTO __L0
+__L2:
+__L0:
+end:
+"""

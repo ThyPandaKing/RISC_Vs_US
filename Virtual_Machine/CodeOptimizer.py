@@ -50,9 +50,6 @@ class CodeOptimizer:
                 t0 = self.get_new_temp()
                 left_operand = line.split()[2]
                 right_operand = line.split()[4]
-                # if(self.register_allocation.is_constant(left_operand)):
-                #     t1 = self.get_new_temp()
-                #     replacement_str += f"{t1} = {left_operand}\n"
                 replacement_str = f"{t0} = {left_operand} - {right_operand} INT\n"
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
@@ -68,6 +65,7 @@ class CodeOptimizer:
             else:
                 modified_tac += line+'\n'
 
+        # manually declaring temporaries
         declared_temps=[]
         final_tac = ''
         for line in modified_tac.splitlines():
@@ -75,6 +73,9 @@ class CodeOptimizer:
                 final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
                 declared_temps.append(line.split(' ')[0])
             final_tac += line+'\n'
+
+        # replacing '#' with '__' for labels
+        final_tac=final_tac.replace('#','__')
 
         print(final_tac)
 

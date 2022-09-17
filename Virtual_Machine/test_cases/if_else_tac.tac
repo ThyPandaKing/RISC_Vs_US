@@ -1,29 +1,29 @@
 main:
-@t0 = 2 INT
+@t0 = 3 INT
 - INT a
 a = @t0 INT
+@t1 = 5 INT
 - INT b
-@t1 = a INT
-@t2 = 3 INT
-@t3 = @t1 == @t2 INT
-if @t3 GOTO #L1 else GOTO #L2
+b = @t1 INT
+@t2 = a INT
+@t3 = 3 INT
+@t4 = @t2 == @t3 INT
+if @t4 GOTO #L1 else GOTO #L2
 #L1:
-@t4 = 1 INT
-b = @t4 INT
+@t5 = 12 INT
+b = @t5 INT
 GOTO #L0
 #L2:
-@t5 = a INT
-@t6 = 2 INT
-@t7 = @t5 == @t6 INT
-if @t7 GOTO #L3 else GOTO #L4
+@t6 = a INT
+@t7 = 2 INT
+@t8 = @t6 == @t7 INT
+if @t8 GOTO #L3 else GOTO #L4
 #L3:
-@t8 = 4 INT
-b = @t8 INT
+@t9 = 14 INT
+b = @t9 INT
 GOTO #L0
 #L4:
-@t9 = 5 INT
-b = @t9 INT
+@t10 = 6 INT
+b = @t10 INT
 #L0:
-@t10 = 0 INT
-return @t10 INT
 end:
