@@ -1,0 +1,8 @@
+// declarations test
+int main(){
+    int a;
+//    int b = 1;
+    int c = 2;
+    int d = b + c;
+    return 0;
+}

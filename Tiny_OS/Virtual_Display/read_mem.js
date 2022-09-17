@@ -1,8 +1,11 @@
 // const fs = require('fs')
 var display_div = document.getElementById("display")
+// 
 
 const NUM_OF_ROW_PIXELS = 358
 const NUM_OF_COL_PIXELS = 128
+
+
 
 var row = new Array(NUM_OF_COL_PIXELS)
 for (let i = 0; i < row.length; i++) {
@@ -80,6 +83,8 @@ document.getElementById("display").innerHTML = pixel
 //     // display_div.style.display = 'block'
 
 // }, 500)
+
+
 
 
 console.log('hello')
