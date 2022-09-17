@@ -2,6 +2,7 @@
 const {app, BrowserWindow, ipcMain} = require ('electron');
 const path = require ('path');
 const fse = require ('fs-extra');
+const fs = require('fs');
 const {exec} = require ('child_process');
 var child = require ('child_process').execFile;
 var executablePath = 'D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe';
@@ -56,16 +57,17 @@ ipcMain.on ('runCode', (event, filePath) => {
     console.log(stdout);
   });
 
-  // child ('./a.exe', function (err, data) {
-  // if (err) {
-  //   console.error (err);
-  //   return;
-  // }
-
-//   console.log (data.toString ());
-// });
-
 });
+
+ipcMain.on ('refreshDisplay', (event) => {
+    
+  console.log("yo yo yo");
+  // Write code here to read the file with the updated display information
+  // and send it to the renderer process
+  data = fs.readFileSync('./Virtual_Display/memory_map.txt', 'utf-8')
+  console.log(data)
+  return data
+  });
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
