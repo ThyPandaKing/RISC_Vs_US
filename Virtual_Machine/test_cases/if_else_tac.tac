@@ -1,28 +1,29 @@
-.global main
-
 main:
-
+@t0 = 3 INT
 - INT a
-a = 1 INT
+a = @t0 INT
+@t1 = 5 INT
 - INT b
-
-@t0 = a <= 1 INT
-
-if @t1 GOTO #L1 else GOTO #L2
+b = @t1 INT
+@t2 = a INT
+@t3 = 3 INT
+@t4 = @t2 == @t3 INT
+if @t4 GOTO #L1 else GOTO #L2
 #L1:
-b = 1 INT
-
+@t5 = 12 INT
+b = @t5 INT
+GOTO #L0
 #L2:
-@t2 = a == 2 INT
-if @t2 == 2 GOTO #L3 else GOTO #L4
-
+@t6 = a INT
+@t7 = 2 INT
+@t8 = @t6 == @t7 INT
+if @t8 GOTO #L3 else GOTO #L4
 #L3:
-b = 2 INT
-
+@t9 = 14 INT
+b = @t9 INT
+GOTO #L0
 #L4:
-b = 0 INT
-
-return 0 INT
-
+@t10 = 6 INT
+b = @t10 INT
+#L0:
 end:
-

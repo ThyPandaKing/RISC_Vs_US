@@ -1,0 +1,48 @@
+main:
+@t0 = 0 INT
+- INT i
+i = @t0 INT
+@t1 = 0 INT
+- INT j
+j = @t1 INT
+@t2 = 0 INT
+i = @t2 INT
+
+#L0:
+@t3 = i INT
+@t4 = 4 INT
+@t5 = @t3 < @t4 INT
+
+if @t5 GOTO #L1 else GOTO #L2
+
+#L3:
+@t6 = i INT
+@t7 = 1 INT
+@t8 = @t6 + @t7 INT
+i = @t8 INT
+GOTO #L0
+
+#L1:
+
+#L4:
+@t9 = j INT
+@t10 = 7 INT
+@t11 = @t9 < @t10 INT
+
+if @t11 GOTO #L5 else GOTO #L6
+
+#L5:
+@t12 = 5 INT
+j = @t12 INT
+GOTO #L6
+GOTO #L4
+
+#L6:
+GOTO #L3
+GOTO #L3
+
+#L2:
+@t13 = 0 INT
+return @t13 INT
+end:
+

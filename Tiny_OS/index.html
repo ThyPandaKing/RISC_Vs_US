@@ -7,7 +7,7 @@
   <style type="text/css" media="screen">
     #editor {
       height: 90vh;
-      width: 90vh;
+      width: 90vw;
     }
   </style>
 
@@ -37,8 +37,8 @@
   </div>
   <div style="height: 90vh; display: flex;">
 
-    <div style="width: 75vh;">
-      <div style="
+    <div  style="width: 50vw;">
+      <div id="display" style="
                   height: 30vh;
                   flex: 1;
                   background: #1F1B18;
@@ -48,8 +48,8 @@
                   color: white;
                   font-size: 32px;
                 ">
-        OUTPUT
       </div>
+      
       <div style="
                         height: 30vh;
                         flex: 1;
@@ -71,7 +71,7 @@
                       font-size: 64px;
                       padding-top: 1vh;
                     ">
-        <div style="display: flex;">
+        <div style="display: flex; margin-right: 5px;">
           <button class="button3">1</button>
           <button class="button2">a</button>
           <button class="button2">b</button>
@@ -84,7 +84,7 @@
           <button class="button2">i</button>
           <button class="button2">j</button>
         </div>
-        <div style="display: flex;">
+        <div style="display: flex; margin-right: 5px;">
           <button class="button3">2</button>
           <button class="button3">3</button>
           <button class="button2">k</button>
@@ -97,7 +97,7 @@
           <button class="button2">r</button>
           <button class="button2">s</button>
         </div>
-        <div style="display: flex;">
+        <div style="display: flex; margin-right: 5px;">
           <button class="button3">4</button>
           <button class="button3">5</button>
           <button class="button3">6</button>
@@ -110,7 +110,7 @@
           <button class="button2">z</button>
           <button class="button6">.</button>
         </div>
-        <div style="display: flex;">
+        <div style="display: flex; margin-right: 5px;">
           <button class="button3">7</button>
           <button class="button3">8</button>
           <button class="button3">9</button>
@@ -129,6 +129,7 @@
   <script src="./Text-Editor/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="./Text-Editor/editor_functions.js" type="text/javascript" charset="utf-8"></script>
   <input type="hidden" name="hiddenCodeWriter" style="display: none;" id="hiddenCodeWriter">
+  <input type="hidden" name="hiddenDisplay" style="display: none;" id="hiddenDisplay">
   <script>
     var editor = ace.edit('editor');
     editor.setTheme('ace/theme/cobalt');
@@ -138,6 +139,7 @@
         code.value = editor.getSession().getValue();
     });
   </script>
+  <script src="./Virtual_Display/read_mem.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>

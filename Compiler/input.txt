@@ -1,8 +1,0 @@
-int main(){
-    int b;
-    int c;
-    b=1;
-    c=b*10;
-    int a1 = b + c;
-    return a1+1;
-}

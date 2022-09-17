@@ -9,8 +9,9 @@ class CodeOptimizer:
 
     def __init__(self):
         self.blocks = []
-        self.label_index = 0
+        self.label_index = 100
         self.temp_index = 0
+        self.register_allocation = CodeGenerator()
 
     def is_condition_statement(self, instruction):
         """
@@ -49,7 +50,7 @@ class CodeOptimizer:
                 t0 = self.get_new_temp()
                 left_operand = line.split()[2]
                 right_operand = line.split()[4]
-                replacement_str = f"{t0} = {left_operand} - {right_operand}\n"
+                replacement_str = f"{t0} = {left_operand} - {right_operand} INT\n"
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
@@ -64,11 +65,17 @@ class CodeOptimizer:
             else:
                 modified_tac += line+'\n'
 
+        # manually declaring temporaries
+        declared_temps=[]
         final_tac = ''
         for line in modified_tac.splitlines():
-            if(re.search(r'^@t.+', line) is not None):
+            if(re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps):
                 final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
+                declared_temps.append(line.split(' ')[0])
             final_tac += line+'\n'
+
+        # replacing '#' with '__' for labels
+        final_tac=final_tac.replace('#','__')
 
         print(final_tac)
 
@@ -105,5 +112,4 @@ class CodeOptimizer:
         for now, just pass the blocks as it is
         """
 
-        register_allocation = CodeGenerator()
-        register_allocation.main(self.blocks)
+        self.register_allocation.main(self.blocks)
