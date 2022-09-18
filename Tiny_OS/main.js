@@ -61,7 +61,7 @@ ipcMain.handle ('refreshDisplay', async (event) => {
   console.log ('yo yo yo');
   // Write code here to read the file with the updated display information
   // and send it to the renderer process
-  const data = fs.readFileSync ('../User/memory_map.txt', 'utf-8');
+  const data = fs.readFileSync ('../Device_Buffers/memory_map.txt', 'utf-8');
   console.log (data);
   return data;
 });
