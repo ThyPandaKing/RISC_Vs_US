@@ -279,17 +279,21 @@ postfix_expr    :   func_call {
                     ;
  
 unary_expr      :   unary_op primary_expr {
-                        // strcpy($$.type, $2.type);
-                        // tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        strcpy($$.type, $2.type);
+                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
                     }
                     ;
  
 primary_expr    :   ID {
-                        if(check_declaration(string($1.lexeme))){
-                            strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
-                            sprintf($$.lexeme, "@t%d", variable_count++);
-                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
-                        }
+                        check_declaration(string($1.lexeme));
+                        strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
+                        strcpy($$.lexeme, $1.lexeme);
+                        // if(check_declaration(string($1.lexeme))){
+                        //     strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
+                        //     sprintf($$.lexeme, "@t%d", variable_count++);
+                        //     tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                        // }
                     }
                     | const {
                         strcpy($$.type, $1.type);
@@ -512,7 +516,7 @@ arg             :   expr {
 %%
 
 int main(int argc, char *argv[]) {
-    // yydebug = 0;
+    /* yydebug = 1; */
     yyparse();
     for(auto x: tac)
         cout << x << endl;
