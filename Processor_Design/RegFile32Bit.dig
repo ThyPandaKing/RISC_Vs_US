@@ -7,12 +7,12 @@
       <elementName>RegisterFile</elementName>
       <elementAttributes>
         <entry>
-          <string>Label</string>
-          <string>RegFile</string>
-        </entry>
-        <entry>
           <string>AddrBits</string>
           <int>5</int>
+        </entry>
+        <entry>
+          <string>Label</string>
+          <string>RegFile</string>
         </entry>
         <entry>
           <string>Bits</string>
@@ -102,7 +102,7 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>value1</string>
+          <string>Register1</string>
         </entry>
         <entry>
           <string>Bits</string>
@@ -116,7 +116,7 @@
       <elementAttributes>
         <entry>
           <string>Label</string>
-          <string>value2</string>
+          <string>Register2</string>
         </entry>
         <entry>
           <string>Bits</string>
