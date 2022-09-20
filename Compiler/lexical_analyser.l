@@ -25,7 +25,7 @@ digit [0-9]
 "else"                      { strcpy(yylval.node.lexeme, yytext); return ELSE; }
 "while"                     { strcpy(yylval.node.lexeme, yytext); return WHILE; }
 "for"                       { strcpy(yylval.node.lexeme, yytext); return FOR; }
-[-]?{digit}+                { strcpy(yylval.node.lexeme, yytext); return INT_NUM; }
+{digit}+                { strcpy(yylval.node.lexeme, yytext); return INT_NUM; }
 {alpha}({alpha}|{digit})*   { strcpy(yylval.node.lexeme, yytext); return ID; }
 
 
