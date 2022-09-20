@@ -75,6 +75,23 @@ ipcMain.on ('runCode', (event, filePath) => {
       console.log (stdout);
     }
   );
+
+  exec (
+  'cd ../Assembler/ && ./assemble.o < ../User/TAC.tac > ../User/byteCode.byte',
+  [],
+  (err, stdout, stderr) => {
+    if (err) {
+      console.error (`exec error: ${err}`);
+      return;
+    }
+    if (stderr) {
+      console.error (`std exec error: ${stderr}`);
+      return;
+    }
+    console.log (stdout);
+  }
+);
+
 });
 
 ipcMain.handle ('refreshDisplay', async event => {
