@@ -44,20 +44,40 @@ ipcMain.on ('saveCode', (event, myCode) => {
 });
 
 ipcMain.on ('runCode', (event, filePath) => {
-  exec ('./parser < ../User/userCode.txt', [], (err, stdout, stderr) => {
-    if (err) {
-      console.error (`exec error: ${err}`);
-      return;
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
     }
-    if (stderr) {
-      console.error (`std exec error: ${stderr}`);
-      return;
+  );
+
+  exec (
+    'cd ../Virtual_Machine/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
     }
-    console.log (stdout);
-  });
+  );
 });
 
-ipcMain.handle ('refreshDisplay', async (event) => {
+ipcMain.handle ('refreshDisplay', async event => {
   console.log ('yo yo yo');
   // Write code here to read the file with the updated display information
   // and send it to the renderer process

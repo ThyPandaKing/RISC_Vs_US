@@ -5,7 +5,7 @@
 # 	./parser < $${FILENAME}
 
 dummy: parser
-./parser < test-cases/input6.txt > tac.txt
+	./parser < test-cases/input6.txt > tac.txt
 
 
 parser: y.tab.c lex.yy.c y.tab.h
