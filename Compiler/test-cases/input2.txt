@@ -1,8 +1,10 @@
-// declarations test
 int main(){
-    int a;
-//    int b = 1;
-    int c = 2;
-    int d = b + c;
+    int x=1;
+    int c;
+
+    c=x+1;
+    x=c-x/4;
+
     return 0;
 }
+

@@ -82,9 +82,9 @@
 }
 
 
-%token <node> INT CHAR FLOAT RETURN INT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL PRINT SCAN SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
+%token <node> INT CHAR FLOAT VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
 
 %right ASSIGN
 %left OR
@@ -114,7 +114,7 @@ func            :   {
                         tac.push_back("end:\n");
                     }
  
-func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":"); sprintf(curr_func_name, "%s", $2.lexeme);} OC param_list CC {
+func_prefix     :   func_data_type ID {tac.push_back(string($2.lexeme) + ":"); sprintf(curr_func_name, "%s", $2.lexeme);} OC param_list CC {
 
                         strcpy($$.lexeme, $2.lexeme);
                         
@@ -130,6 +130,10 @@ func_prefix     :   data_type ID {tac.push_back(string($2.lexeme) + ":"); sprint
                             }
                         }
                     }
+
+func_data_type  :   data_type 
+                    | VOID
+                    ;
  
 param_list      :   param_list COMMA param {
                         $$.nParams = $1.nParams + 1;
@@ -173,6 +177,13 @@ stmt   		    :   declaration
                         }
                     }     
                     | switch_stmt
+                    | INPUT OC ID CC SCOL  {
+                        check_declaration($3.lexeme);
+                        tac.push_back("input " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
+                    }
+                    | OUTPUT OC expr CC SCOL {
+                        tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
+                    }
                     ;
  
 declaration     :   data_type ID SCOL {
@@ -253,6 +264,12 @@ expr      	    :   expr ADD expr {
                     | expr XOR expr {
                         add_tac($$, $1, $2, $3)
                     }
+                    | expr LEFTSHIFT expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr RIGHTSHIFT expr {
+                        add_tac($$, $1, $2, $3)
+                    }
                     | unary_expr {
                         strcpy($$.type, $1.type);
                         strcpy($$.type, $1.type);
@@ -314,6 +331,10 @@ unary_op        :   ADD
  
 const           :   INT_NUM {
                         strcpy($$.type, "INT");
+                        strcpy($$.lexeme, $1.lexeme);
+                    }
+                    | FLOAT_NUM {
+                        strcpy($$.type, "FLOAT");
                         strcpy($$.lexeme, $1.lexeme);
                     }
                     | CHARACTER {
