@@ -5,6 +5,8 @@
 #include<cstring>
 #include<regex>
 #include<iostream>
+#include<fstream>
+#include<bitset>
 #include <fcntl.h>
 using namespace std;
 class OPERATIONS

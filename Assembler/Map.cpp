@@ -242,55 +242,58 @@ unsigned char OPERATIONS::setIns(int &ins, string op)
 
 int main()
 {
-	string vmout="sample.txt";
-    int readFD=open(&vmout[0], O_RDONLY);
+	string vmout="vmout.tac";
+	string asmout="asmout.asm";
 
-	if(readFD == -1)
+    ifstream fin(vmout, ios::in);
+	if(!fin)
 	{
-		perror("VM output file not found");
+		perror("VM output file does not exist");
 		return 1;
 	}
+	ofstream fout(asmout, ios::out);
     
-	char *readChar=new char[1];
-    int bytesRead=0;
-	string readStream="";
+	string ins_tac;
+	string op, reg_list;
 	int ins=0;
 	unsigned char type;
-	do
+	while(getline(fin, ins_tac))
 	{
-		bytesRead=read(readFD,readChar,sizeof(char));
-		if(*readChar==' ')
+		istringstream iss(ins_tac);
+		if(!(iss>>op>>reg_list))
 		{
-			try
-			{
-				type=Map::getInstance()->getOperations()->setIns(ins, readStream);
-			}
-			catch(const exception& e)
-			{
-				perror("Invalid Operation");
-				return 2;
-			}
-			readStream.clear();
-			continue;
+			perror("Invalid Syntax");
+			return 2;
 		}
-		if(*readChar=='\n' || *readChar==EOF)
+		
+		// OP
+		try
 		{
-			try
-			{
-				Map::getInstance()->getRegisters()->setRegCode(ins, readStream, type);
-				cout<<ins<<endl;
-				ins=0;
-			}
-			catch(const exception& e)
-			{
-				perror("Invalid Register Syntax");
-				return 3;
-			}
-			readStream.clear();
-			continue;
+			type=Map::getInstance()->getOperations()->setIns(ins, op);
 		}
-		readStream=readStream+*readChar;
-	}while(bytesRead>0);
-    close(readFD);
+		catch(const exception& e)
+		{
+			perror("Invalid Operation");
+			return 3;
+		}
+
+		// REG_LIST
+		try
+		{
+			Map::getInstance()->getRegisters()->setRegCode(ins, reg_list, type);
+			bitset<32> binary(ins);
+			fout<<binary<<endl;
+			ins=0;
+		}
+		catch(const exception& e)
+		{
+			perror("Invalid Register Syntax");
+			return 4;
+		}
+		op.clear();
+		reg_list.clear();
+	}
+    fin.close();
+	fout.close();
     return 0;
 }
