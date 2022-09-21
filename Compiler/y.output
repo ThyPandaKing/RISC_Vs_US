@@ -1,0 +1,3599 @@
+Terminals unused in grammar
+
+   STR
+
+
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: func_list
+
+    2 func_list: func_list func
+    3          | %empty
+
+    4 $@1: %empty
+
+    5 func: $@1 func_prefix OF stmt_list CF
+
+    6 $@2: %empty
+
+    7 func_prefix: func_data_type ID $@2 OC param_list CC
+
+    8 func_data_type: data_type
+    9               | VOID
+
+   10 param_list: param_list COMMA param
+   11           | param
+   12           | %empty
+
+   13 param: data_type ID
+   14      | data_type ID OS CS COLON INT ID
+
+   15 stmt_list: stmt stmt_list
+   16          | %empty
+
+   17 stmt: declaration
+   18     | assign SCOL
+   19     | expr SCOL
+   20     | return_stmt SCOL
+   21     | if_stmt
+   22     | while_loop_stmt
+   23     | for_loop_stmt
+   24     | BREAK SCOL
+   25     | CONTINUE SCOL
+   26     | switch_stmt
+   27     | INPUT OC ID CC SCOL
+   28     | OUTPUT OC expr CC SCOL
+
+   29 declaration: data_type ID SCOL
+   30            | data_type ID ASSIGN expr SCOL
+
+   31 return_stmt: RETURN expr
+
+   32 data_type: INT
+   33          | FLOAT
+   34          | CHAR
+
+   35 expr: expr ADD expr
+   36     | expr SUBTRACT expr
+   37     | expr MULTIPLY expr
+   38     | expr DIVIDE expr
+   39     | expr LE expr
+   40     | expr GE expr
+   41     | expr LT expr
+   42     | expr GT expr
+   43     | expr EQ expr
+   44     | expr NE expr
+   45     | expr AND expr
+   46     | expr OR expr
+   47     | expr MODULO expr
+   48     | expr BITAND expr
+   49     | expr BITOR expr
+   50     | expr XOR expr
+   51     | expr LEFTSHIFT expr
+   52     | expr RIGHTSHIFT expr
+   53     | unary_expr
+   54     | primary_expr
+   55     | postfix_expr
+
+   56 postfix_expr: func_call
+
+   57 unary_expr: unary_op primary_expr
+
+   58 primary_expr: ID
+   59             | const
+   60             | OC expr CC
+
+   61 unary_op: ADD
+   62         | SUBTRACT
+   63         | NOT
+   64         | NEGATION
+
+   65 const: INT_NUM
+   66      | FLOAT_NUM
+   67      | CHARACTER
+
+   68 assign: ID ASSIGN expr
+
+   69 $@3: %empty
+
+   70 $@4: %empty
+
+   71 $@5: %empty
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+   73 $@6: %empty
+
+   74 $@7: %empty
+
+   75 $@8: %empty
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF stmt_list CF $@8 elif_stmt
+   77          | %empty
+
+   78 else_stmt: ELSE OF stmt_list CF
+   79          | %empty
+
+   80 $@9: %empty
+
+   81 $@10: %empty
+
+   82 $@11: %empty
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF case_stmt_list $@11 default_stmt CF
+
+   84 case_stmt_list: case_stmt case_stmt_list
+   85               | %empty
+
+   86 $@12: %empty
+
+   87 $@13: %empty
+
+   88 case_stmt: CASE $@12 OC const $@13 CC COLON stmt_list
+
+   89 default_stmt: DEFAULT COLON stmt_list
+   90             | %empty
+
+   91 $@14: %empty
+
+   92 $@15: %empty
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC $@15 OF stmt_list CF
+
+   94 $@16: %empty
+
+   95 $@17: %empty
+
+   96 $@18: %empty
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+   98 func_call: ID OC arg_list CC
+
+   99 arg_list: arg COMMA arg_list
+  100         | arg
+  101         | %empty
+
+  102 arg: expr
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+INT (258) 14 32
+CHAR (259) 34
+FLOAT (260) 33
+VOID (261) 9
+RETURN (262) 31
+INT_NUM (263) 65
+FLOAT_NUM (264) 66
+ID (265) 7 13 14 27 29 30 58 68 83 98
+LEFTSHIFT (266) 51
+RIGHTSHIFT (267) 52
+LE (268) 39
+GE (269) 40
+EQ (270) 43
+NE (271) 44
+GT (272) 42
+LT (273) 41
+AND (274) 45
+OR (275) 46
+NOT (276) 63
+ADD (277) 35 61
+SUBTRACT (278) 36 62
+DIVIDE (279) 38
+MULTIPLY (280) 37
+MODULO (281) 47
+BITAND (282) 48
+BITOR (283) 49
+NEGATION (284) 64
+XOR (285) 50
+STR (286)
+CHARACTER (287) 67
+CC (288) 7 27 28 60 72 76 83 88 93 97 98
+OC (289) 7 27 28 60 72 76 83 88 93 97 98
+CS (290) 14
+OS (291) 14
+CF (292) 5 72 76 78 83 93 97
+OF (293) 5 72 76 78 83 93 97
+COMMA (294) 10 99
+COLON (295) 14 88 89
+SCOL (296) 18 19 20 24 25 27 28 29 30 97
+OUTPUT (297) 28
+INPUT (298) 27
+SWITCH (299) 83
+CASE (300) 88
+BREAK (301) 24
+DEFAULT (302) 89
+IF (303) 72
+ELIF (304) 76
+ELSE (305) 78
+WHILE (306) 93
+FOR (307) 97
+CONTINUE (308) 25
+ASSIGN (309) 30 68
+
+
+Nonterminals, with rules where they appear
+
+$accept (55)
+    on left: 0
+Program (56)
+    on left: 1, on right: 0
+func_list (57)
+    on left: 2 3, on right: 1 2
+func (58)
+    on left: 5, on right: 2
+$@1 (59)
+    on left: 4, on right: 5
+func_prefix (60)
+    on left: 7, on right: 5
+$@2 (61)
+    on left: 6, on right: 7
+func_data_type (62)
+    on left: 8 9, on right: 7
+param_list (63)
+    on left: 10 11 12, on right: 7 10
+param (64)
+    on left: 13 14, on right: 10 11
+stmt_list (65)
+    on left: 15 16, on right: 5 15 72 76 78 88 89 93 97
+stmt (66)
+    on left: 17 18 19 20 21 22 23 24 25 26 27 28, on right: 15
+declaration (67)
+    on left: 29 30, on right: 17
+return_stmt (68)
+    on left: 31, on right: 20
+data_type (69)
+    on left: 32 33 34, on right: 8 13 14 29 30
+expr (70)
+    on left: 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52
+    53 54 55, on right: 19 28 30 31 35 36 37 38 39 40 41 42 43 44 45
+    46 47 48 49 50 51 52 60 68 72 76 93 97 102
+postfix_expr (71)
+    on left: 56, on right: 55
+unary_expr (72)
+    on left: 57, on right: 53
+primary_expr (73)
+    on left: 58 59 60, on right: 54 57
+unary_op (74)
+    on left: 61 62 63 64, on right: 57
+const (75)
+    on left: 65 66 67, on right: 59 88
+assign (76)
+    on left: 68, on right: 18 97
+if_stmt (77)
+    on left: 72, on right: 21
+$@3 (78)
+    on left: 69, on right: 72
+$@4 (79)
+    on left: 70, on right: 72
+$@5 (80)
+    on left: 71, on right: 72
+elif_stmt (81)
+    on left: 76 77, on right: 72 76
+$@6 (82)
+    on left: 73, on right: 76
+$@7 (83)
+    on left: 74, on right: 76
+$@8 (84)
+    on left: 75, on right: 76
+else_stmt (85)
+    on left: 78 79, on right: 72
+switch_stmt (86)
+    on left: 83, on right: 26
+$@9 (87)
+    on left: 80, on right: 83
+$@10 (88)
+    on left: 81, on right: 83
+$@11 (89)
+    on left: 82, on right: 83
+case_stmt_list (90)
+    on left: 84 85, on right: 83 84
+case_stmt (91)
+    on left: 88, on right: 84
+$@12 (92)
+    on left: 86, on right: 88
+$@13 (93)
+    on left: 87, on right: 88
+default_stmt (94)
+    on left: 89 90, on right: 83
+while_loop_stmt (95)
+    on left: 93, on right: 22
+$@14 (96)
+    on left: 91, on right: 93
+$@15 (97)
+    on left: 92, on right: 93
+for_loop_stmt (98)
+    on left: 97, on right: 23
+$@16 (99)
+    on left: 94, on right: 97
+$@17 (100)
+    on left: 95, on right: 97
+$@18 (101)
+    on left: 96, on right: 97
+func_call (102)
+    on left: 98, on right: 56
+arg_list (103)
+    on left: 99 100 101, on right: 98 99
+arg (104)
+    on left: 102, on right: 99 100
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    $default  reduce using rule 3 (func_list)
+
+    Program    go to state 1
+    func_list  go to state 2
+
+
+State 1
+
+    0 $accept: Program . $end
+
+    $end  shift, and go to state 3
+
+
+State 2
+
+    1 Program: func_list .
+    2 func_list: func_list . func
+
+    $end      reduce using rule 1 (Program)
+    $default  reduce using rule 4 ($@1)
+
+    func  go to state 4
+    $@1   go to state 5
+
+
+State 3
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 4
+
+    2 func_list: func_list func .
+
+    $default  reduce using rule 2 (func_list)
+
+
+State 5
+
+    5 func: $@1 . func_prefix OF stmt_list CF
+
+    INT    shift, and go to state 6
+    CHAR   shift, and go to state 7
+    FLOAT  shift, and go to state 8
+    VOID   shift, and go to state 9
+
+    func_prefix     go to state 10
+    func_data_type  go to state 11
+    data_type       go to state 12
+
+
+State 6
+
+   32 data_type: INT .
+
+    $default  reduce using rule 32 (data_type)
+
+
+State 7
+
+   34 data_type: CHAR .
+
+    $default  reduce using rule 34 (data_type)
+
+
+State 8
+
+   33 data_type: FLOAT .
+
+    $default  reduce using rule 33 (data_type)
+
+
+State 9
+
+    9 func_data_type: VOID .
+
+    $default  reduce using rule 9 (func_data_type)
+
+
+State 10
+
+    5 func: $@1 func_prefix . OF stmt_list CF
+
+    OF  shift, and go to state 13
+
+
+State 11
+
+    7 func_prefix: func_data_type . ID $@2 OC param_list CC
+
+    ID  shift, and go to state 14
+
+
+State 12
+
+    8 func_data_type: data_type .
+
+    $default  reduce using rule 8 (func_data_type)
+
+
+State 13
+
+    5 func: $@1 func_prefix OF . stmt_list CF
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 33
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 14
+
+    7 func_prefix: func_data_type ID . $@2 OC param_list CC
+
+    $default  reduce using rule 6 ($@2)
+
+    $@2  go to state 50
+
+
+State 15
+
+   31 return_stmt: RETURN . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 52
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 16
+
+   65 const: INT_NUM .
+
+    $default  reduce using rule 65 (const)
+
+
+State 17
+
+   66 const: FLOAT_NUM .
+
+    $default  reduce using rule 66 (const)
+
+
+State 18
+
+   58 primary_expr: ID .
+   68 assign: ID . ASSIGN expr
+   98 func_call: ID . OC arg_list CC
+
+    OC      shift, and go to state 53
+    ASSIGN  shift, and go to state 54
+
+    $default  reduce using rule 58 (primary_expr)
+
+
+State 19
+
+   63 unary_op: NOT .
+
+    $default  reduce using rule 63 (unary_op)
+
+
+State 20
+
+   61 unary_op: ADD .
+
+    $default  reduce using rule 61 (unary_op)
+
+
+State 21
+
+   62 unary_op: SUBTRACT .
+
+    $default  reduce using rule 62 (unary_op)
+
+
+State 22
+
+   64 unary_op: NEGATION .
+
+    $default  reduce using rule 64 (unary_op)
+
+
+State 23
+
+   67 const: CHARACTER .
+
+    $default  reduce using rule 67 (const)
+
+
+State 24
+
+   60 primary_expr: OC . expr CC
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 55
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 25
+
+   28 stmt: OUTPUT . OC expr CC SCOL
+
+    OC  shift, and go to state 56
+
+
+State 26
+
+   27 stmt: INPUT . OC ID CC SCOL
+
+    OC  shift, and go to state 57
+
+
+State 27
+
+   83 switch_stmt: SWITCH . $@9 OC ID $@10 CC OF case_stmt_list $@11 default_stmt CF
+
+    $default  reduce using rule 80 ($@9)
+
+    $@9  go to state 58
+
+
+State 28
+
+   24 stmt: BREAK . SCOL
+
+    SCOL  shift, and go to state 59
+
+
+State 29
+
+   72 if_stmt: IF . $@3 OC expr CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+    $default  reduce using rule 69 ($@3)
+
+    $@3  go to state 60
+
+
+State 30
+
+   93 while_loop_stmt: WHILE . $@14 OC expr CC $@15 OF stmt_list CF
+
+    $default  reduce using rule 91 ($@14)
+
+    $@14  go to state 61
+
+
+State 31
+
+   97 for_loop_stmt: FOR . OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    OC  shift, and go to state 62
+
+
+State 32
+
+   25 stmt: CONTINUE . SCOL
+
+    SCOL  shift, and go to state 63
+
+
+State 33
+
+    5 func: $@1 func_prefix OF stmt_list . CF
+
+    CF  shift, and go to state 64
+
+
+State 34
+
+   15 stmt_list: stmt . stmt_list
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 65
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 35
+
+   17 stmt: declaration .
+
+    $default  reduce using rule 17 (stmt)
+
+
+State 36
+
+   20 stmt: return_stmt . SCOL
+
+    SCOL  shift, and go to state 66
+
+
+State 37
+
+   29 declaration: data_type . ID SCOL
+   30            | data_type . ID ASSIGN expr SCOL
+
+    ID  shift, and go to state 67
+
+
+State 38
+
+   19 stmt: expr . SCOL
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    SCOL        shift, and go to state 86
+
+
+State 39
+
+   55 expr: postfix_expr .
+
+    $default  reduce using rule 55 (expr)
+
+
+State 40
+
+   53 expr: unary_expr .
+
+    $default  reduce using rule 53 (expr)
+
+
+State 41
+
+   54 expr: primary_expr .
+
+    $default  reduce using rule 54 (expr)
+
+
+State 42
+
+   57 unary_expr: unary_op . primary_expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 87
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    primary_expr  go to state 88
+    const         go to state 43
+
+
+State 43
+
+   59 primary_expr: const .
+
+    $default  reduce using rule 59 (primary_expr)
+
+
+State 44
+
+   18 stmt: assign . SCOL
+
+    SCOL  shift, and go to state 89
+
+
+State 45
+
+   21 stmt: if_stmt .
+
+    $default  reduce using rule 21 (stmt)
+
+
+State 46
+
+   26 stmt: switch_stmt .
+
+    $default  reduce using rule 26 (stmt)
+
+
+State 47
+
+   22 stmt: while_loop_stmt .
+
+    $default  reduce using rule 22 (stmt)
+
+
+State 48
+
+   23 stmt: for_loop_stmt .
+
+    $default  reduce using rule 23 (stmt)
+
+
+State 49
+
+   56 postfix_expr: func_call .
+
+    $default  reduce using rule 56 (postfix_expr)
+
+
+State 50
+
+    7 func_prefix: func_data_type ID $@2 . OC param_list CC
+
+    OC  shift, and go to state 90
+
+
+State 51
+
+   58 primary_expr: ID .
+   98 func_call: ID . OC arg_list CC
+
+    OC  shift, and go to state 53
+
+    $default  reduce using rule 58 (primary_expr)
+
+
+State 52
+
+   31 return_stmt: RETURN expr .
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 31 (return_stmt)
+
+
+State 53
+
+   98 func_call: ID OC . arg_list CC
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    $default  reduce using rule 101 (arg_list)
+
+    expr          go to state 91
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+    arg_list      go to state 92
+    arg           go to state 93
+
+
+State 54
+
+   68 assign: ID ASSIGN . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 94
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 55
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   60 primary_expr: OC expr . CC
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    CC          shift, and go to state 95
+
+
+State 56
+
+   28 stmt: OUTPUT OC . expr CC SCOL
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 96
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 57
+
+   27 stmt: INPUT OC . ID CC SCOL
+
+    ID  shift, and go to state 97
+
+
+State 58
+
+   83 switch_stmt: SWITCH $@9 . OC ID $@10 CC OF case_stmt_list $@11 default_stmt CF
+
+    OC  shift, and go to state 98
+
+
+State 59
+
+   24 stmt: BREAK SCOL .
+
+    $default  reduce using rule 24 (stmt)
+
+
+State 60
+
+   72 if_stmt: IF $@3 . OC expr CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+    OC  shift, and go to state 99
+
+
+State 61
+
+   93 while_loop_stmt: WHILE $@14 . OC expr CC $@15 OF stmt_list CF
+
+    OC  shift, and go to state 100
+
+
+State 62
+
+   97 for_loop_stmt: FOR OC . assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    ID  shift, and go to state 101
+
+    assign  go to state 102
+
+
+State 63
+
+   25 stmt: CONTINUE SCOL .
+
+    $default  reduce using rule 25 (stmt)
+
+
+State 64
+
+    5 func: $@1 func_prefix OF stmt_list CF .
+
+    $default  reduce using rule 5 (func)
+
+
+State 65
+
+   15 stmt_list: stmt stmt_list .
+
+    $default  reduce using rule 15 (stmt_list)
+
+
+State 66
+
+   20 stmt: return_stmt SCOL .
+
+    $default  reduce using rule 20 (stmt)
+
+
+State 67
+
+   29 declaration: data_type ID . SCOL
+   30            | data_type ID . ASSIGN expr SCOL
+
+    SCOL    shift, and go to state 103
+    ASSIGN  shift, and go to state 104
+
+
+State 68
+
+   51 expr: expr LEFTSHIFT . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 105
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 69
+
+   52 expr: expr RIGHTSHIFT . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 106
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 70
+
+   39 expr: expr LE . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 107
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 71
+
+   40 expr: expr GE . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 108
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 72
+
+   43 expr: expr EQ . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 109
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 73
+
+   44 expr: expr NE . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 110
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 74
+
+   42 expr: expr GT . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 111
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 75
+
+   41 expr: expr LT . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 112
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 76
+
+   45 expr: expr AND . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 113
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 77
+
+   46 expr: expr OR . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 114
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 78
+
+   35 expr: expr ADD . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 115
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 79
+
+   36 expr: expr SUBTRACT . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 116
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 80
+
+   38 expr: expr DIVIDE . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 117
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 81
+
+   37 expr: expr MULTIPLY . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 118
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 82
+
+   47 expr: expr MODULO . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 119
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 83
+
+   48 expr: expr BITAND . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 120
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 84
+
+   49 expr: expr BITOR . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 121
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 85
+
+   50 expr: expr XOR . expr
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 122
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 86
+
+   19 stmt: expr SCOL .
+
+    $default  reduce using rule 19 (stmt)
+
+
+State 87
+
+   58 primary_expr: ID .
+
+    $default  reduce using rule 58 (primary_expr)
+
+
+State 88
+
+   57 unary_expr: unary_op primary_expr .
+
+    $default  reduce using rule 57 (unary_expr)
+
+
+State 89
+
+   18 stmt: assign SCOL .
+
+    $default  reduce using rule 18 (stmt)
+
+
+State 90
+
+    7 func_prefix: func_data_type ID $@2 OC . param_list CC
+
+    INT    shift, and go to state 6
+    CHAR   shift, and go to state 7
+    FLOAT  shift, and go to state 8
+
+    $default  reduce using rule 12 (param_list)
+
+    param_list  go to state 123
+    param       go to state 124
+    data_type   go to state 125
+
+
+State 91
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+  102 arg: expr .
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 102 (arg)
+
+
+State 92
+
+   98 func_call: ID OC arg_list . CC
+
+    CC  shift, and go to state 126
+
+
+State 93
+
+   99 arg_list: arg . COMMA arg_list
+  100         | arg .
+
+    COMMA  shift, and go to state 127
+
+    $default  reduce using rule 100 (arg_list)
+
+
+State 94
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   68 assign: ID ASSIGN expr .
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 68 (assign)
+
+
+State 95
+
+   60 primary_expr: OC expr CC .
+
+    $default  reduce using rule 60 (primary_expr)
+
+
+State 96
+
+   28 stmt: OUTPUT OC expr . CC SCOL
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    CC          shift, and go to state 128
+
+
+State 97
+
+   27 stmt: INPUT OC ID . CC SCOL
+
+    CC  shift, and go to state 129
+
+
+State 98
+
+   83 switch_stmt: SWITCH $@9 OC . ID $@10 CC OF case_stmt_list $@11 default_stmt CF
+
+    ID  shift, and go to state 130
+
+
+State 99
+
+   72 if_stmt: IF $@3 OC . expr CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 131
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 100
+
+   93 while_loop_stmt: WHILE $@14 OC . expr CC $@15 OF stmt_list CF
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 132
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 101
+
+   68 assign: ID . ASSIGN expr
+
+    ASSIGN  shift, and go to state 54
+
+
+State 102
+
+   97 for_loop_stmt: FOR OC assign . SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    SCOL  shift, and go to state 133
+
+
+State 103
+
+   29 declaration: data_type ID SCOL .
+
+    $default  reduce using rule 29 (declaration)
+
+
+State 104
+
+   30 declaration: data_type ID ASSIGN . expr SCOL
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 134
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 105
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   51     | expr LEFTSHIFT expr .
+   52     | expr . RIGHTSHIFT expr
+
+    ADD       shift, and go to state 78
+    SUBTRACT  shift, and go to state 79
+    DIVIDE    shift, and go to state 80
+    MULTIPLY  shift, and go to state 81
+    MODULO    shift, and go to state 82
+
+    $default  reduce using rule 51 (expr)
+
+
+State 106
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   52     | expr RIGHTSHIFT expr .
+
+    ADD       shift, and go to state 78
+    SUBTRACT  shift, and go to state 79
+    DIVIDE    shift, and go to state 80
+    MULTIPLY  shift, and go to state 81
+    MODULO    shift, and go to state 82
+
+    $default  reduce using rule 52 (expr)
+
+
+State 107
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   39     | expr LE expr .
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 39 (expr)
+
+
+State 108
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   40     | expr GE expr .
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 40 (expr)
+
+
+State 109
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   43     | expr EQ expr .
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 43 (expr)
+
+
+State 110
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   44     | expr NE expr .
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 44 (expr)
+
+
+State 111
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   42     | expr GT expr .
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 42 (expr)
+
+
+State 112
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   41     | expr LT expr .
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 41 (expr)
+
+
+State 113
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   45     | expr AND expr .
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 45 (expr)
+
+
+State 114
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   46     | expr OR expr .
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 46 (expr)
+
+
+State 115
+
+   35 expr: expr . ADD expr
+   35     | expr ADD expr .
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    DIVIDE    shift, and go to state 80
+    MULTIPLY  shift, and go to state 81
+    MODULO    shift, and go to state 82
+
+    $default  reduce using rule 35 (expr)
+
+
+State 116
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   36     | expr SUBTRACT expr .
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    DIVIDE    shift, and go to state 80
+    MULTIPLY  shift, and go to state 81
+    MODULO    shift, and go to state 82
+
+    $default  reduce using rule 36 (expr)
+
+
+State 117
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   38     | expr DIVIDE expr .
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    $default  reduce using rule 38 (expr)
+
+
+State 118
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   37     | expr MULTIPLY expr .
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    $default  reduce using rule 37 (expr)
+
+
+State 119
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   47     | expr MODULO expr .
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    $default  reduce using rule 47 (expr)
+
+
+State 120
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   48     | expr BITAND expr .
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+
+    $default  reduce using rule 48 (expr)
+
+
+State 121
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   49     | expr BITOR expr .
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    XOR         shift, and go to state 85
+
+    $default  reduce using rule 49 (expr)
+
+
+State 122
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   50     | expr XOR expr .
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+
+    $default  reduce using rule 50 (expr)
+
+
+State 123
+
+    7 func_prefix: func_data_type ID $@2 OC param_list . CC
+   10 param_list: param_list . COMMA param
+
+    CC     shift, and go to state 135
+    COMMA  shift, and go to state 136
+
+
+State 124
+
+   11 param_list: param .
+
+    $default  reduce using rule 11 (param_list)
+
+
+State 125
+
+   13 param: data_type . ID
+   14      | data_type . ID OS CS COLON INT ID
+
+    ID  shift, and go to state 137
+
+
+State 126
+
+   98 func_call: ID OC arg_list CC .
+
+    $default  reduce using rule 98 (func_call)
+
+
+State 127
+
+   99 arg_list: arg COMMA . arg_list
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    $default  reduce using rule 101 (arg_list)
+
+    expr          go to state 91
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+    arg_list      go to state 138
+    arg           go to state 93
+
+
+State 128
+
+   28 stmt: OUTPUT OC expr CC . SCOL
+
+    SCOL  shift, and go to state 139
+
+
+State 129
+
+   27 stmt: INPUT OC ID CC . SCOL
+
+    SCOL  shift, and go to state 140
+
+
+State 130
+
+   83 switch_stmt: SWITCH $@9 OC ID . $@10 CC OF case_stmt_list $@11 default_stmt CF
+
+    $default  reduce using rule 81 ($@10)
+
+    $@10  go to state 141
+
+
+State 131
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   72 if_stmt: IF $@3 OC expr . CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    CC          shift, and go to state 142
+
+
+State 132
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   93 while_loop_stmt: WHILE $@14 OC expr . CC $@15 OF stmt_list CF
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    CC          shift, and go to state 143
+
+
+State 133
+
+   97 for_loop_stmt: FOR OC assign SCOL . $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    $default  reduce using rule 94 ($@16)
+
+    $@16  go to state 144
+
+
+State 134
+
+   30 declaration: data_type ID ASSIGN expr . SCOL
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    SCOL        shift, and go to state 145
+
+
+State 135
+
+    7 func_prefix: func_data_type ID $@2 OC param_list CC .
+
+    $default  reduce using rule 7 (func_prefix)
+
+
+State 136
+
+   10 param_list: param_list COMMA . param
+
+    INT    shift, and go to state 6
+    CHAR   shift, and go to state 7
+    FLOAT  shift, and go to state 8
+
+    param      go to state 146
+    data_type  go to state 125
+
+
+State 137
+
+   13 param: data_type ID .
+   14      | data_type ID . OS CS COLON INT ID
+
+    OS  shift, and go to state 147
+
+    $default  reduce using rule 13 (param)
+
+
+State 138
+
+   99 arg_list: arg COMMA arg_list .
+
+    $default  reduce using rule 99 (arg_list)
+
+
+State 139
+
+   28 stmt: OUTPUT OC expr CC SCOL .
+
+    $default  reduce using rule 28 (stmt)
+
+
+State 140
+
+   27 stmt: INPUT OC ID CC SCOL .
+
+    $default  reduce using rule 27 (stmt)
+
+
+State 141
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 . CC OF case_stmt_list $@11 default_stmt CF
+
+    CC  shift, and go to state 148
+
+
+State 142
+
+   72 if_stmt: IF $@3 OC expr CC . $@4 OF stmt_list CF $@5 elif_stmt else_stmt
+
+    $default  reduce using rule 70 ($@4)
+
+    $@4  go to state 149
+
+
+State 143
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC . $@15 OF stmt_list CF
+
+    $default  reduce using rule 92 ($@15)
+
+    $@15  go to state 150
+
+
+State 144
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 . expr SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 151
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 145
+
+   30 declaration: data_type ID ASSIGN expr SCOL .
+
+    $default  reduce using rule 30 (declaration)
+
+
+State 146
+
+   10 param_list: param_list COMMA param .
+
+    $default  reduce using rule 10 (param_list)
+
+
+State 147
+
+   14 param: data_type ID OS . CS COLON INT ID
+
+    CS  shift, and go to state 152
+
+
+State 148
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC . OF case_stmt_list $@11 default_stmt CF
+
+    OF  shift, and go to state 153
+
+
+State 149
+
+   72 if_stmt: IF $@3 OC expr CC $@4 . OF stmt_list CF $@5 elif_stmt else_stmt
+
+    OF  shift, and go to state 154
+
+
+State 150
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC $@15 . OF stmt_list CF
+
+    OF  shift, and go to state 155
+
+
+State 151
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr . SCOL $@17 assign CC $@18 OF stmt_list CF
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    SCOL        shift, and go to state 156
+
+
+State 152
+
+   14 param: data_type ID OS CS . COLON INT ID
+
+    COLON  shift, and go to state 157
+
+
+State 153
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF . case_stmt_list $@11 default_stmt CF
+
+    CASE  shift, and go to state 158
+
+    $default  reduce using rule 85 (case_stmt_list)
+
+    case_stmt_list  go to state 159
+    case_stmt       go to state 160
+
+
+State 154
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF . stmt_list CF $@5 elif_stmt else_stmt
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 161
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 155
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC $@15 OF . stmt_list CF
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 162
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 156
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL . $@17 assign CC $@18 OF stmt_list CF
+
+    $default  reduce using rule 95 ($@17)
+
+    $@17  go to state 163
+
+
+State 157
+
+   14 param: data_type ID OS CS COLON . INT ID
+
+    INT  shift, and go to state 164
+
+
+State 158
+
+   88 case_stmt: CASE . $@12 OC const $@13 CC COLON stmt_list
+
+    $default  reduce using rule 86 ($@12)
+
+    $@12  go to state 165
+
+
+State 159
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF case_stmt_list . $@11 default_stmt CF
+
+    $default  reduce using rule 82 ($@11)
+
+    $@11  go to state 166
+
+
+State 160
+
+   84 case_stmt_list: case_stmt . case_stmt_list
+
+    CASE  shift, and go to state 158
+
+    $default  reduce using rule 85 (case_stmt_list)
+
+    case_stmt_list  go to state 167
+    case_stmt       go to state 160
+
+
+State 161
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list . CF $@5 elif_stmt else_stmt
+
+    CF  shift, and go to state 168
+
+
+State 162
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC $@15 OF stmt_list . CF
+
+    CF  shift, and go to state 169
+
+
+State 163
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 . assign CC $@18 OF stmt_list CF
+
+    ID  shift, and go to state 101
+
+    assign  go to state 170
+
+
+State 164
+
+   14 param: data_type ID OS CS COLON INT . ID
+
+    ID  shift, and go to state 171
+
+
+State 165
+
+   88 case_stmt: CASE $@12 . OC const $@13 CC COLON stmt_list
+
+    OC  shift, and go to state 172
+
+
+State 166
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF case_stmt_list $@11 . default_stmt CF
+
+    DEFAULT  shift, and go to state 173
+
+    $default  reduce using rule 90 (default_stmt)
+
+    default_stmt  go to state 174
+
+
+State 167
+
+   84 case_stmt_list: case_stmt case_stmt_list .
+
+    $default  reduce using rule 84 (case_stmt_list)
+
+
+State 168
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list CF . $@5 elif_stmt else_stmt
+
+    $default  reduce using rule 71 ($@5)
+
+    $@5  go to state 175
+
+
+State 169
+
+   93 while_loop_stmt: WHILE $@14 OC expr CC $@15 OF stmt_list CF .
+
+    $default  reduce using rule 93 (while_loop_stmt)
+
+
+State 170
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign . CC $@18 OF stmt_list CF
+
+    CC  shift, and go to state 176
+
+
+State 171
+
+   14 param: data_type ID OS CS COLON INT ID .
+
+    $default  reduce using rule 14 (param)
+
+
+State 172
+
+   88 case_stmt: CASE $@12 OC . const $@13 CC COLON stmt_list
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    CHARACTER  shift, and go to state 23
+
+    const  go to state 177
+
+
+State 173
+
+   89 default_stmt: DEFAULT . COLON stmt_list
+
+    COLON  shift, and go to state 178
+
+
+State 174
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF case_stmt_list $@11 default_stmt . CF
+
+    CF  shift, and go to state 179
+
+
+State 175
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list CF $@5 . elif_stmt else_stmt
+
+    ELIF  shift, and go to state 180
+
+    $default  reduce using rule 77 (elif_stmt)
+
+    elif_stmt  go to state 181
+
+
+State 176
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC . $@18 OF stmt_list CF
+
+    $default  reduce using rule 96 ($@18)
+
+    $@18  go to state 182
+
+
+State 177
+
+   88 case_stmt: CASE $@12 OC const . $@13 CC COLON stmt_list
+
+    $default  reduce using rule 87 ($@13)
+
+    $@13  go to state 183
+
+
+State 178
+
+   89 default_stmt: DEFAULT COLON . stmt_list
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 184
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 179
+
+   83 switch_stmt: SWITCH $@9 OC ID $@10 CC OF case_stmt_list $@11 default_stmt CF .
+
+    $default  reduce using rule 83 (switch_stmt)
+
+
+State 180
+
+   76 elif_stmt: ELIF . $@6 OC expr CC $@7 OF stmt_list CF $@8 elif_stmt
+
+    $default  reduce using rule 73 ($@6)
+
+    $@6  go to state 185
+
+
+State 181
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list CF $@5 elif_stmt . else_stmt
+
+    ELSE  shift, and go to state 186
+
+    $default  reduce using rule 79 (else_stmt)
+
+    else_stmt  go to state 187
+
+
+State 182
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 . OF stmt_list CF
+
+    OF  shift, and go to state 188
+
+
+State 183
+
+   88 case_stmt: CASE $@12 OC const $@13 . CC COLON stmt_list
+
+    CC  shift, and go to state 189
+
+
+State 184
+
+   89 default_stmt: DEFAULT COLON stmt_list .
+
+    $default  reduce using rule 89 (default_stmt)
+
+
+State 185
+
+   76 elif_stmt: ELIF $@6 . OC expr CC $@7 OF stmt_list CF $@8 elif_stmt
+
+    OC  shift, and go to state 190
+
+
+State 186
+
+   78 else_stmt: ELSE . OF stmt_list CF
+
+    OF  shift, and go to state 191
+
+
+State 187
+
+   72 if_stmt: IF $@3 OC expr CC $@4 OF stmt_list CF $@5 elif_stmt else_stmt .
+
+    $default  reduce using rule 72 (if_stmt)
+
+
+State 188
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF . stmt_list CF
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 192
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 189
+
+   88 case_stmt: CASE $@12 OC const $@13 CC . COLON stmt_list
+
+    COLON  shift, and go to state 193
+
+
+State 190
+
+   76 elif_stmt: ELIF $@6 OC . expr CC $@7 OF stmt_list CF $@8 elif_stmt
+
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 51
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+
+    expr          go to state 194
+    postfix_expr  go to state 39
+    unary_expr    go to state 40
+    primary_expr  go to state 41
+    unary_op      go to state 42
+    const         go to state 43
+    func_call     go to state 49
+
+
+State 191
+
+   78 else_stmt: ELSE OF . stmt_list CF
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 195
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 192
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list . CF
+
+    CF  shift, and go to state 196
+
+
+State 193
+
+   88 case_stmt: CASE $@12 OC const $@13 CC COLON . stmt_list
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 197
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 194
+
+   35 expr: expr . ADD expr
+   36     | expr . SUBTRACT expr
+   37     | expr . MULTIPLY expr
+   38     | expr . DIVIDE expr
+   39     | expr . LE expr
+   40     | expr . GE expr
+   41     | expr . LT expr
+   42     | expr . GT expr
+   43     | expr . EQ expr
+   44     | expr . NE expr
+   45     | expr . AND expr
+   46     | expr . OR expr
+   47     | expr . MODULO expr
+   48     | expr . BITAND expr
+   49     | expr . BITOR expr
+   50     | expr . XOR expr
+   51     | expr . LEFTSHIFT expr
+   52     | expr . RIGHTSHIFT expr
+   76 elif_stmt: ELIF $@6 OC expr . CC $@7 OF stmt_list CF $@8 elif_stmt
+
+    LEFTSHIFT   shift, and go to state 68
+    RIGHTSHIFT  shift, and go to state 69
+    LE          shift, and go to state 70
+    GE          shift, and go to state 71
+    EQ          shift, and go to state 72
+    NE          shift, and go to state 73
+    GT          shift, and go to state 74
+    LT          shift, and go to state 75
+    AND         shift, and go to state 76
+    OR          shift, and go to state 77
+    ADD         shift, and go to state 78
+    SUBTRACT    shift, and go to state 79
+    DIVIDE      shift, and go to state 80
+    MULTIPLY    shift, and go to state 81
+    MODULO      shift, and go to state 82
+    BITAND      shift, and go to state 83
+    BITOR       shift, and go to state 84
+    XOR         shift, and go to state 85
+    CC          shift, and go to state 198
+
+
+State 195
+
+   78 else_stmt: ELSE OF stmt_list . CF
+
+    CF  shift, and go to state 199
+
+
+State 196
+
+   97 for_loop_stmt: FOR OC assign SCOL $@16 expr SCOL $@17 assign CC $@18 OF stmt_list CF .
+
+    $default  reduce using rule 97 (for_loop_stmt)
+
+
+State 197
+
+   88 case_stmt: CASE $@12 OC const $@13 CC COLON stmt_list .
+
+    $default  reduce using rule 88 (case_stmt)
+
+
+State 198
+
+   76 elif_stmt: ELIF $@6 OC expr CC . $@7 OF stmt_list CF $@8 elif_stmt
+
+    $default  reduce using rule 74 ($@7)
+
+    $@7  go to state 200
+
+
+State 199
+
+   78 else_stmt: ELSE OF stmt_list CF .
+
+    $default  reduce using rule 78 (else_stmt)
+
+
+State 200
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 . OF stmt_list CF $@8 elif_stmt
+
+    OF  shift, and go to state 201
+
+
+State 201
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF . stmt_list CF $@8 elif_stmt
+
+    INT        shift, and go to state 6
+    CHAR       shift, and go to state 7
+    FLOAT      shift, and go to state 8
+    RETURN     shift, and go to state 15
+    INT_NUM    shift, and go to state 16
+    FLOAT_NUM  shift, and go to state 17
+    ID         shift, and go to state 18
+    NOT        shift, and go to state 19
+    ADD        shift, and go to state 20
+    SUBTRACT   shift, and go to state 21
+    NEGATION   shift, and go to state 22
+    CHARACTER  shift, and go to state 23
+    OC         shift, and go to state 24
+    OUTPUT     shift, and go to state 25
+    INPUT      shift, and go to state 26
+    SWITCH     shift, and go to state 27
+    BREAK      shift, and go to state 28
+    IF         shift, and go to state 29
+    WHILE      shift, and go to state 30
+    FOR        shift, and go to state 31
+    CONTINUE   shift, and go to state 32
+
+    $default  reduce using rule 16 (stmt_list)
+
+    stmt_list        go to state 202
+    stmt             go to state 34
+    declaration      go to state 35
+    return_stmt      go to state 36
+    data_type        go to state 37
+    expr             go to state 38
+    postfix_expr     go to state 39
+    unary_expr       go to state 40
+    primary_expr     go to state 41
+    unary_op         go to state 42
+    const            go to state 43
+    assign           go to state 44
+    if_stmt          go to state 45
+    switch_stmt      go to state 46
+    while_loop_stmt  go to state 47
+    for_loop_stmt    go to state 48
+    func_call        go to state 49
+
+
+State 202
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF stmt_list . CF $@8 elif_stmt
+
+    CF  shift, and go to state 203
+
+
+State 203
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF stmt_list CF . $@8 elif_stmt
+
+    $default  reduce using rule 75 ($@8)
+
+    $@8  go to state 204
+
+
+State 204
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF stmt_list CF $@8 . elif_stmt
+
+    ELIF  shift, and go to state 180
+
+    $default  reduce using rule 77 (elif_stmt)
+
+    elif_stmt  go to state 205
+
+
+State 205
+
+   76 elif_stmt: ELIF $@6 OC expr CC $@7 OF stmt_list CF $@8 elif_stmt .
+
+    $default  reduce using rule 76 (elif_stmt)

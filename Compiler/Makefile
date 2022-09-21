@@ -11,7 +11,7 @@ parser: y.tab.c lex.yy.c y.tab.h
 	g++ -w y.tab.c lex.yy.c -lfl -o parser
 
 y.tab.c: parser.y
-	yacc -v -d -t parser.y
+	yacc -v -d -t -Wno-other parser.y
 
 lex.yy.c: lexical_analyser.l
 	lex lexical_analyser.l
