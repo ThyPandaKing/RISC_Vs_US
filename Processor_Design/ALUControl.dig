@@ -145,6 +145,10 @@
           <string>Label</string>
           <string>Operation</string>
         </entry>
+        <entry>
+          <string>Bits</string>
+          <int>4</int>
+        </entry>
       </elementAttributes>
       <pos x="1060" y="180"/>
     </visualElement>
