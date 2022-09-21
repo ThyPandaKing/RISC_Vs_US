@@ -5,16 +5,17 @@
 
 %option yylineno
 
-alpha [a-zA-Z]
+alpha [a-zA-Z_]
 digit [0-9]
 
 %%
 
-"print"                     { strcpy(yylval.node.lexeme, yytext); return PRINT; }
-"scan"                      { strcpy(yylval.node.lexeme, yytext); return SCAN; }
 "int"                       { strcpy(yylval.node.lexeme, yytext); return INT; }
 "char"                      { strcpy(yylval.node.lexeme, yytext); return CHAR; }
+"void"                      { strcpy(yylval.node.lexeme, yytext); return VOID; }
 "return"                    { strcpy(yylval.node.lexeme, yytext); return RETURN; }
+"input"                     { strcpy(yylval.node.lexeme, yytext); return INPUT; }
+"output"                    { strcpy(yylval.node.lexeme, yytext); return OUTPUT; }
 "switch"                    { strcpy(yylval.node.lexeme, yytext); return SWITCH; }
 "case"                      { strcpy(yylval.node.lexeme, yytext); return CASE; }
 "break"                     { strcpy(yylval.node.lexeme, yytext); return BREAK; }
@@ -25,7 +26,8 @@ digit [0-9]
 "else"                      { strcpy(yylval.node.lexeme, yytext); return ELSE; }
 "while"                     { strcpy(yylval.node.lexeme, yytext); return WHILE; }
 "for"                       { strcpy(yylval.node.lexeme, yytext); return FOR; }
-{digit}+                { strcpy(yylval.node.lexeme, yytext); return INT_NUM; }
+{digit}+                    { strcpy(yylval.node.lexeme, yytext); return INT_NUM; }
+{digit}*\.{digit}+          { strcpy(yylval.node.lexeme, yytext); return FLOAT_NUM;}
 {alpha}({alpha}|{digit})*   { strcpy(yylval.node.lexeme, yytext); return ID; }
 
 

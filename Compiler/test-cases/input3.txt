@@ -1,9 +1,11 @@
-// arithmetic and assignment operations test
 int main(){
-    int b = 1;
-    int c = 2;
-    int a = b - c;
-    a = (b + c) + c;
-    a = (b - c) / c;
-    return 0;
+    int a;
+    input(a);
+
+    int b = a ^ 2;
+    b = a && b;
+    
+    char c = 'r';
+    output(a|b+5);
 }
+

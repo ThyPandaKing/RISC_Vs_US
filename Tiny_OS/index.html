@@ -76,52 +76,52 @@
                       padding-top: 1vh;
                     ">
         <div style="display: flex; margin-right: 5px;">
-          <button class="button3">1</button>
-          <button class="button2">a</button>
-          <button class="button2">b</button>
-          <button class="button2">c</button>
-          <button class="button2">d</button>
-          <button class="button2">e</button>
-          <button class="button2">f</button>
-          <button class="button2">g</button>
-          <button class="button2">h</button>
-          <button class="button2">i</button>
-          <button class="button2">j</button>
+          <button class="button3" onclick="toTerminal(event)">1</button>
+          <button class="button2" onclick="toTerminal(event)">a</button>
+          <button class="button2" onclick="toTerminal(event)">b</button>
+          <button class="button2" onclick="toTerminal(event)">c</button>
+          <button class="button2" onclick="toTerminal(event)">d</button>
+          <button class="button2" onclick="toTerminal(event)">e</button>
+          <button class="button2" onclick="toTerminal(event)">f</button>
+          <button class="button2" onclick="toTerminal(event)">g</button>
+          <button class="button2" onclick="toTerminal(event)">h</button>
+          <button class="button2" onclick="toTerminal(event)">i</button>
+          <button class="button2" onclick="toTerminal(event)">j</button>
         </div>
         <div style="display: flex; margin-right: 5px;">
-          <button class="button3">2</button>
-          <button class="button3">3</button>
-          <button class="button2">k</button>
-          <button class="button2">l</button>
-          <button class="button2">m</button>
-          <button class="button2">n</button>
-          <button class="button2">o</button>
-          <button class="button2">p</button>
-          <button class="button2">q</button>
-          <button class="button2">r</button>
-          <button class="button2">s</button>
+          <button class="button3" onclick="toTerminal(event)">2</button>
+          <button class="button3" onclick="toTerminal(event)">3</button>
+          <button class="button2" onclick="toTerminal(event)">k</button>
+          <button class="button2" onclick="toTerminal(event)">l</button>
+          <button class="button2" onclick="toTerminal(event)">m</button>
+          <button class="button2" onclick="toTerminal(event)">n</button>
+          <button class="button2" onclick="toTerminal(event)">o</button>
+          <button class="button2" onclick="toTerminal(event)">p</button>
+          <button class="button2" onclick="toTerminal(event)">q</button>
+          <button class="button2" onclick="toTerminal(event)">r</button>
+          <button class="button2" onclick="toTerminal(event)">s</button>
         </div>
         <div style="display: flex; margin-right: 5px;">
-          <button class="button3">4</button>
-          <button class="button3">5</button>
-          <button class="button3">6</button>
-          <button class="button2">t</button>
-          <button class="button2">u</button>
-          <button class="button2">v</button>
-          <button class="button2">w</button>
-          <button class="button2">x</button>
-          <button class="button2">y</button>
-          <button class="button2">z</button>
-          <button class="button6">.</button>
+          <button class="button3" onclick="toTerminal(event)">4</button>
+          <button class="button3" onclick="toTerminal(event)">5</button>
+          <button class="button3" onclick="toTerminal(event)">6</button>
+          <button class="button2" onclick="toTerminal(event)">t</button>
+          <button class="button2" onclick="toTerminal(event)">u</button>
+          <button class="button2" onclick="toTerminal(event)">v</button>
+          <button class="button2" onclick="toTerminal(event)">w</button>
+          <button class="button2" onclick="toTerminal(event)">x</button>
+          <button class="button2" onclick="toTerminal(event)">y</button>
+          <button class="button2" onclick="toTerminal(event)">z</button>
+          <button class="button6" onclick="toTerminal(event)">.</button>
         </div>
         <div style="display: flex; margin-right: 5px;">
-          <button class="button3">7</button>
-          <button class="button3">8</button>
-          <button class="button3">9</button>
-          <button class="button3">0</button>
-          <button class="button4">Space</button>
+          <button class="button3" onclick="toTerminal(event)">7</button>
+          <button class="button3" onclick="toTerminal(event)">8</button>
+          <button class="button3" onclick="toTerminal(event)">9</button>
+          <button class="button3" onclick="toTerminal(event)">0</button>
+          <button class="button4" onclick="toTerminal(event)">Space</button>
           <button class="button5">Enter</button>
-          <button class="button6">/</button>
+          <button class="button6" onclick="toTerminal(event)">/</button>
         </div>
       </div>
     </div>
@@ -199,7 +199,16 @@
         }
       }
   });
-</script>
+  </script>
+  <script>
+    function toTerminal(event)
+    {
+      var input=document.getElementById("cmd");
+      var elem=event.path[0].innerHTML;
+      if(elem=="Space"){elem=" ";}
+      input.value=input.value+elem;
+    }
+  </script>
   <script src="./Virtual_Display/initialise.js" type="text/javascript" charset="utf-8"></script>
 </body>
 

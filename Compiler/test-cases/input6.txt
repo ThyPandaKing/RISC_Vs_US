@@ -1,8 +1,9 @@
-int main(){
+void main(){
     int x=1;
-    int y=-5;
+    int y='1';
     int a=x+y;
     int c=-x-y;
 
-    return a;
+    input(x);
+    output(y+a-c);
 }
