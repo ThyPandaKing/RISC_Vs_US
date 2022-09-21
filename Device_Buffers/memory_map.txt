@@ -1,6 +1,6 @@
-123  H A PPY
-FOWER
 
-nfuif
+Hello World!
 
-bpierf gggggggggggggggggggggggggggggggggggggggggggygygygygyygygygygygygy
+*** Welcome ***
+
+This is the Virtual Display with Device Driver implemented using bit maps.
