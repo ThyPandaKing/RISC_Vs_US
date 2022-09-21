@@ -94,6 +94,7 @@
 %left BITAND
 %left EQ NE
 %left LE GE LT GT
+%left LEFTSHIFT RIGHTSHIFT
 %left ADD SUBTRACT
 %left MULTIPLY DIVIDE MODULO
 %left NEGATION
@@ -156,7 +157,7 @@ param           :   data_type ID {
                     ;
  
 stmt_list       :   stmt stmt_list 
-                    | 
+                    |
                     ;
  
 stmt   		    :   declaration 

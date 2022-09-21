@@ -1,20 +1,18 @@
 main:
-@t0 = 1 INT
-- INT x
-x = @t0 INT
-- INT c
-@t1 = 1 INT
-@t2 = x + @t1 INT
-c = @t2 INT
-@t3 = 4 INT
-@t4 = x / @t3 INT
-@t5 = c - @t4 INT
-x = @t5 INT
-@t6 = 0 INT
-return @t6 INT
+- INT a
+input a 
+@t0 = 2 INT
+@t1 = a ^ @t0 INT
+- INT b
+b = @t1 INT
+@t2 = a && b INT
+b = @t2 INT
+@t3 = 'r' CHAR
+- CHAR c
+c = @t3 CHAR
+@t4 = 5 INT
+@t5 = b + @t4 INT
+@t6 = a | @t5 INT
+output @t6 INT
 end:
-
-
-
-
 
