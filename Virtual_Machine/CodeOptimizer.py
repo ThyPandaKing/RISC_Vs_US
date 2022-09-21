@@ -6,6 +6,7 @@ class CodeOptimizer:
 
     operators = set("+ - * / % && || > < >= <= ! != = ==".split())
     relational_operators = set("> < >= <= != ==".split())
+    logical_operators = set("&& || !".split())
 
     def __init__(self):
         self.blocks = []
@@ -13,7 +14,7 @@ class CodeOptimizer:
         self.temp_index = 0
         self.register_allocation = CodeGenerator()
 
-    def is_condition_statement(self, instruction):
+    def is_condition_statement(self, instruction) -> bool:
         """
         returns true if the given instruction
         is a condition statement
@@ -26,6 +27,19 @@ class CodeOptimizer:
             return True
         return False
 
+    def is_logical_statement(self, instruction) -> bool:
+        """
+        returns true if the given instruction
+        is a condition statement
+        """
+        split = instruction.split(' ')
+        if(len(split) != 6):
+            return False
+        if(len(set(split).intersection(self.logical_operators)) == 1 and
+                split[1] == '='):
+            return True
+        return False
+    
     def get_new_temp(self) -> str:
         temp = '@_t'+str(self.temp_index)
         self.temp_index += 1
@@ -50,9 +64,6 @@ class CodeOptimizer:
                 t0 = self.get_new_temp()
                 left_operand = line.split()[2]
                 right_operand = line.split()[4]
-                # if(self.register_allocation.is_constant(left_operand)):
-                #     t1 = self.get_new_temp()
-                #     replacement_str += f"{t1} = {left_operand}\n"
                 replacement_str = f"{t0} = {left_operand} - {right_operand} INT\n"
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
@@ -65,9 +76,16 @@ class CodeOptimizer:
                 replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+            # elif(self.is_logical_statement(line)):
+            #     line = line.split(' ')
+            #     logicalop = line[3]
+            #     lhs = line[0]
+            #     op1 = line[2]
+            #     op2 = line[4]
             else:
                 modified_tac += line+'\n'
 
+        # manually declaring temporaries
         declared_temps=[]
         final_tac = ''
         for line in modified_tac.splitlines():
@@ -75,6 +93,9 @@ class CodeOptimizer:
                 final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
                 declared_temps.append(line.split(' ')[0])
             final_tac += line+'\n'
+
+        # replacing '#' with '__' for labels
+        final_tac=final_tac.replace('#','__')
 
         print(final_tac)
 

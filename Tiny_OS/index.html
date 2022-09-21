@@ -17,7 +17,7 @@
 </head>
 
 <body style="background:#04090e; ">
-  <div style="display: flex;">
+  <div style="display: none;">
     <div style="
                     height: 7vh;
                     flex: 1;
@@ -31,9 +31,9 @@
       Nav Bar
     </div>
 
-    <button class="button1" type="button" id="saveButton">Save</button>
+    <button class="button1" type="button" id="saveButton" >Save</button>
     <button class="button1" type="button" id="runButton">Run</button>
-    <button class="button1" type="button" onclick="clear_file()">Clear</button>
+    <button class="button1" type="button" id="clearButton" onclick="clear_file()">Clear</button>
   </div>
   <div style="height: 90vh; display: flex;">
 
@@ -50,18 +50,22 @@
                 ">
       </div>
       
-      <div style="
+      <div id="terminal" style="
                         height: 30vh;
                         flex: 1;
                         background-color: #404040;
                         display: flex;
-                        justify-content: center;
-                        align-items: center;
                         color: white;
-                        font-size: 32px;
+                        flex-direction: column;
+                        overflow-y:scroll;
+                        border-radius: 5px;
                       ">
-        TERMINAL
-      </div>
+        <div class="trml" id="current">
+            <p class="arrow">>></p>
+            <input type="text" id="cmd"></input>
+            <p class="output" id="output"></p>
+        </div>
+    </div>
       <div style="
                       height: 30vh;
                       background: black;
@@ -129,6 +133,7 @@
   <script src="./Text-Editor/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="./Text-Editor/editor_functions.js" type="text/javascript" charset="utf-8"></script>
   <input type="hidden" name="hiddenCodeWriter" style="display: none;" id="hiddenCodeWriter">
+  <input type="hidden" name="hiddenDisplay" style="display: none;" id="hiddenDisplay">
   <script>
     var editor = ace.edit('editor');
     editor.setTheme('ace/theme/cobalt');
@@ -138,7 +143,64 @@
         code.value = editor.getSession().getValue();
     });
   </script>
-  <script src="./Virtual_Display/read_mem.js" type="text/javascript" charset="utf-8"></script>
+  <script>
+    var input = document.getElementById("cmd");
+    input.addEventListener("keyup", function (e) {
+      if (e.keyCode === 13) {  
+        var parent=document.getElementById("terminal");
+
+        var container=document.createElement("div");
+        container.classList.add("trml");
+
+        var arrow=document.createElement("p");
+        arrow.classList.add("arrow");
+        arrow.innerHTML=">>";
+        container.append(arrow);
+        
+        var inputfield=document.createElement("input");
+        inputfield.type="text";
+        inputfield.disabled=true;
+        inputfield.value=input.value;
+        container.append(inputfield);
+        
+        var pout=document.createElement("p");
+        pout.classList.add("output");
+        container.append(pout);
+
+        var last=document.getElementById("current");
+        last.parentNode.removeChild(last);
+        parent.append(container);
+        parent.append(last);
+        if(input.value==="save")
+        {
+          input.value="";
+          pout.innerHTML="Saved Successfully";
+          var button=document.getElementById("saveButton");
+          button.click();
+        }
+        else if(input.value=="run")
+        {
+          input.value="";
+          pout.innerHTML="Command Succesfully executed";
+          var button=document.getElementById("runButton");
+          button.click();
+        }
+        else if(input.value=="clear")
+        {
+          input.value="";
+          pout.innerHTML="Successfully cleared the file";
+          var button=document.getElementById("clearButton");
+          button.click();
+        }
+        else
+        {
+          input.value="";
+          pout.innerHTML="Invalid command";
+        }
+      }
+  });
+</script>
+  <script src="./Virtual_Display/initialise.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>

@@ -2,16 +2,16 @@
 const {app, BrowserWindow, ipcMain} = require ('electron');
 const path = require ('path');
 const fse = require ('fs-extra');
+const fs = require ('fs');
 const {exec} = require ('child_process');
 var child = require ('child_process').execFile;
 var executablePath = 'D:\\Projects\\RISC_Vs_US\\Tiny_OS\\a.exe';
-const console = require('console');
-app.console = new console.Console(process.stdout, process.stderr);
+const console = require ('console');
+app.console = new console.Console (process.stdout, process.stderr);
 
 // Enable live reload for all the files inside your project directory
-require('electron-reload')('./');
-console.log('hi')
-
+require ('electron-reload') ('./');
+console.log ('hi');
 
 function createWindow () {
   // Create the browser window.
@@ -44,7 +44,42 @@ ipcMain.on ('saveCode', (event, myCode) => {
 });
 
 ipcMain.on ('runCode', (event, filePath) => {
-  exec ("./parser < ../User/userCode.txt", [], (err, stdout, stderr) => {
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+  exec (
+    'cd ../Virtual_Machine/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+  exec (
+  'cd ../Assembler/ && ./assemble.o < ../User/TAC.tac > ../User/byteCode.byte',
+  [],
+  (err, stdout, stderr) => {
     if (err) {
       console.error (`exec error: ${err}`);
       return;
@@ -53,18 +88,19 @@ ipcMain.on ('runCode', (event, filePath) => {
       console.error (`std exec error: ${stderr}`);
       return;
     }
-    console.log(stdout);
-  });
+    console.log (stdout);
+  }
+);
 
-  // child ('./a.exe', function (err, data) {
-  // if (err) {
-  //   console.error (err);
-  //   return;
-  // }
+});
 
-//   console.log (data.toString ());
-// });
-
+ipcMain.handle ('refreshDisplay', async event => {
+  console.log ('yo yo yo');
+  // Write code here to read the file with the updated display information
+  // and send it to the renderer process
+  const data = fs.readFileSync ('../Device_Buffers/memory_map.txt', 'utf-8');
+  console.log (data);
+  return data;
 });
 
 // This method will be called when Electron has finished

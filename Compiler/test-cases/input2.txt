@@ -1,0 +1,10 @@
+int main(){
+    int x=1;
+    int c;
+
+    c=x+1;
+    x=c-x/4;
+
+    return 0;
+}
+
