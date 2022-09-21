@@ -214,11 +214,6 @@
       <pos x="1620" y="60"/>
     </visualElement>
     <visualElement>
-      <elementName>ALUControl.dig</elementName>
-      <elementAttributes/>
-      <pos x="1120" y="480"/>
-    </visualElement>
-    <visualElement>
       <elementName>Splitter</elementName>
       <elementAttributes>
         <entry>
@@ -294,6 +289,11 @@
         </entry>
       </elementAttributes>
       <pos x="1120" y="20"/>
+    </visualElement>
+    <visualElement>
+      <elementName>alu_control_unit.dig</elementName>
+      <elementAttributes/>
+      <pos x="1120" y="480"/>
     </visualElement>
   </visualElements>
   <wires>
