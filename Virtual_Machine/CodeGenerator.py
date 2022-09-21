@@ -295,8 +295,7 @@ class CodeGenerator:
         updates the symbol table
         """
         if(self.symbol_table[subject] is not None):
-            self.symbol_table[subject
-                              ]['datatype'] = datatype
+            self.symbol_table[subject]['datatype'] = datatype
         else:
             self.symbol_table[subject] = {
                 'datatype': datatype
@@ -379,10 +378,10 @@ class CodeGenerator:
                             self.symbol_table[line[4]]['datatype'] == Datatypes.CHAR.value):
                         # implicit typecast of char to int
                         self.update_symbol_table(
-                            subject=lhs[0], datatype=Datatypes.CHAR)
+                            subject=line[0], datatype=Datatypes.CHAR)
                     elif(line[5] == Datatypes.INT.value or line[5] == Datatypes.BOOL.value):
                         self.update_symbol_table(
-                            subject=lhs[0], datatype=Datatypes.INT)
+                            subject=line[0], datatype=Datatypes.INT)
 
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
@@ -494,14 +493,14 @@ class CodeGenerator:
                                 self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
                             # no need to update descriptor with rhs value
                             self.update_symbol_table(
-                                subject=lhs[0], datatype=Datatypes.INT)
+                                subject=line[0], datatype=Datatypes.INT)
 
                         if(rhs_datatype == Datatypes.INT.value or rhs_datatype == Datatypes.BOOL.value):
                             self.update_symbol_table(
-                                subject=lhs[0], datatype=Datatypes.INT)
+                                subject=line[0], datatype=Datatypes.INT)
                         elif(rhs_datatype == Datatypes.CHAR.value):
                             self.update_symbol_table(
-                                subject=lhs[0], datatype=Datatypes.CHAR)
+                                subject=line[0], datatype=Datatypes.CHAR)
 
                 elif(self.is_if_statement_without_relop(line)):
                     line = line.split(' ')
