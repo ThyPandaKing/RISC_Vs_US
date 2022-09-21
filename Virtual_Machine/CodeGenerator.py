@@ -45,29 +45,23 @@ class Datatypes(enum.Enum):
 class CodeGenerator:
 
     available_registers = [
-        'x18',
-        'x19',
-        'x20',
-        'x21',
-        'x22',
-        'x23',
-        'x24',
-        'x25',
-        'x26',
-        'x27',
+        'x5',
+        'x6',
+        'x7',
+        'x28',
+        'x29',
+        'x30',
+        'x31',
     ]
 
     default_reg_des = {
-        'x18': None,
-        'x19': None,
-        'x20': None,
-        'x21': None,
-        'x22': None,
-        'x23': None,
-        'x24': None,
-        'x25': None,
-        'x26': None,
-        'x27': None
+        'x5': None,
+        'x6': None,
+        'x7': None,
+        'x28': None,
+        'x29': None,
+        'x30': None,
+        'x31': None
     }
 
     datatype_sizes = {
