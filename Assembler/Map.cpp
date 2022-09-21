@@ -8,6 +8,7 @@ OPERATIONS::OPERATIONS()
 	opcode={
 		// R- Type
 		{"ADD", 0b0110011},
+		{"SUB", 0b0110011},
 		{"OR", 0b0110011},
 		{"AND", 0b0110011},
 		
@@ -21,6 +22,7 @@ OPERATIONS::OPERATIONS()
 	funct3={
 		// R - Type
 		{"ADD", 0b000},
+		{"SUB", 0b000},
 		{"OR", 0b110},
 		{"AND", 0b111},
 
@@ -34,6 +36,7 @@ OPERATIONS::OPERATIONS()
 	funct7={
 		// R - Type
 		{"ADD", 0b0000000},
+		{"SUB", 0b0100000},
 		{"OR", 0b0000000},
 		{"AND", 0b0000000},
 	};
@@ -130,7 +133,6 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 	try
 	{
 		regex regexp(regex_reg_imm);
-		int i=regs.size();
 		sregex_iterator next(reg.begin(), reg.end(), regexp);
 		sregex_iterator end;
 		
@@ -139,14 +141,13 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		
 		int immediate=stoi(imm_reg.substr(0, imm_reg.find('(')));
 
-		regs.push_back(immediate);
+		regs.resize(regs.size()+1, immediate);
 		next++;
-		i++;
-
+		
 		if(next != end)
 		{
 			perror("Invalid Syntax");
-			reg.resize(i);
+			reg.resize(regs.size()-1);
 			return 1;
 		}
 	}
@@ -161,9 +162,8 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 {
 	vector<int> regs=extractRegisters(reg, type);
-	if(type == 'I')
+	if(type == 'I' || type=='S')
 		extractImmediate(regs, reg, type);
-
 	return regs;	
 }
 int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
@@ -216,6 +216,27 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 		ins=ins|(regs[1]<<15);
 		// imm
 		ins=ins|(regs[2]<<20);
+	}
+	else if(type=='S')
+	{
+		if(regs.size() != 3)
+		{
+			perror("Invalid Syntax");
+			return 1;
+		}
+		// reg[0] is source(rs2) reg[1] is source(rs1)
+		// reg[2] has the immediate value
+		
+		// rs1
+		ins=ins|(regs[1]<<15);
+		// rs2
+		ins=ins|(regs[0]<<20);
+		// imm
+		// imm is split into 2 segments
+		// first 5 bits from LSB - starting at index 7 of ins 
+		// remaining 7 bits - starting at index 25 of ins
+		ins=ins|((regs[2]&31)<<7);
+		ins=ins|((regs[2]&4064)>>5<<25);
 	}
 	return 1;
 }
