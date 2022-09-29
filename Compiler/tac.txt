@@ -2,17 +2,16 @@ main:
 - INT a
 input a 
 @t0 = 2 INT
-@t1 = a ^ @t0 INT
-- INT b
-b = @t1 INT
-@t2 = a && b INT
-b = @t2 INT
 @t3 = 'r' CHAR
 - CHAR c
 c = @t3 CHAR
 @t4 = 5 INT
-@t5 = b + @t4 INT
-@t6 = a | @t5 INT
-output @t6 INT
+output @t4 INT
 end:
+
+
+
+
+
+
 
