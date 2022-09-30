@@ -15,6 +15,8 @@
 
 
 import enum
+from stat import IO_REPARSE_TAG_MOUNT_POINT
+from webbrowser import Opera
 
 
 class Operators(enum.Enum):
@@ -23,8 +25,13 @@ class Operators(enum.Enum):
     Mul = '*'
     Div = '/'
     Mod = '%'
-    LAnd = '&&'
-    LOr = '||'
+    BitAnd = '&'
+    BitOr = '|'
+    BitXor = '^'
+    LeftShift = '<<'
+    RightShift = '>>'
+    LogicalAnd = '&&'
+    LogicalOr = '||'
     Gre = '>'
     Less = '<'
     GreEq = '>='
@@ -71,7 +78,7 @@ class CodeGenerator:
         'bool': 1,
     }
 
-    operators = set("+ - * / % && || > < >= <= ! != = ==".split())
+    operators = set("+ - * / % & | ^ << >> && || > < >= <= ! != = ==".split())
     relational_operators = set("> < >= <= != ==".split())
 
     def __init__(self) -> None:
@@ -194,6 +201,8 @@ class CodeGenerator:
         function that returns true if instruction
         is a user input statement
         """
+        if(instruction.startswith('input')):
+            return True
         return False
 
     def is_output_statement(self, instruction) -> bool:
@@ -201,6 +210,8 @@ class CodeGenerator:
         function that returns true if instruction
         is an output statement
         """
+        if(instruction.startswith('print')):
+            return True
         return False
 
     def isfloat(self, num) -> bool:
@@ -372,6 +383,25 @@ class CodeGenerator:
 
                     elif(line[3] == Operators.Div.value):
                         self.text_segment += f"div {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.BitAnd.value):
+                        self.text_segment += f"and {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.BitOr.value):
+                        self.text_segment += f"or {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.BitXor.value):
+                        self.text_segment += f"xor {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.LeftShift.value):
+                        self.text_segment += f"sll {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    elif(line[3] == Operators.RightShift.value):
+                        self.text_segment += f"srl {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                    # a = b && c
+                    # if (a && b)
+                    # elif(line[3] == Operators.LogicalAnd.value):
 
                     # adding/updating lhs in symbol table
                     if(self.symbol_table[line[2]]['datatype'] == Datatypes.CHAR.value or
@@ -546,6 +576,16 @@ class CodeGenerator:
                         elif(relop == '>'):
                             self.text_segment += f"blt x0, {lhs[0]}, {line[5]}\n"
                             self.text_segment += f"beq x0, x0, {line[8]}\n"
+                # elif(self.is_input_statement(line)):
+                #     #
+                # elif(self.is_output_statement(line)):
+                #     # for printing constants
+                #     line = line.split(' ')
+                #     #printing string
+                #     if(len(line) == 2):
+
+                #     else:
+
 
             # spill all here
             if(block != blocks[-1]):
