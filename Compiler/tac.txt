@@ -1,17 +1,18 @@
 main:
-- INT a
-input a 
-@t0 = 2 INT
-@t3 = 'r' CHAR
-- CHAR c
-c = @t3 CHAR
-@t4 = 5 INT
-output @t4 INT
+- INT vec [ 3 ] 
+- INT arr [ 2 ] 
+arr [ 0 ] = 1
+arr [ 1 ] = 2
+@t0 = 0 INT
+@t1 = 1 INT
+vec [ @t0 ]  = @t1 INT
+@t2 = 1 INT
+@t3 = 1 INT
+@t4 = arr [ @t3 ]  INT
+@t5 = 1 INT
+@t6 = @t4 + @t5 INT
+vec [ @t2 ]  = @t6 INT
+@t7 = 0 INT
+return @t7 INT
 end:
-
-
-
-
-
-
 
