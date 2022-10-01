@@ -47,6 +47,7 @@ class Datatypes(enum.Enum):
     FLOAT = 'float'
     BOOL = 'bool'
     CHAR = 'char'
+    STRING = 'str'
 
 
 class CodeGenerator:
@@ -86,6 +87,8 @@ class CodeGenerator:
         self.register_descriptor = self.default_reg_des.copy()  # register descriptor
         self.address_descriptor = {}    # address descriptor
         self.text_segment = '.section\n.text\n'
+        self.data_segment = '.data\n'
+        self.ds_variables = {}
         self.offset = 4     # for stack pointer (spill)
         self.symbol_table = {}      # a custom symbol table
 
@@ -576,15 +579,74 @@ class CodeGenerator:
                         elif(relop == '>'):
                             self.text_segment += f"blt x0, {lhs[0]}, {line[5]}\n"
                             self.text_segment += f"beq x0, x0, {line[8]}\n"
-                # elif(self.is_input_statement(line)):
-                #     #
-                # elif(self.is_output_statement(line)):
-                #     # for printing constants
-                #     line = line.split(' ')
-                #     #printing string
-                #     if(len(line) == 2):
 
-                #     else:
+                elif(self.is_input_statement(line)):
+                    line = line.split(' ')
+                    datatype = self.symbol_table[line[1]]
+                    # taking integer input
+                    if(datatype == Datatypes.INT.value):
+                        self.text_segment += "li a7, 5\necall\n"
+                        offset = self.address_descriptor[line[1]]['offset']
+                        self.text_segment += f"sw a0, {-offset}(x8)\n"
+
+                    # taking char input
+                    elif(datatype == Datatypes.CHAR.value):
+                        self.text_segment += "li a7, 12\necall\n"
+                        offset = self.address_descriptor[line[1]]['offset']
+                        self.text_segment += f"sw a0, {-offset}(x8)\n"
+
+                    # taking float input
+                    elif(datatype == Datatypes.FLOAT.value):
+                        self.text_segment += "li a7, 6\necall\n"
+                        offset = self.address_descriptor[line[1]]['offset']
+                        self.text_segment += f"sw fa0, {-offset}(x8)\n"
+
+                    # taking string input (INCOMPLETE)
+                    # elif(datatype == Datatypes.STRING.value):
+                    #     self.text_segment += f"la a0, {line[1]}\n"
+                    #     self.text_segment += "li a7, 8\necall\n"
+
+
+                elif(self.is_output_statement(line)):
+                    line = line.split(' ')
+                    #printing string
+                    if(line[2].lower() == Datatypes.STRING.value):
+                        if(self.is_constant(line[1])):
+                            if(self.ds_variables.get(line[1]) == None):
+                                value = f"ds{len(self.ds_variables)}"
+                                self.ds_variables[line[1]] = value
+                                self.data_segment += f"{value}:\t.ascii {line[1]}\n"
+                            var_name = self.ds_variables[line[1]]
+                            self.text_segment += f"la a0, {var_name}\n"
+                        else:
+                            self.text_segment += f"la a0, {line[1]}\n"
+
+                        self.text_segment += "li a7, 4\necall\n"
+
+                    # printing integers
+                    if(line[2].lower() == Datatypes.INT.value):
+                        if(self.is_constant(line[1])):
+                            self.text_segment += f"li a0, {line[1]}\n"
+                        else:
+                            self.text_segment += f"lw a0, {line[1]}\n"
+                        self.text_segment += "li a7, 1\necall\n"
+
+                    # printing char
+                    elif(line[2].lower() == Datatypes.CHAR.value):
+                        if(self.is_constant(line[1])):
+                            self.text_segment += f"li a0, {line[1]}\n"
+                        else:
+                            self.text_segment += f"lw a0, {line[1]}\n"
+                        self.text_segment += "li a7, 11\necall\n"
+
+                    # printing floats
+                    elif(line[2].lower() == Datatypes.FLOAT.value):
+                        if(self.is_constant(line[1])):
+                            self.text_segment += f"li fa0, {line[1]}\n"
+                        else:
+                            self.text_segment += f"lw fa0, {line[1]}\n"
+                        self.text_segment += "li a7, 2\necall\n"
+                        
 
 
             # spill all here
