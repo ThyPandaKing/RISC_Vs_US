@@ -1,5 +1,8 @@
+import imp
 import re
 from CodeGenerator import CodeGenerator
+import os
+import sys
 
 
 class Node:
@@ -60,6 +63,19 @@ class CodeOptimizer:
         label = '___L'+str(self.label_index)
         self.label_index += 1
         return label
+
+    def get_node(self, graph, index) -> Node:
+        for node in graph:
+            if node.index == index:
+                return node
+        return None
+
+    def DFS(self, visited=None, graph=[], node=None) -> None:
+        if node not in visited:
+            visited.add(node)
+            for neighbour_index in node.next:
+                neighbour = self.get_node(graph, neighbour_index)
+                self.DFS(visited, graph, neighbour)
 
     def generate_target_code(self, tac_code) -> None:
         """
@@ -140,11 +156,21 @@ class CodeOptimizer:
         for now, just pass the blocks as it is
         """
 
-        self.eliminate_dead_code(self.blocks, None)
+        self.eliminate_dead_code(self.blocks)
 
-        self.register_allocation.main(self.blocks)
+        text_segment = self.register_allocation.main(self.blocks)
 
-    def pre_optimizations(self, intermediate_code):
+        text_segment = self.post_optimizations(text_segment)
+
+        # print(text_segment)
+        script_dir = os.path.dirname(__file__)
+        rel_path = 'outputs/'+sys.argv[1].split('/')[-1]
+        abs_file_path = os.path.join(script_dir, rel_path)
+
+        with open(abs_file_path, 'w+') as file:
+            file.write(text_segment)
+
+    def pre_optimizations(self, intermediate_code) -> str:
         """
         function that performs basic
         optimizations before generating blocks 
@@ -249,7 +275,36 @@ class CodeOptimizer:
 
         return optimized_code4
 
-    def eliminate_dead_code(self, blocks):
+    def post_optimizations(self, tac_code) -> str:
+        """
+        function that performs VM specific optimizations
+        """
+
+        lines = tac_code.split('\n')
+        """
+        sw x2, -4(x8)
+        lw x5, -4(x8)
+        to
+        sw x2, -4(x8)
+        add x5, x2, x0
+        """
+        optimized_asm_code = ''
+        i = 0
+        while i < len(lines)-1:
+            if lines[i].lower().startswith('sw') and \
+                    lines[i+1].lower().startswith('lw'):
+                if lines[i].split(' ')[-1] == lines[i+1].split(' ')[-1]:
+                    # TODO: support float
+                    optimized_asm_code += lines[i] + '\n'
+                    optimized_asm_code += f"add {lines[i+1].split(' ')[1]} {lines[i].split(' ')[1]} x0\n"
+                    i += 1
+            else:
+                optimized_asm_code += lines[i]+'\n'
+            i += 1
+
+        return optimized_asm_code
+
+    def eliminate_dead_code(self, blocks) -> list:
         """
         function that eliminates dead code
         """

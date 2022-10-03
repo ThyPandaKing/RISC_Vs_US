@@ -15,9 +15,6 @@
 
 
 import enum
-from stat import IO_REPARSE_TAG_MOUNT_POINT
-from webbrowser import Opera
-
 
 class Operators(enum.Enum):
     Plus = '+'
@@ -606,10 +603,9 @@ class CodeGenerator:
                     #     self.text_segment += f"la a0, {line[1]}\n"
                     #     self.text_segment += "li a7, 8\necall\n"
 
-
                 elif(self.is_output_statement(line)):
                     line = line.split(' ')
-                    #printing string
+                    # printing string
                     if(line[2].lower() == Datatypes.STRING.value):
                         if(self.is_constant(line[1])):
                             if(self.ds_variables.get(line[1]) == None):
@@ -646,14 +642,13 @@ class CodeGenerator:
                         else:
                             self.text_segment += f"lw fa0, {line[1]}\n"
                         self.text_segment += "li a7, 2\necall\n"
-                        
-
 
             # spill all here
             if(block != blocks[-1]):
                 self.spill_all_registers()
 
-        print(self.text_segment)
         # print(self.register_descriptor)
         print(self.address_descriptor)
         # print(self.symbol_table)
+
+        return self.text_segment
