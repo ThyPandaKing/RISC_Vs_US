@@ -94,7 +94,8 @@ class CodeOptimizer:
         declared_temps = []
         final_tac = ''
         for line in modified_tac.splitlines():
-            if(re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps):
+            if(re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps
+                    and re.search(r'^@call+', line) is None):
                 final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
                 declared_temps.append(line.split(' ')[0])
             final_tac += line+'\n'
@@ -104,15 +105,16 @@ class CodeOptimizer:
 
         # print(final_tac)
 
+        final_tac = self.pre_optimizations(final_tac)
+
         block_lines = ''
         for line in final_tac.splitlines():
-            if(line.startswith('.global')):
+            if(line.lower().startswith('.global')):
                 block_lines += line
             elif line.strip() == '' or line.strip() == 'end:':
                 pass
-            # TODO: break after function calls as well
-            elif line.startswith('if') or line.startswith('goto') \
-                    or line.startswith('return'):
+            elif line.lower().startswith('if') or line.lower().startswith('goto') \
+                    or line.startswith('return') or '@call' in line:
                 block_lines += line
                 self.blocks.append(block_lines)
                 block_lines = ''
@@ -142,7 +144,112 @@ class CodeOptimizer:
 
         self.register_allocation.main(self.blocks)
 
-    def eliminate_dead_code(self, blocks, symbol_table):
+    def pre_optimizations(self, intermediate_code):
+        """
+        function that performs basic
+        optimizations before generating blocks 
+        """
+
+        goto_labels = set()
+        for lines in intermediate_code.splitlines():
+            if 'goto' in lines.lower():
+                goto_labels.add(lines.split(' ')[-1])
+
+        # removes all labels that have no goto statements pointing to them
+        optimized_code0 = ""
+        for lines in intermediate_code.splitlines():
+            if (lines.startswith('__L') or lines.startswith('___L')) and lines.split(':')[0] not in goto_labels:
+                pass
+            else:
+                optimized_code0 += lines + '\n'
+
+        intermediate_code_list = optimized_code0.splitlines()
+        optimized_code1 = intermediate_code_list[0] + '\n'
+        i = 1
+        while i < len(intermediate_code_list):
+            if 'return' in intermediate_code_list[i-1] and 'return' in intermediate_code_list[i]:
+                pass
+            else:
+                optimized_code1 += intermediate_code_list[i] + '\n'
+            i += 1
+
+        # removes labels in consecutive lines and replaces all the occurences of the label with the first one
+        optimized_code2 = ""
+        redundant_labels = {}
+        optimized_code_list = optimized_code1.splitlines()
+        i = 0
+        while i < len(optimized_code_list):
+            lines = optimized_code_list[i]
+            if (lines.startswith('__L') or lines.startswith('___L')):
+                optimized_code2 += lines + '\n'
+                k = i
+                for j in range(i+1, len(optimized_code_list)):
+                    if (optimized_code_list[j].startswith('__L') or optimized_code_list[j].startswith('___L')):
+                        try:
+                            redundant_labels[optimized_code_list[i].split(
+                                ':')[0]].append(optimized_code_list[j].split(':')[0])
+                        except KeyError:
+                            redundant_labels[optimized_code_list[i].split(
+                                ':')[0]] = [optimized_code_list[j].split(':')[0]]
+                        k = j
+                    else:
+                        k += 1
+                        break
+                i = k
+            else:
+                optimized_code2 += lines + '\n'
+                i += 1
+
+        for label in redundant_labels.keys():
+            for l in redundant_labels[label]:
+                optimized_code2 = optimized_code2.replace(l+':', '')
+                optimized_code2 = optimized_code2.replace(l, label)
+
+        # removes all the goto statements that occur in consecutive statements
+        optimized_code3 = ""
+        optimized_code_list = optimized_code2.splitlines()
+        i = 0
+        while i < len(optimized_code_list):
+            lines = optimized_code_list[i]
+            if lines.lower().startswith('goto'):
+                optimized_code3 += lines+'\n'
+                k = i
+                for j in range(i+1, len(optimized_code_list)):
+                    if optimized_code_list[j].lower().startswith('goto'):
+                        k = j
+                    else:
+                        k += 1
+                        break
+                i = k
+            else:
+                optimized_code3 += lines+'\n'
+                i += 1
+
+        # removes goto X and label X statements if they occur in consecutive lines
+        optimized_code4 = ""
+        optimized_code_list = optimized_code3.splitlines()
+        i = 0
+        while i < len(optimized_code_list):
+            lines = optimized_code_list[i]
+            if lines.lower().startswith('goto'):
+                label = lines.split(' ')[-1]
+                k = 0
+                flag = True
+                for k in range(len(optimized_code_list)):
+                    if k != i and optimized_code_list[k].lower().startswith('goto') and optimized_code_list[k].split(' ')[-1] == label:
+                        flag = False
+                        break
+                if (optimized_code_list[i+1].startswith('__L') or optimized_code_list[i+1].startswith('___L')) and optimized_code_list[i+1].split(':')[0] == label and flag:
+                    i += 1
+                else:
+                    optimized_code4 += lines+'\n'
+            else:
+                optimized_code4 += lines+'\n'
+            i += 1
+
+        return optimized_code4
+
+    def eliminate_dead_code(self, blocks):
         """
         function that eliminates dead code
         """
@@ -172,18 +279,18 @@ class CodeOptimizer:
         for i in range(1, len(CFG)):
             block = CFG[i-1].code_block
             last_line = block.split('\n')[-1]
-            # TODO: change 'call'
-            if len(last_line.split(' ')) >= 3 and last_line.split(' ')[-3] == 'call':
-                funct = last_line.split(' ')[-2].split(',')[0]
+            if len(last_line.split(' ')) >= 4 and last_line.split(' ')[-4] == '@call':
+                # funct = last_line.split(' ')[-2].split(',')[0]
+                funct = last_line.split(' ')[-3]
                 CFG[i].function_next = funct
 
         # Start creating Control Flow Graph connections
         for node in CFG:
             last_line = node.code_block.split('\n')[-1]
             words = last_line.split(' ')
-            if (len(words) >= 1 and (words[0] == 'goto' or words[0] == 'return')) or 'call' in words:
+            if (len(words) >= 1 and (words[0].lower() == 'goto' or words[0].lower() == 'return')) or '@call' in words:
                 # The direct goto statements (without condition)
-                if words[0] == 'goto':
+                if words[0].lower() == 'goto':
                     label = words[1]
                     for search_node in CFG:
                         if search_node.leading_label is not None and search_node.leading_label == label:
@@ -193,7 +300,7 @@ class CodeOptimizer:
                 if node.index < (len(blocks_current)-1):
                     node.next.add(node.index+1)
 
-            if len(words) > 2 and words[-2] == 'goto':
+            if len(words) > 2 and words[-2].lower() == 'goto':
                 # For the gotos that accompany an if or ifFalse statement (with condition)
                 label = words[-1]
                 for search_node in CFG:
@@ -214,7 +321,7 @@ class CodeOptimizer:
                     else:
                         word = words[0]
 
-                    if not word.startswith('#L') and word.endswith(':'):
+                    if not (word.startswith('__L') or word.startswith('___L')) and word.endswith(':'):
                         word = word.split(':')[0]
                         # print("Function label found", word)
                         for search_node in CFG:
@@ -225,9 +332,10 @@ class CodeOptimizer:
 
                 return_pointer += 1
             # print('current line', words)
-            if (len(words) > 2 and words[0] == 'call') or (len(words) > 4 and words[2] == 'call'):
+            if (len(words) > 3 and words[0] == '@call') or (len(words) > 5 and words[-4] == 'call'):
                 # print("call found")
-                funct = words[-2].split(',')[0]
+                # funct = words[-2].split(',')[0]
+                funct = words[-3]
                 # print('index of this block: ', node.index)
                 for search_node in CFG:
                     if search_node.leading_label is not None and search_node.leading_label == funct:
@@ -245,7 +353,7 @@ class CodeOptimizer:
         # Step 1: Find the start block, i.e., the one that contains 'start' as the leading label
         start_block = None
         for node in CFG:
-            if node.leading_label == 'start':
+            if node.leading_label == 'main':
                 start_block = node
                 break
         # print('start_block', start_block, type(start_block))
