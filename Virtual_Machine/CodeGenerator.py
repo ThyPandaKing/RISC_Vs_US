@@ -16,6 +16,7 @@
 
 import enum
 
+
 class Operators(enum.Enum):
     Plus = '+'
     Minus = '-'
@@ -357,7 +358,7 @@ class CodeGenerator:
                         lhs = self.get_register(line[0])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[0])
 
                         op1 = self.get_register(line[2])
@@ -418,7 +419,7 @@ class CodeGenerator:
                     # INT, CHAR and BOOL
                     if(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.BOOL.value
                             or line[1].lower() == Datatypes.CHAR.value):
-                        self.text_segment += f"sw x0, {-self.offset}(x8)\n"
+                        # self.text_segment += f"sw x0, {-self.offset}(x8)\n"
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
                             'registers': None
@@ -438,7 +439,7 @@ class CodeGenerator:
                     lhs = self.get_register(line[0])
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
-                        self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                        # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                         self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
@@ -487,7 +488,7 @@ class CodeGenerator:
                     lhs = self.get_register(line[0])
                     if(lhs[1] == 1):
                         offset = self.address_descriptor[line[0]]['offset']
-                        self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                        # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                         self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
@@ -540,7 +541,7 @@ class CodeGenerator:
                         lhs = self.get_register(line[1])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[1]]['offset']
-                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[1])
 
                         self.text_segment += f"bne {lhs[0]}, x0, {line[3]}\n"
@@ -555,7 +556,7 @@ class CodeGenerator:
                         lhs = self.get_register(line[1])
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[1]]['offset']
-                            self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[1])
 
                         if(relop == '=='):

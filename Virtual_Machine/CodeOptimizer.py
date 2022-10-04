@@ -160,11 +160,9 @@ class CodeOptimizer:
 
         text_segment = self.register_allocation.main(self.blocks)
 
-        text_segment = self.post_optimizations(text_segment)
-
         # print(text_segment)
         script_dir = os.path.dirname(__file__)
-        rel_path = 'outputs/'+sys.argv[1].split('/')[-1]
+        rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
         abs_file_path = os.path.join(script_dir, rel_path)
 
         with open(abs_file_path, 'w+') as file:
@@ -274,35 +272,6 @@ class CodeOptimizer:
             i += 1
 
         return optimized_code4
-
-    def post_optimizations(self, tac_code) -> str:
-        """
-        function that performs VM specific optimizations
-        """
-
-        lines = tac_code.split('\n')
-        """
-        sw x2, -4(x8)
-        lw x5, -4(x8)
-        to
-        sw x2, -4(x8)
-        add x5, x2, x0
-        """
-        optimized_asm_code = ''
-        i = 0
-        while i < len(lines)-1:
-            if lines[i].lower().startswith('sw') and \
-                    lines[i+1].lower().startswith('lw'):
-                if lines[i].split(' ')[-1] == lines[i+1].split(' ')[-1]:
-                    # TODO: support float
-                    optimized_asm_code += lines[i] + '\n'
-                    optimized_asm_code += f"add {lines[i+1].split(' ')[1]} {lines[i].split(' ')[1]} x0\n"
-                    i += 1
-            else:
-                optimized_asm_code += lines[i]+'\n'
-            i += 1
-
-        return optimized_asm_code
 
     def eliminate_dead_code(self, blocks) -> list:
         """
