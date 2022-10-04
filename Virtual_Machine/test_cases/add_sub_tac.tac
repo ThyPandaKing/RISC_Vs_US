@@ -14,5 +14,11 @@ c = a + b INT
 c = @t1 + b INT
 return 0 INT
 
+- INT x
+x = 7 INT
+x = a + b
+
+return 0 INT
+
 end:
 

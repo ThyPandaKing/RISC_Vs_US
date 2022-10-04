@@ -150,24 +150,6 @@ class CodeOptimizer:
 
         self.optimize()
 
-    def optimize(self) -> None:
-        """
-        all optimizations will occur here
-        for now, just pass the blocks as it is
-        """
-
-        self.eliminate_dead_code(self.blocks)
-
-        text_segment = self.register_allocation.main(self.blocks)
-
-        # print(text_segment)
-        script_dir = os.path.dirname(__file__)
-        rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
-        abs_file_path = os.path.join(script_dir, rel_path)
-
-        with open(abs_file_path, 'w+') as file:
-            file.write(text_segment)
-
     def pre_optimizations(self, intermediate_code) -> str:
         """
         function that performs basic
@@ -176,8 +158,13 @@ class CodeOptimizer:
 
         goto_labels = set()
         for lines in intermediate_code.splitlines():
-            if 'goto' in lines.lower():
-                goto_labels.add(lines.split(' ')[-1])
+            line_arr=lines.split(' ')
+            if 'GOTO' in line_arr[0]:
+                goto_labels.add(line_arr[-1])
+            elif 'GOTO' in lines:
+                for i in range(len(line_arr)):
+                    if(line_arr[i]=='GOTO'):
+                        goto_labels.add(line_arr[i+1])
 
         # removes all labels that have no goto statements pointing to them
         optimized_code0 = ""
@@ -365,11 +352,11 @@ class CodeOptimizer:
                     if search_node.leading_label is not None and search_node.leading_label == funct:
                         node.next.add(search_node.index)
 
-            print("Current node index", node.index)
-            print('Current node code\n', node.code_block)
-            print('in case of a call -> Function next stores: ', node.function_next)
-            print('Next blocks', node.next)
-            print("================================================")
+            # print("Current node index", node.index)
+            # print('Current node code\n', node.code_block)
+            # print('in case of a call -> Function next stores: ', node.function_next)
+            # print('Next blocks', node.next)
+            # print("================================================")
 
         # The CFG is now completed - we now perform a depth first search to identify the dead code blocks
         # And block unfreachable from the start block is dead code
@@ -392,6 +379,25 @@ class CodeOptimizer:
             blocks.append(node.code_block)
             # print(node.index)
 
+        # print("dead code elimination:")
         # print(*blocks, sep = '\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n')
 
         return blocks
+
+
+    def optimize(self) -> None:
+        """
+        all optimizations occur here
+        """
+
+        self.eliminate_dead_code(self.blocks)
+
+        text_segment = self.register_allocation.main(self.blocks)
+
+        # print(text_segment)
+        script_dir = os.path.dirname(__file__)
+        rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
+        abs_file_path = os.path.join(script_dir, rel_path)
+
+        with open(abs_file_path, 'w+') as file:
+            file.write(text_segment)

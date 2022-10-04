@@ -536,6 +536,10 @@ class CodeGenerator:
                 elif(self.is_if_statement_without_relop(line)):
                     line = line.split(' ')
                     datatype = self.symbol_table[line[1]]['datatype']
+
+                    if(block != blocks[-1]):
+                        self.spill_all_registers()
+
                     if(datatype == Datatypes.INT or datatype == Datatypes.BOOL
                             or datatype == Datatypes.CHAR):
                         lhs = self.get_register(line[1])
@@ -558,6 +562,9 @@ class CodeGenerator:
                             offset = self.address_descriptor[line[1]]['offset']
                             # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[1])
+
+                        if(block != blocks[-1]):
+                            self.spill_all_registers()
 
                         if(relop == '=='):
                             self.text_segment += f"beq {lhs[0]}, x0, {line[5]}\n"
@@ -606,6 +613,9 @@ class CodeGenerator:
 
                 elif(self.is_output_statement(line)):
                     line = line.split(' ')
+
+                    self.spill_all_registers()
+
                     # printing string
                     if(line[2].lower() == Datatypes.STRING.value):
                         if(self.is_constant(line[1])):
@@ -645,11 +655,11 @@ class CodeGenerator:
                         self.text_segment += "li a7, 2\necall\n"
 
             # spill all here
-            if(block != blocks[-1]):
-                self.spill_all_registers()
+            # if(block != blocks[-1]):
+            #     self.spill_all_registers()
 
         # print(self.register_descriptor)
-        print(self.address_descriptor)
+        # print(self.address_descriptor)
         # print(self.symbol_table)
 
         return self.text_segment

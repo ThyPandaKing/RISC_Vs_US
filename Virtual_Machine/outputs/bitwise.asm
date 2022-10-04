@@ -1,8 +1,6 @@
 .section
 .text
 .global main
-# ---- end of block ----
-# ---- end of spill ----
 main:
 addi x5, x0, 8
 sw x5, -4(x8)
