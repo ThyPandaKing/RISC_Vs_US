@@ -392,12 +392,40 @@ class CodeOptimizer:
 
         self.eliminate_dead_code(self.blocks)
 
-        text_segment = self.register_allocation.main(self.blocks)
+        final_asm = self.register_allocation.main(self.blocks)
 
-        # print(text_segment)
+        final_asm = self.post_optimizations(final_asm)
+
+        # print(final_asm)
         script_dir = os.path.dirname(__file__)
         rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
         abs_file_path = os.path.join(script_dir, rel_path)
 
         with open(abs_file_path, 'w+') as file:
-            file.write(text_segment)
+            file.write(final_asm)
+
+    def post_optimizations(self, asm_code):
+        """
+        function that performs optimizations
+        on asm code generated
+        """
+
+        final_asm=''
+
+        # sw x5, -4(x8)
+        # # ---- end of block ----
+        # sw x5, -4(x8)
+        lines=asm_code.splitlines()
+        i=0
+        while(i<len(lines)-1):
+            j=i+1
+            while(j<len(lines) and lines[j].startswith('#')):
+                j+=1
+            # print(lines[i],lines[j])
+            if(lines[i]!=lines[j]):
+                final_asm+=lines[i]+'\n'
+            i+=1
+        final_asm+=lines[-1]
+        
+        return final_asm
+            
