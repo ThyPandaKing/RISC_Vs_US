@@ -1,0 +1,8 @@
+void main(){
+    int a = 5;
+    int main;
+    int switch;
+    if(a==5){
+        a = 4;
+    }
+}
