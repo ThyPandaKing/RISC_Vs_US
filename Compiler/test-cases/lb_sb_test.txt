@@ -1,0 +1,14 @@
+int main(){
+    int a=5;
+    int b=-3;
+    char x='x';
+    char y='w';
+    int c;
+    c=a+b;
+    if(c==2){
+        x=x-y;
+    }
+    else{
+        x=x-y-'a';
+    }
+}
