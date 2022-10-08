@@ -1,2 +1,24 @@
-usage of reserved keyword 'main' in line 3
-syntax error in line 4
+func:
+- arg INT a
+- arg INT c
+@t0 = 1 INT
+@t1 = a + @t0 INT
+- INT b
+b = @t1 INT
+return b INT
+end:
+
+main:
+- INT arr [ 2 ] 
+arr [ 0 ] = 1 INT
+arr [ 1 ] = 2 INT
+@t2 = 1 INT
+@t3 = arr [ @t2 ]  INT
+@t4 = 1 INT
+@t5 = @t3 + @t4 INT
+- INT a
+a = @t5 INT
+@t6 = 0 INT
+return @t6 INT
+end:
+
