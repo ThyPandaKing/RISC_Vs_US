@@ -1,5 +1,4 @@
 import os
-import re
 from CodeOptimizer import CodeOptimizer
 
 if __name__ == '__main__':
@@ -10,8 +9,7 @@ if __name__ == '__main__':
     abs_file_path = os.path.join(script_dir, rel_path)
 
     with open(abs_file_path) as file:
-        original_tac_code = file.read()
-        tac_code = re.split(r'(\-\-)+(\-)*', original_tac_code)[-1]
+        tac_code = file.read()
 
         code_generator = CodeOptimizer()
         # starting point of the virtual machine

@@ -5,33 +5,41 @@ from CodeGenerator import CodeGenerator
 class CodeOptimizer:
 
     operators = set("+ - * / % && || > < >= <= ! != = ==".split())
-    relational_operators = set("> < >= <= ! != ==".split())
-
-    datatype_sizes = {
-        'int': 4,
-        'float': 4,
-        'char': 1,
-        'bool': 4,
-    }
+    relational_operators = set("> < >= <= != ==".split())
+    logical_operators = set("&& || !".split())
 
     def __init__(self):
         self.blocks = []
-        self.label_index = 0
+        self.label_index = 100
         self.temp_index = 0
+        self.register_allocation = CodeGenerator()
 
-    def is_condition_statement(self, instruction):
+    def is_condition_statement(self, instruction) -> bool:
         """
         returns true if the given instruction
         is a condition statement
         """
         split = instruction.split(' ')
-        if(len(split) != 5):
+        if(len(split) != 6):
             return False
         if(len(set(split).intersection(self.relational_operators)) == 1 and
                 split[1] == '='):
             return True
         return False
 
+    def is_logical_statement(self, instruction) -> bool:
+        """
+        returns true if the given instruction
+        is a condition statement
+        """
+        split = instruction.split(' ')
+        if(len(split) != 6):
+            return False
+        if(len(set(split).intersection(self.logical_operators)) == 1 and
+                split[1] == '='):
+            return True
+        return False
+    
     def get_new_temp(self) -> str:
         temp = '@_t'+str(self.temp_index)
         self.temp_index += 1
@@ -48,9 +56,6 @@ class CodeOptimizer:
         by reading the tac code
         """
 
-        # remove '- INT a' type of statements
-        tac_code = re.sub(r'\- .*', '', tac_code)
-
         modified_tac = ''
         for line in tac_code.splitlines():
             if(self.is_condition_statement(line)):
@@ -59,24 +64,43 @@ class CodeOptimizer:
                 t0 = self.get_new_temp()
                 left_operand = line.split()[2]
                 right_operand = line.split()[4]
-                replacement_str = t0+' = '+left_operand+' - '+right_operand+'\n'
+                replacement_str = f"{t0} = {left_operand} - {right_operand} INT\n"
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
-                replacement_str += 'if '+t0+' '+relop+' 0 GOTO '+l0+' else GOTO '+l1+'\n'
-                replacement_str += l0+':\n'
-                replacement_str += temp+' = 1\n'
-                replacement_str += 'GOTO '+l2+'\n'
-                replacement_str += l1+':\n'
-                replacement_str += temp+' = 0\n'
-                replacement_str += l2+':\n'
-
+                replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
+                replacement_str += f"{l0}:\n"
+                replacement_str += f"{temp} = 1 INT\n"
+                replacement_str += f"GOTO {l2}\n"
+                replacement_str += f"{l1}:\n"
+                replacement_str += f"{temp} = 0 INT\n"
+                replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+            # elif(self.is_logical_statement(line)):
+            #     line = line.split(' ')
+            #     logicalop = line[3]
+            #     lhs = line[0]
+            #     op1 = line[2]
+            #     op2 = line[4]
             else:
                 modified_tac += line+'\n'
 
-        block_lines = ''
+        # manually declaring temporaries
+        declared_temps=[]
+        final_tac = ''
         for line in modified_tac.splitlines():
+            if(re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps):
+                final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
+                declared_temps.append(line.split(' ')[0])
+            final_tac += line+'\n'
+
+        # replacing '#' with '__' for labels
+        final_tac=final_tac.replace('#','__')
+
+        print(final_tac)
+
+        block_lines = ''
+        for line in final_tac.splitlines():
             if(line.startswith('.global')):
                 block_lines += line
             elif line.strip() == '' or line.strip() == 'end:':
@@ -98,7 +122,7 @@ class CodeOptimizer:
             self.blocks.append(block_lines)
 
         # printing the generated blocks
-        print(*self.blocks, sep='\n----------------\n')
+        # print(*self.blocks, sep='\n----------------\n')
 
         self.optimize()
 
@@ -108,5 +132,4 @@ class CodeOptimizer:
         for now, just pass the blocks as it is
         """
 
-        register_allocation = CodeGenerator()
-        register_allocation.main(self.blocks)
+        self.register_allocation.main(self.blocks)

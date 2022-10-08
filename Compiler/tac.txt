@@ -1,24 +1,18 @@
-testFunf:
-- INT z
-@t0 = 1 INT
-z = @t0 INT
-@t1 = 2 INT
-return @t1 INT
-end:
-
 main:
+- INT vec [ 3 ] 
+- INT arr [ 2 ] 
+arr [ 0 ] = 1
+arr [ 1 ] = 2
+@t0 = 0 INT
+@t1 = 1 INT
+vec [ @t0 ]  = @t1 INT
 @t2 = 1 INT
-- INT b
-b = @t2 INT
-@t3 = b INT
-@param 0 @t3 INT
-@t4 = b INT
-@param 1 @t4 INT
-@t5 = @call testFunf 1
-b = @t5 INT
-@t6 = 0 INT
-return @t6 INT
+@t3 = 1 INT
+@t4 = arr [ @t3 ]  INT
+@t5 = 1 INT
+@t6 = @t4 + @t5 INT
+vec [ @t2 ]  = @t6 INT
+@t7 = 0 INT
+return @t7 INT
 end:
 
-b-->INT
-z-->INT

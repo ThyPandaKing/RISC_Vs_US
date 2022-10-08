@@ -3,3 +3,5 @@
 env
 .vscode
 node_modules
+User
+.DS_Store
