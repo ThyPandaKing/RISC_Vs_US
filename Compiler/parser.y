@@ -14,6 +14,7 @@
     #include <string>
     #include <unordered_map>
     #include <stack>
+    #include<algorithm>
 
     using namespace std;
 
@@ -23,6 +24,8 @@
     int yytext();
 
     bool check_declaration(string variable);
+    bool multiple_declaration(string variable);
+    bool is_reserved_word(string id);
 
     struct var_info {
         string data_type;
@@ -79,6 +82,8 @@
         int count;
         func_symbol_table st[1000];
     } func_table[50];
+
+    vector<string> reserved = {"int", "float", "char", "void", "if", "elif", "else", "for", "while", "break", "continue", "main", "return", "switch", "case", "input", "output"};
 %}
 
 %union{
@@ -204,6 +209,8 @@ stmt   		    :   declaration
                     ;
  
 declaration     :   data_type ID SCOL { 
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
@@ -213,15 +220,21 @@ declaration     :   data_type ID SCOL {
                         symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
                     } */
                     | data_type ID ASSIGN expr SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
                         symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
                     | data_type ID OS INT_NUM CS SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
                         symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), 1, countn+1 };
                     }
                     | data_type ID OS INT_NUM CS ASSIGN {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
                         symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), 1, countn+1 };
                         curr_array = string($2.lexeme);
@@ -609,7 +622,30 @@ bool check_declaration(string variable){
     return true;
 }
 
+bool multiple_declaration(string variable){
+    if(!(symbol_table.find(variable) == symbol_table.end())){
+        sem_errors.push_back("redeclaration of '" + variable + "' in line " + to_string(countn+1));
+        return false;
+    }
+    return true;
+}
+
+bool is_reserved_word(string id){
+    for(auto &item: id){
+        item = tolower(item);
+    }
+    auto iterator = find(reserved.begin(), reserved.end(), id);
+    if(iterator != reserved.end()){
+        sem_errors.push_back("usage of reserved keyword '" + id + "' in line " + to_string(countn+1));
+        return true;
+    }
+    return false;
+}
+
 void yyerror(const char* msg) {
+    sem_errors.push_back("syntax error in line " + to_string(countn+1));
+    for(auto item: sem_errors)
+        cout << item << endl;
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
