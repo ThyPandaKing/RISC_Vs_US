@@ -12,6 +12,8 @@ digit [0-9]
 
 "int"                       { strcpy(yylval.node.lexeme, yytext); return INT; }
 "char"                      { strcpy(yylval.node.lexeme, yytext); return CHAR; }
+"float"                     { strcpy(yylval.node.lexeme, yytext); return FLOAT; }
+"string"                    { strcpy(yylval.node.lexeme, yytext); return STRING; }
 "void"                      { strcpy(yylval.node.lexeme, yytext); return VOID; }
 "return"                    { strcpy(yylval.node.lexeme, yytext); return RETURN; }
 "input"                     { strcpy(yylval.node.lexeme, yytext); return INPUT; }
@@ -56,7 +58,7 @@ digit [0-9]
 "&"			                { strcpy(yylval.node.lexeme, yytext); return BITAND; }
 "|"			                { strcpy(yylval.node.lexeme, yytext); return BITOR; }
 "~"			                { strcpy(yylval.node.lexeme, yytext); return NEGATION; }
-"^"			                { strcpy(yylval.node.lexeme, yytext);return XOR; }
+"^"			                { strcpy(yylval.node.lexeme, yytext); return XOR; }
 
 "!"					        { strcpy(yylval.node.lexeme, yytext); return NOT;}
 ";"                         { strcpy(yylval.node.lexeme, yytext); return SCOL;}
