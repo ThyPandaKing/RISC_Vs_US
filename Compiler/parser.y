@@ -6,9 +6,9 @@
     #include <string.h>
 
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
-                                        sprintf($$.lexeme, "@t%d", variable_count);\
-                                        variable_count++;\
-                                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
+        sprintf($$.lexeme, "@t%d", variable_count);\
+        variable_count++;\
+        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
     
     #include <iostream>
     #include <string>
@@ -27,6 +27,7 @@
     struct var_info {
         string data_type;
         int size;   // for arrays
+        int isArray;
         int line_number; 
     };
 
@@ -49,6 +50,13 @@
 
     extern int countn;
 
+    // struct func_table{
+    //     string type;
+    //     int num_params;
+
+    // };
+    // unordered_map<string, struct func_info> fun_table;
+
     typedef struct node{
         char* id;
         char* data_type;
@@ -70,7 +78,7 @@
         int num_of_param;
         int count;
         func_symbol_table st[1000];
-    }func_table[50];
+    } func_table[50];
 %}
 
 %union{
@@ -90,7 +98,7 @@
     } node;
 }
 
-%token <node> INT CHAR FLOAT VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
+%token <node> INT CHAR FLOAT STRING VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
 %type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
 
@@ -196,33 +204,42 @@ stmt   		    :   declaration
                     ;
  
 declaration     :   data_type ID SCOL { 
-                        strcpy($2.type, $1.type);
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
-                        symbol_table[string($2.lexeme)] = { string($1.type), 0, countn+1 };
+                        symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
+                    /* | STRING ID ASSIGN STR SCOL {
+                        tac.push_back("- STR " + string($2.lexeme));
+                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
+                        symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
+                    } */
                     | data_type ID ASSIGN expr SCOL {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
-                        symbol_table[string($2.lexeme)] = { string($1.type), 0, countn+1 };
+                        symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
                     | data_type ID OS INT_NUM CS SCOL {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
-                        symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), countn+1 };
+                        symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), 1, countn+1 };
                     }
                     | data_type ID OS INT_NUM CS ASSIGN {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
-                        symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), countn+1 };
+                        symbol_table[string($2.lexeme)] = { string($1.type), stoi(string($4.lexeme)), 1, countn+1 };
                         curr_array = string($2.lexeme);
-                    } 
-                    OF arr_values CF SCOL // array size must be a positive integer 
+                    } OF arr_values CF SCOL // array size must be a positive integer 
                     ;
 
 arr_values      :   const {
                         tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme));
+                        if(arr_index > symbol_table[curr_array].size){
+                            sem_errors.push_back("Line no: " + to_string(symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(symbol_table[curr_array].size) + "]’");
+                        }
                     } 
                     COMMA arr_values
                     | const {
                         tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme));
+                        if(arr_index > symbol_table[curr_array].size){
+                            sem_errors.push_back("Line no: " + to_string(symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(symbol_table[curr_array].size) + "]’");
+                        }
                         arr_index=0;
                     }
                     ;
@@ -245,7 +262,38 @@ data_type       :   INT {
                
  
 /* Expressions */
-expr      	    :   
+expr      	    :   expr ADD expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr SUBTRACT expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr MULTIPLY expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr DIVIDE expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr LE expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr GE expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr LT expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr GT expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr EQ expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr NE expr {
+                        add_tac($$, $1, $2, $3)
+                    }
+                    | expr AND expr {
+                        add_tac($$, $1, $2, $3)
                     }
                     | expr OR expr {
                         add_tac($$, $1, $2, $3)
@@ -289,7 +337,9 @@ postfix_expr    :   func_call {
                     }
                     |
                     ID OS expr CS {
-                        check_declaration(string($1.lexeme));
+                        if(check_declaration(string($1.lexeme)) && symbol_table[string($1.lexeme)].isArray == 0) { 
+                            sem_errors.push_back("Variable is not an array"); 
+                        }
                         strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
                         sprintf($$.lexeme, "@t%d", variable_count++);
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " " + string($$.type));
@@ -345,7 +395,9 @@ assign          :   ID ASSIGN expr {
                     }
                     |
                     ID OS expr CS ASSIGN expr {
-                        check_declaration(string($1.lexeme));
+                        if(check_declaration(string($1.lexeme)) && symbol_table[string($1.lexeme)].isArray == 0) { 
+                            sem_errors.push_back("Variable is not an array"); 
+                        }
                         tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " = " + string($6.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
                     }
 
