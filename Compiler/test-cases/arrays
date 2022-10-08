@@ -1,0 +1,9 @@
+int main(){
+    int vec[3];
+    int arr[2] = {1,2};
+    
+    vec[0] = 1;
+    vec[1] = arr[1] + 1;
+
+    return 0;
+}
