@@ -327,7 +327,11 @@ class CodeGenerator:
             if(reg is not None):
                 offset = self.address_descriptor[var]['offset']
                 self.address_descriptor[var]['registers'] = None
-                self.text_segment += f"sw {reg}, {-offset}(x8)\n"
+                if(self.symbol_table[var]['datatype'] == Datatypes.INT):
+                    self.text_segment += f"sw {reg}, {-offset}(x8)\n"
+                elif(self.symbol_table[var]['datatype'] == Datatypes.BOOL or
+                     self.symbol_table[var]['datatype'] == Datatypes.CHAR):
+                    self.text_segment += f"sb {reg}, {-offset}(x8)\n"
 
         self.text_segment += '# ---- end of spill ----\n'
 
@@ -354,8 +358,10 @@ class CodeGenerator:
 
                 elif(self.is_binary_arithmetic(line)):
                     line = line.split(' ')
+                    exp_datatype = line[-1]
 
-                    # common part
+                    ld_command = 'lw' if exp_datatype == Datatypes.INT else 'lb'
+
                     if(line[3] == Operators.Plus.value or line[3] == Operators.Minus.value
                             or line[3] == Operators.Mul.value or Operators.Div.value):
                         lhs = self.get_register(line[0])
@@ -367,13 +373,13 @@ class CodeGenerator:
                         op1 = self.get_register(line[2])
                         if(op1[1] == 1):
                             offset = self.address_descriptor[line[2]]['offset']
-                            self.text_segment += f"lw {op1[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"{ld_command} {op1[0]}, {-offset}(x8)\n"
                             self.update_descriptors(op1[0], line[2])
 
                         op2 = self.get_register(line[4])
                         if(op2[1] == 1):
                             offset = self.address_descriptor[line[4]]['offset']
-                            self.text_segment += f"lw {op2[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"{ld_command} {op2[0]}, {-offset}(x8)\n"
                             self.update_descriptors(op2[0], line[4])
 
                     if(line[3] == Operators.Plus.value):
@@ -413,31 +419,36 @@ class CodeGenerator:
                         # implicit typecast of char to int
                         self.update_symbol_table(
                             subject=line[0], datatype=Datatypes.CHAR)
-                    elif(line[5] == Datatypes.INT.value or line[5] == Datatypes.BOOL.value):
+                    elif(line[5] == Datatypes.INT.value):
                         self.update_symbol_table(
                             subject=line[0], datatype=Datatypes.INT)
+                    elif(line[5] == Datatypes.BOOL.value):
+                        self.update_symbol_table(
+                            subject=line[0], datatype=Datatypes.BOOL)
 
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
-                    # INT, CHAR and BOOL
-                    if(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.BOOL.value
-                            or line[1].lower() == Datatypes.CHAR.value):
+                    # CHAR and BOOL
+                    if(line[1].lower() == Datatypes.BOOL.value or line[1].lower() == Datatypes.CHAR.value):
                         # self.text_segment += f"sw x0, {-self.offset}(x8)\n"
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
                             'registers': None
                         }
-                        self.offset += 4
-                    elif(line[1].lower() == Datatypes.FLOAT.value):
+                        self.offset += 1
+                    elif(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.FLOAT.value):
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
                             'registers': None
                         }
                         self.offset += 4
 
-                    if(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.BOOL.value):
+                    if(line[1].lower() == Datatypes.INT.value):
                         self.symbol_table[line[2]] = {
                             'datatype': Datatypes.INT}
+                    elif(line[1].lower() == Datatypes.BOOL.value):
+                        self.symbol_table[line[2]] = {
+                            'datatype': Datatypes.BOOL}
                     elif(line[1].lower() == Datatypes.CHAR.value):
                         self.symbol_table[line[2]] = {
                             'datatype': Datatypes.CHAR}
@@ -452,35 +463,39 @@ class CodeGenerator:
                     line = line.split(' ')
                     constant, datatype = self.is_constant(line[2])
                     lhs = self.get_register(line[0])
-                    if(lhs[1] == 1 and line[-1].lower()!=Datatypes.STR.value):
+                    if(lhs[1] == 1 and line[-1].lower() != Datatypes.STR.value):
                         # offset = self.address_descriptor[line[0]]['offset']
                         # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                         self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
-                        # INT and BOOL
-                        if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
+                        # INT
+                        if(datatype == Datatypes.INT.value):
                             self.text_segment += f"addi {lhs[0]}, x0, {line[2]}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_symbol_table(line[0], Datatypes.INT)
+                        elif(datatype == Datatypes.BOOL.value):
+                            self.text_segment += f"addi {lhs[0]}, x0, {line[2]}\n"
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
                             self.update_symbol_table(line[0], Datatypes.INT)
                         # CHAR
                         elif(datatype == Datatypes.CHAR.value):
                             self.text_segment += f"addi {lhs[0]}, x0, {ord(line[2])}\n"
                             offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
                             self.update_symbol_table(line[0], Datatypes.CHAR)
                         # STRING
-                        elif(datatype==Datatypes.STR.value):
-                            const=line[2]
-                            var=line[0]
+                        elif(datatype == Datatypes.STR.value):
+                            const = line[2]
+                            var = line[0]
                             self.data_segment_dict[var] = (".asciz", const)
                             self.update_symbol_table(var, Datatypes.STR)
                     else:
                         rhs_datatype = line[-1].lower()
-                        # INT, BOOL and CHAR
-                        if(rhs_datatype == Datatypes.INT.value or rhs_datatype == Datatypes.BOOL.value
-                                or rhs_datatype == Datatypes.CHAR.value):
+                        # INT
+                        if(rhs_datatype == Datatypes.INT.value):
                             rhs_register = None
                             # check if the variable is already in some register
                             for reg in self.register_descriptor:
@@ -492,18 +507,33 @@ class CodeGenerator:
                             else:
                                 offset = self.address_descriptor[line[2]]['offset']
                                 self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                            # no need to update descriptor with rhs value
-                            self.update_symbol_table(
-                                subject=line[0], datatype=Datatypes.INT)
-                        elif(rhs_datatype==Datatypes.STR.value):
-                            self.data_segment_dict[line[0]] = self.data_segment_dict[line[2]]
+                        # BOOL and CHAR
+                        elif(rhs_datatype == Datatypes.BOOL.value or rhs_datatype == Datatypes.CHAR.value):
+                            rhs_register = None
+                            # check if the variable is already in some register
+                            for reg in self.register_descriptor:
+                                if(self.register_descriptor[reg] == line[2]):
+                                    rhs_register = reg
+                                    break
+                            if(rhs_register is not None):
+                                self.text_segment += f"add {lhs[0]}, x0, {rhs_register}\n"
+                            else:
+                                offset = self.address_descriptor[line[2]]['offset']
+                                self.text_segment += f"lb {lhs[0]}, {-offset}(x8)\n"
+                        # STR
+                        elif(rhs_datatype == Datatypes.STR.value):
+                            self.data_segment_dict[line[0]
+                                                   ] = self.data_segment_dict[line[2]]
 
-                        if(rhs_datatype == Datatypes.INT.value or rhs_datatype == Datatypes.BOOL.value):
+                        if(rhs_datatype == Datatypes.INT.value):
                             self.update_symbol_table(
                                 subject=line[0], datatype=Datatypes.INT)
                         elif(rhs_datatype == Datatypes.CHAR.value):
                             self.update_symbol_table(
                                 subject=line[0], datatype=Datatypes.CHAR)
+                        elif(rhs_datatype == Datatypes.BOOL.value):
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.BOOL)
                         elif(rhs_datatype == Datatypes.STR.value):
                             self.update_symbol_table(
                                 subject=line[0], datatype=Datatypes.STR)
@@ -512,13 +542,13 @@ class CodeGenerator:
                     line = line.split(' ')
                     constant, datatype = self.is_constant(line[3])
                     lhs = self.get_register(line[0])
-                    if(lhs[1] == 1 and line[-1].lower()!=Datatypes.STR.value):
-                        offset = self.address_descriptor[line[0]]['offset']
+                    if(lhs[1] == 1 and line[-1].lower() != Datatypes.STR.value):
+                        # offset = self.address_descriptor[line[0]]['offset']
                         # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                         self.update_descriptors(lhs[0], line[0])
 
                     if(constant):
-                        # INT and BOOL
+                        # INT
                         if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
                             self.text_segment += f"addi {lhs[0]}, x0, {-int(line[3])}\n"
                             offset = self.address_descriptor[line[0]]['offset']
@@ -530,12 +560,17 @@ class CodeGenerator:
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
                             self.update_symbol_table(line[0], Datatypes.CHAR)
+                        # BOOL
+                        elif(datatype == Datatypes.BOOL.value):
+                            self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
+                            self.update_symbol_table(line[0], Datatypes.BOOL)
                         # should be syntax error for strings
                     else:
                         rhs_datatype = line[-1].lower()
-                        # INT, BOOL and CHAR
-                        if(rhs_datatype == Datatypes.INT.value or rhs_datatype == Datatypes.BOOL.value
-                                or rhs_datatype == Datatypes.CHAR.value):
+                        # INT
+                        if(rhs_datatype == Datatypes.INT.value):
                             rhs_register = None
                             # check if the variable is already in some register
                             for reg in self.register_descriptor:
@@ -550,15 +585,33 @@ class CodeGenerator:
                                 self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                                 self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
                             # no need to update descriptor with rhs value
-                            self.update_symbol_table(
-                                subject=line[0], datatype=Datatypes.INT)
+                        # BOOL and CHAR
+                        elif(rhs_datatype == Datatypes.BOOL.value
+                                or rhs_datatype == Datatypes.CHAR.value):
+                            rhs_register = None
+                            # check if the variable is already in some register
+                            for reg in self.register_descriptor:
+                                if(self.register_descriptor[reg] == line[3]):
+                                    rhs_register = reg
+                                    break
+                            # loading the variable as a negative value
+                            if(rhs_register is not None):
+                                self.text_segment += f"sub {lhs[0]}, x0, {rhs_register}\n"
+                            else:
+                                offset = self.address_descriptor[line[3]]['offset']
+                                self.text_segment += f"lb {lhs[0]}, {-offset}(x8)\n"
+                                self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
+                            # no need to update descriptor with rhs value
 
-                        if(rhs_datatype == Datatypes.INT.value or rhs_datatype == Datatypes.BOOL.value):
+                        if(rhs_datatype == Datatypes.INT.value):
                             self.update_symbol_table(
                                 subject=line[0], datatype=Datatypes.INT)
                         elif(rhs_datatype == Datatypes.CHAR.value):
                             self.update_symbol_table(
                                 subject=line[0], datatype=Datatypes.CHAR)
+                        elif(rhs_datatype == Datatypes.BOOL.value):
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.BOOL)
 
                 elif(self.is_if_statement_without_relop(line)):
                     line = line.split(' ')
@@ -570,9 +623,10 @@ class CodeGenerator:
                     if(datatype == Datatypes.INT or datatype == Datatypes.BOOL
                             or datatype == Datatypes.CHAR):
                         lhs = self.get_register(line[1])
+                        load_command = 'lw' if datatype == Datatypes.INT else 'lb'
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[1]]['offset']
-                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"{load_command} {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[1])
 
                         self.text_segment += f"bne {lhs[0]}, x0, {line[3]}\n"
@@ -585,9 +639,10 @@ class CodeGenerator:
                     if(datatype == Datatypes.INT or datatype == Datatypes.BOOL
                             or datatype == Datatypes.CHAR):
                         lhs = self.get_register(line[1])
+                        load_command = 'lw' if datatype == Datatypes.INT else 'lb'
                         if(lhs[1] == 1):
                             offset = self.address_descriptor[line[1]]['offset']
-                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"{load_command} {lhs[0]}, {-offset}(x8)\n"
                             self.update_descriptors(lhs[0], line[1])
 
                         if(block != blocks[-1]):
@@ -650,7 +705,8 @@ class CodeGenerator:
                                 var = f"ds{len(self.ds_variables)}"
                                 self.ds_variables[line[1]] = var
                                 # self.data_segment += f"{var}:\t.ascii {line[1]}\n"
-                                self.data_segment_dict[var] = (".asciz", line[1])
+                                self.data_segment_dict[var] = (
+                                    ".asciz", line[1])
                             var_name = self.ds_variables[line[1]]
                             self.text_segment += f"la a0, {var_name}\n"
                         else:
@@ -684,15 +740,15 @@ class CodeGenerator:
 
             # spill all here
             # if(block != blocks[-1]):
-            #     self.spill_all_registers()
+                # self.spill_all_registers()
 
         # print(self.register_descriptor)
         # print(self.address_descriptor)
         # print(self.symbol_table)
 
         for var, (type, value) in self.data_segment_dict.items():
-            self.data_segment+=f"{var}:\n\t{type} {value}\n"
-        
-        final_asm=self.data_segment+'\n'+self.text_segment
+            self.data_segment += f"{var}:\n\t{type} {value}\n"
+
+        final_asm = self.data_segment+'\n'+self.text_segment
 
         return final_asm
