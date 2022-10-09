@@ -47,7 +47,7 @@
     int temp_label;
 
     stack<int> loop_continue, loop_break;
-    stack<string> func_call_id;
+    stack<pair<string, vector<string>>> func_call_id;
 
     // for array declaration with initialization
     string curr_array;
@@ -543,17 +543,11 @@ for_loop_stmt   :   FOR OC assign SCOL {
                     }
 
 func_call       :   ID {
-                        // func_call_id.push(string($1.lexeme));
-                        // if(func_table.find(string($1.lexeme)) == func_table.end()){
-                        //     printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
-                        //     exit(0);
-                        // }
-                        cout << " -----------------------\n";
-                        cout << func_table[string($1.lexeme)].return_type.c_str() << endl;
-                        strcpy($$.type, 'INT');
+                        func_call_id.push({string($1.lexeme), func_table[string($1.lexeme)].param_types});
                         } 
                         OC arg_list CC  {
-                        // func_call_id.pop();
+                        strcpy($$.type, func_table[string($1.lexeme)].return_type.c_str());
+                        func_call_id.pop();
                         sprintf($$.lexeme, "@t%d", variable_count);
                         variable_count++;
 
@@ -565,26 +559,26 @@ func_call       :   ID {
                     ;
 
 arg_list        :   arg COMMA arg_list {
-                        // function_check(string($1.type), 1);
-                        cout << "here" << string($1.type) << endl;
-                        // int sz = func_table[string(func_call_id.top())].param_types.size();
-                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
-                        // func_table[func_call_id.top()].param_types.pop_back();
-                        // if(string($1.type) != type) {
-                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
-                        // }
+                        func_call_id.top().second.pop_back();
+                        if(string($1.type) != type) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
                     }
                     | arg {
-                        // function_check(string($1.type), 1);
-                        cout << "here" << string($1.type) << endl;
-                        // int sz = func_table[string(func_call_id.top())].param_types.size();
-                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
-                        // func_table[func_call_id.top()].param_types.pop_back();
-                        // if(string($1.type) != type) {
-                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
-                        // }
+                        func_call_id.top().second.pop_back();
+                        if(string($1.type) != type) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
                     }
                     | 
                     ;

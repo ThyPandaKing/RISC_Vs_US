@@ -117,7 +117,7 @@
     int temp_label;
 
     stack<int> loop_continue, loop_break;
-    stack<string> func_call_id;
+    stack<pair<string, vector<string>>> func_call_id;
 
     // for array declaration with initialization
     string curr_array;
@@ -850,8 +850,8 @@ static const yytype_int16 yyrline[] =
      373,   374,   377,   381,   385,   391,   396,   404,   407,   413,
      404,   422,   427,   434,   422,   439,   442,   443,   446,   451,
      455,   446,   465,   469,   472,   475,   472,   490,   491,   494,
-     500,   494,   518,   522,   534,   518,   545,   545,   567,   578,
-     589,   592
+     500,   494,   518,   522,   534,   518,   545,   545,   561,   572,
+     583,   586
 };
 #endif
 
@@ -2380,22 +2380,16 @@ yyreduce:
   case 106: /* $@21: %empty  */
 #line 545 "parser.y"
                        {
-                        // func_call_id.push(string($1.lexeme));
-                        // if(func_table.find(string($1.lexeme)) == func_table.end()){
-                        //     printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
-                        //     exit(0);
-                        // }
-                        cout << " -----------------------\n";
-                        cout << func_table[string((yyvsp[0].node).lexeme)].return_type.c_str() << endl;
-                        strcpy((yyvsp[0].node).type, 'INT');
+                        func_call_id.push({string((yyvsp[0].node).lexeme), func_table[string((yyvsp[0].node).lexeme)].param_types});
                         }
-#line 2393 "y.tab.c"
+#line 2386 "y.tab.c"
     break;
 
   case 107: /* func_call: ID $@21 OC arg_list CC  */
-#line 555 "parser.y"
+#line 548 "parser.y"
                                         {
-                        // func_call_id.pop();
+                        strcpy((yyval.node).type, func_table[string((yyvsp[-4].node).lexeme)].return_type.c_str());
+                        func_call_id.pop();
                         sprintf((yyval.node).lexeme, "@t%d", variable_count);
                         variable_count++;
 
@@ -2404,51 +2398,51 @@ yyreduce:
 
                         tac.push_back(string((yyval.node).lexeme) + " = @call " + string((yyvsp[-4].node).lexeme) + " " + func_table[string((yyvsp[-4].node).lexeme)].return_type + " " + to_string(func_table[string((yyvsp[-4].node).lexeme)].num_params));
                     }
-#line 2408 "y.tab.c"
+#line 2402 "y.tab.c"
     break;
 
   case 108: /* arg_list: arg COMMA arg_list  */
-#line 567 "parser.y"
+#line 561 "parser.y"
                                        {
-                        // function_check(string($1.type), 1);
-                        cout << "here" << string((yyvsp[-2].node).type) << endl;
-                        // int sz = func_table[string(func_call_id.top())].param_types.size();
-                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
-                        // func_table[func_call_id.top()].param_types.pop_back();
-                        // if(string($1.type) != type) {
-                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
-                        // }
+                        func_call_id.top().second.pop_back();
+                        if(string((yyvsp[-2].node).type) != type) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
                     }
-#line 2424 "y.tab.c"
+#line 2418 "y.tab.c"
     break;
 
   case 109: /* arg_list: arg  */
-#line 578 "parser.y"
+#line 572 "parser.y"
                           {
-                        // function_check(string($1.type), 1);
-                        cout << "here" << string((yyvsp[0].node).type) << endl;
-                        // int sz = func_table[string(func_call_id.top())].param_types.size();
-                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
-                        // func_table[func_call_id.top()].param_types.pop_back();
-                        // if(string($1.type) != type) {
-                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
-                        // }
+                        func_call_id.top().second.pop_back();
+                        if(string((yyvsp[0].node).type) != type) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
                     }
-#line 2440 "y.tab.c"
+#line 2434 "y.tab.c"
     break;
 
   case 111: /* arg: expr  */
-#line 592 "parser.y"
+#line 586 "parser.y"
                          {
                         tac.push_back("param " + string((yyvsp[0].node).lexeme) + " " + string((yyvsp[0].node).type));
                     }
-#line 2448 "y.tab.c"
+#line 2442 "y.tab.c"
     break;
 
 
-#line 2452 "y.tab.c"
+#line 2446 "y.tab.c"
 
       default: break;
     }
@@ -2641,7 +2635,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 597 "parser.y"
+#line 591 "parser.y"
 
 
 int main(int argc, char *argv[]) {

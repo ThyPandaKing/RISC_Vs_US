@@ -1,12 +1,3 @@
- -----------------------
-INT
- -----------------------
-INT
-hereFLOAT
-hereINT
-here
-hereFLOAT
-hereINT
 min:
 - arg INT f
 - arg FLOAT w
@@ -15,25 +6,27 @@ min:
 return @t0 INT
 end:
 
-tem:
-- INT c
-- FLOAT d
-param c INT
-param d FLOAT
-param c INT
-param d FLOAT
-@t1 = @call min INT 3
-param @t1 
-@t2 = @call min INT 3
-- INT z
-z = @t2 INT
-end:
-
 main:
 - arg INT a
 - arg INT b
-@t3 = 5 INT
+@t1 = 5 INT
 - INT e
-e = @t3 INT
+e = @t1 INT
 end:
 
+tem:
+- INT c
+- INT d
+- INT g
+param c INT
+param d INT
+param c INT
+param g INT
+@t2 = @call main INT 2
+param @t2 INT
+@t3 = @call min INT 3
+- INT z
+z = @t3 INT
+end:
+
+datatype for argument not matched in line 14
