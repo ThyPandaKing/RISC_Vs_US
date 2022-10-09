@@ -16,7 +16,6 @@
 
 import enum
 
-
 class Operators(enum.Enum):
     Plus = '+'
     Minus = '-'
@@ -400,6 +399,11 @@ class CodeGenerator:
                     elif(line[3] == Operators.RightShift.value):
                         self.text_segment += f"srl {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
+                    # elif(line[3] == Operators.LogicalOr.value):
+                    #     # t0 = t1 || t2
+                        
+
+
                     # a = b && c
                     # if (a && b)
                     # elif(line[3] == Operators.LogicalAnd.value):
@@ -618,7 +622,8 @@ class CodeGenerator:
 
                     # printing string
                     if(line[2].lower() == Datatypes.STRING.value):
-                        if(self.is_constant(line[1])):
+                        constant, datatype = self.is_constant(line[1])
+                        if(constant):
                             if(self.ds_variables.get(line[1]) == None):
                                 value = f"ds{len(self.ds_variables)}"
                                 self.ds_variables[line[1]] = value
@@ -632,26 +637,32 @@ class CodeGenerator:
 
                     # printing integers
                     if(line[2].lower() == Datatypes.INT.value):
-                        if(self.is_constant(line[1])):
+                        constant, datatype = self.is_constant(line[1])
+                        if(constant):
                             self.text_segment += f"li a0, {line[1]}\n"
                         else:
-                            self.text_segment += f"lw a0, {line[1]}\n"
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"lw a0, {-offset}(x8)\n"
                         self.text_segment += "li a7, 1\necall\n"
 
                     # printing char
                     elif(line[2].lower() == Datatypes.CHAR.value):
-                        if(self.is_constant(line[1])):
+                        constant, datatype = self.is_constant(line[1])
+                        if(constant):
                             self.text_segment += f"li a0, {line[1]}\n"
                         else:
-                            self.text_segment += f"lw a0, {line[1]}\n"
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"lw a0, {-offset}(x8)\n"
                         self.text_segment += "li a7, 11\necall\n"
 
                     # printing floats
                     elif(line[2].lower() == Datatypes.FLOAT.value):
-                        if(self.is_constant(line[1])):
+                        constant, datatype = self.is_constant(line[1])
+                        if(constant):
                             self.text_segment += f"li fa0, {line[1]}\n"
                         else:
-                            self.text_segment += f"lw fa0, {line[1]}\n"
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"lw fa0, {-offset}(x8)\n"
                         self.text_segment += "li a7, 2\necall\n"
 
             # spill all here
