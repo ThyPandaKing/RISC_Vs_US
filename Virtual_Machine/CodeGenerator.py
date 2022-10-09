@@ -1,19 +1,3 @@
-"""
-- Structure of address descriptor:
-
-    self.address_descriptor = {
-        "var_name": {
-            "offset": None,
-            "registers": None
-        }
-    }
-
-- main() is the starting point of code generation
-- stack pointer is x2 register
-- frame pointer is x8 register
-"""
-
-
 import enum
 import struct
 
@@ -209,7 +193,7 @@ class CodeGenerator:
         function that returns true if instruction
         is an if statement
         """
-        if(instruction.startswith('if') and len(set(instruction.split(' ')).intersection(self.relational_operators)) != 0):
+        if(instruction.startswith('if ') and len(set(instruction.split(' ')).intersection(self.relational_operators)) != 0):
             return True
         return False
 
@@ -218,7 +202,7 @@ class CodeGenerator:
         function that returns true if instruction
         is an if statement
         """
-        if(instruction.startswith('if') and not self.is_if_statement_with_relop(instruction)):
+        if(instruction.startswith('if ') and not self.is_if_statement_with_relop(instruction)):
             return True
         return False
 
@@ -227,7 +211,7 @@ class CodeGenerator:
         function that returns true if instruction
         is a goto statement
         """
-        if(instruction.startswith('GOTO')):
+        if(instruction.startswith('GOTO ')):
             return True
         return False
 
@@ -236,7 +220,7 @@ class CodeGenerator:
         function that returns true if instruction
         is a return statement
         """
-        if(instruction.startswith('return')):
+        if(instruction.startswith('return ')):
             return True
         return False
 
@@ -245,7 +229,7 @@ class CodeGenerator:
         function that returns true if instruction
         is a user input statement
         """
-        if(instruction.startswith('input')):
+        if(instruction.startswith('input ')):
             return True
         return False
 
@@ -254,7 +238,7 @@ class CodeGenerator:
         function that returns true if instruction
         is an output statement
         """
-        if(instruction.startswith('print')):
+        if(instruction.startswith('print ')):
             return True
         return False
 
@@ -334,7 +318,7 @@ class CodeGenerator:
                 return (reg, 1)
         # spill a register according to rr_registers_index_float
         register = self.available_float_registers[self.rr_registers_index_float]
-        self.spill_register(register)
+        self.spill_float_register(register)
         self.rr_registers_index_float = (
             self.rr_registers_index_float+1) % len(self.available_float_registers)
 
@@ -367,6 +351,33 @@ class CodeGenerator:
         # update register descriptor
         self.register_descriptor[register] = None
 
+    def spill_float_register(self, register) -> None:
+        """
+        handles the logic of spilling
+        a float register
+        """
+
+        variable = self.float_register_descriptor[register]
+
+        # update address descriptor
+        if(self.address_descriptor[variable] is not None):
+            try:
+                self.address_descriptor[variable]["registers"] = None
+                self.text_segment += f"fsw {register}, {-self.address_descriptor[variable]['offset']}(x8)\n"
+            except KeyError or ValueError:
+                # should not reach here
+                print("Error: register not present in address descriptor")
+        else:
+            self.address_descriptor[variable] = {
+                'offset': self.offset,
+                'registers': None
+            }
+            self.text_segment += f"fsw {register}, {-self.offset}(x8)\n"
+            self.offset += 4
+
+        # update register descriptor
+        self.float_register_descriptor[register] = None
+
     def get_ieee_rep(self, value):
         """
         function that converts a constant
@@ -387,7 +398,6 @@ class CodeGenerator:
                 'datatype': datatype
             }
 
-    # TODO: take care of floats
     def spill_all_registers(self) -> None:
         """
         function that spills all registers
@@ -405,10 +415,13 @@ class CodeGenerator:
                 elif(self.symbol_table[var]['datatype'] == Datatypes.BOOL or
                      self.symbol_table[var]['datatype'] == Datatypes.CHAR):
                     self.text_segment += f"sb {reg}, {-offset}(x8)\n"
+                elif(self.symbol_table[var]['datatype'] == Datatypes.FLOAT):
+                    self.text_segment += f"fsw {reg}, {-offset}(x8)\n"
 
         self.text_segment += '# ---- end of spill ----\n'
 
         self.register_descriptor = self.default_reg_des.copy()
+        self.float_register_descriptor = self.default_float_reg_des.copy()
 
     def main(self, blocks) -> None:
         """
@@ -433,67 +446,110 @@ class CodeGenerator:
                     line = line.split(' ')
                     exp_datatype = line[-1]
 
-                    ld_command = 'lw' if exp_datatype == Datatypes.INT else 'lb'
+                    if(line[1].lower()==Datatypes.INT.value or line[1].lower()==Datatypes.BOOL.value \
+                        or line[1].lower()==Datatypes.CHAR.value):
+                        ld_command = 'lw' if exp_datatype == Datatypes.INT else 'lb'
 
-                    if(line[3] == Operators.Plus.value or line[3] == Operators.Minus.value
-                            or line[3] == Operators.Mul.value or Operators.Div.value):
-                        lhs = self.get_register(line[0])
-                        if(lhs[1] == 1):
-                            offset = self.address_descriptor[line[0]]['offset']
-                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                            self.update_descriptors(lhs[0], line[0])
+                        if(line[3] == Operators.Plus.value or line[3] == Operators.Minus.value
+                                or line[3] == Operators.Mul.value or Operators.Div.value):
+                            lhs = self.get_register(line[0])
+                            if(lhs[1] == 1):
+                                offset = self.address_descriptor[line[0]]['offset']
+                                # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                                self.update_descriptors(lhs[0], line[0])
 
-                        op1 = self.get_register(line[2])
-                        if(op1[1] == 1):
-                            offset = self.address_descriptor[line[2]]['offset']
-                            self.text_segment += f"{ld_command} {op1[0]}, {-offset}(x8)\n"
-                            self.update_descriptors(op1[0], line[2])
+                            op1 = self.get_register(line[2])
+                            if(op1[1] == 1):
+                                offset = self.address_descriptor[line[2]]['offset']
+                                self.text_segment += f"{ld_command} {op1[0]}, {-offset}(x8)\n"
+                                self.update_descriptors(op1[0], line[2])
 
-                        op2 = self.get_register(line[4])
-                        if(op2[1] == 1):
-                            offset = self.address_descriptor[line[4]]['offset']
-                            self.text_segment += f"{ld_command} {op2[0]}, {-offset}(x8)\n"
-                            self.update_descriptors(op2[0], line[4])
+                            op2 = self.get_register(line[4])
+                            if(op2[1] == 1):
+                                offset = self.address_descriptor[line[4]]['offset']
+                                self.text_segment += f"{ld_command} {op2[0]}, {-offset}(x8)\n"
+                                self.update_descriptors(op2[0], line[4])
 
-                    if(line[3] == Operators.Plus.value):
-                        self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        if(line[3] == Operators.Plus.value):
+                            self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.Minus.value):
-                        self.text_segment += f"sub {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.Minus.value):
+                            self.text_segment += f"sub {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.Mul.value):
-                        self.text_segment += f"mul {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.Mul.value):
+                            self.text_segment += f"mul {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.Div.value):
-                        self.text_segment += f"div {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.Div.value):
+                            self.text_segment += f"div {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.BitAnd.value):
-                        self.text_segment += f"and {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.BitAnd.value):
+                            self.text_segment += f"and {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.BitOr.value):
-                        self.text_segment += f"or {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.BitOr.value):
+                            self.text_segment += f"or {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.BitXor.value):
-                        self.text_segment += f"xor {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.BitXor.value):
+                            self.text_segment += f"xor {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.LeftShift.value):
-                        self.text_segment += f"sll {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                        elif(line[3] == Operators.LeftShift.value):
+                            self.text_segment += f"sll {lhs[0]}, {op1[0]}, {op2[0]}\n"
 
-                    elif(line[3] == Operators.RightShift.value):
-                        self.text_segment += f"srl {lhs[0]}, {op1[0]}, {op2[0]}\n"
-                        
-                    # adding/updating lhs in symbol table
-                    if(self.symbol_table[line[2]]['datatype'] == Datatypes.CHAR.value or
-                            self.symbol_table[line[4]]['datatype'] == Datatypes.CHAR.value):
-                        # implicit typecast of char to int
-                        self.update_symbol_table(
-                            subject=line[0], datatype=Datatypes.CHAR)
-                    elif(line[5] == Datatypes.INT.value):
-                        self.update_symbol_table(
-                            subject=line[0], datatype=Datatypes.INT)
-                    elif(line[5] == Datatypes.BOOL.value):
-                        self.update_symbol_table(
-                            subject=line[0], datatype=Datatypes.BOOL)
+                        elif(line[3] == Operators.RightShift.value):
+                            self.text_segment += f"srl {lhs[0]}, {op1[0]}, {op2[0]}\n"
+                            
+                        # adding/updating lhs in symbol table
+                        if(self.symbol_table[line[2]]['datatype'] == Datatypes.CHAR.value or
+                                self.symbol_table[line[4]]['datatype'] == Datatypes.CHAR.value):
+                            # implicit typecast of char to int
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.CHAR)
+                        elif(line[5] == Datatypes.INT.value):
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.INT)
+                        elif(line[5] == Datatypes.BOOL.value):
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.BOOL)
+
+                    elif(line[-1].lower()==Datatypes.FLOAT.value):
+
+                        if(line[3] == Operators.Plus.value or line[3] == Operators.Minus.value
+                                or line[3] == Operators.Mul.value or Operators.Div.value):
+                            lhs = self.get_float_register(line[0])
+                            if(lhs[1] == 1):
+                                offset = self.address_descriptor[line[0]]['offset']
+                                # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                                self.update_float_descriptors(lhs[0], line[0])
+
+                            op1 = self.get_float_register(line[2])
+                            if(op1[1] == 1):
+                                offset = self.address_descriptor[line[2]]['offset']
+                                self.text_segment += f"flw {op1[0]}, {-offset}(x8)\n"
+                                self.update_float_descriptors(op1[0], line[2])
+
+                            op2 = self.get_float_register(line[4])
+                            if(op2[1] == 1):
+                                offset = self.address_descriptor[line[4]]['offset']
+                                self.text_segment += f"flw {op2[0]}, {-offset}(x8)\n"
+                                self.update_float_descriptors(op2[0], line[4])
+
+                        if(line[3] == Operators.Plus.value):
+                            self.text_segment += f"fadd.s {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                        elif(line[3] == Operators.Minus.value):
+                            self.text_segment += f"fsub.s {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                        elif(line[3] == Operators.Mul.value):
+                            self.text_segment += f"fmul.s {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                        elif(line[3] == Operators.Div.value):
+                            self.text_segment += f"fdiv.s {lhs[0]}, {op1[0]}, {op2[0]}\n"
+
+                        # bitwise operations not supported for floats
+                            
+                        # adding/updating lhs in symbol table
+                        if(line[5] == Datatypes.FLOAT.value):
+                            self.update_symbol_table(
+                                subject=line[0], datatype=Datatypes.FLOAT)
 
                 elif(self.is_declaration(line)):
                     line = line.split(' ')
@@ -649,77 +705,117 @@ class CodeGenerator:
                 elif(self.is_unary_assignment(line)):
                     line = line.split(' ')
                     constant, datatype = self.is_constant(line[3])
-                    lhs = self.get_register(line[0])
-                    if(lhs[1] == 1 and line[-1].lower() != Datatypes.STR.value):
-                        # offset = self.address_descriptor[line[0]]['offset']
-                        # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                        self.update_descriptors(lhs[0], line[0])
 
-                    if(constant):
-                        # INT
-                        if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
-                            self.text_segment += f"addi {lhs[0]}, x0, {-int(line[3])}\n"
-                            offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
-                            self.update_symbol_table(line[0], Datatypes.INT)
-                        # CHAR
-                        elif(datatype == Datatypes.CHAR.value):
-                            self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
-                            offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
-                            self.update_symbol_table(line[0], Datatypes.CHAR)
-                        # BOOL
-                        elif(datatype == Datatypes.BOOL.value):
-                            self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
-                            offset = self.address_descriptor[line[0]]['offset']
-                            self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
-                            self.update_symbol_table(line[0], Datatypes.BOOL)
-                        # should be syntax error for strings
+                    if(line[-1].lower()!=Datatypes.FLOAT.value):
+                        lhs = self.get_register(line[0])
+                        if(lhs[1] == 1 and line[-1].lower() != Datatypes.STR.value):
+                            # offset = self.address_descriptor[line[0]]['offset']
+                            # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_descriptors(lhs[0], line[0])
+
+                        if(constant):
+                            # INT
+                            if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
+                                self.text_segment += f"addi {lhs[0]}, x0, {-int(line[3])}\n"
+                                offset = self.address_descriptor[line[0]]['offset']
+                                self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
+                                self.update_symbol_table(line[0], Datatypes.INT)
+                            # CHAR
+                            elif(datatype == Datatypes.CHAR.value):
+                                self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
+                                offset = self.address_descriptor[line[0]]['offset']
+                                self.text_segment += f"sw {lhs[0]}, {-offset}(x8)\n"
+                                self.update_symbol_table(line[0], Datatypes.CHAR)
+                            # BOOL
+                            elif(datatype == Datatypes.BOOL.value):
+                                self.text_segment += f"addi {lhs[0]}, x0, {-ord(line[3])}\n"
+                                offset = self.address_descriptor[line[0]]['offset']
+                                self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
+                                self.update_symbol_table(line[0], Datatypes.BOOL)
+                            # should be syntax error for strings
+                        else:
+                            rhs_datatype = line[-1].lower()
+                            # INT
+                            if(rhs_datatype == Datatypes.INT.value):
+                                rhs_register = None
+                                # check if the variable is already in some register
+                                for reg in self.register_descriptor:
+                                    if(self.register_descriptor[reg] == line[3]):
+                                        rhs_register = reg
+                                        break
+                                # loading the variable as a negative value
+                                if(rhs_register is not None):
+                                    self.text_segment += f"sub {lhs[0]}, x0, {rhs_register}\n"
+                                else:
+                                    offset = self.address_descriptor[line[3]]['offset']
+                                    self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                                    self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
+                                # no need to update descriptor with rhs value
+                            # BOOL and CHAR
+                            elif(rhs_datatype == Datatypes.BOOL.value
+                                    or rhs_datatype == Datatypes.CHAR.value):
+                                rhs_register = None
+                                # check if the variable is already in some register
+                                for reg in self.register_descriptor:
+                                    if(self.register_descriptor[reg] == line[3]):
+                                        rhs_register = reg
+                                        break
+                                # loading the variable as a negative value
+                                if(rhs_register is not None):
+                                    self.text_segment += f"sub {lhs[0]}, x0, {rhs_register}\n"
+                                else:
+                                    offset = self.address_descriptor[line[3]]['offset']
+                                    self.text_segment += f"lb {lhs[0]}, {-offset}(x8)\n"
+                                    self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
+                                # no need to update descriptor with rhs value
+
+                            if(rhs_datatype == Datatypes.INT.value):
+                                self.update_symbol_table(
+                                    subject=line[0], datatype=Datatypes.INT)
+                            elif(rhs_datatype == Datatypes.CHAR.value):
+                                self.update_symbol_table(
+                                    subject=line[0], datatype=Datatypes.CHAR)
+                            elif(rhs_datatype == Datatypes.BOOL.value):
+                                self.update_symbol_table(
+                                    subject=line[0], datatype=Datatypes.BOOL)
+                    # FLOAT
                     else:
-                        rhs_datatype = line[-1].lower()
-                        # INT
-                        if(rhs_datatype == Datatypes.INT.value):
-                            rhs_register = None
-                            # check if the variable is already in some register
-                            for reg in self.register_descriptor:
-                                if(self.register_descriptor[reg] == line[3]):
-                                    rhs_register = reg
-                                    break
-                            # loading the variable as a negative value
-                            if(rhs_register is not None):
-                                self.text_segment += f"sub {lhs[0]}, x0, {rhs_register}\n"
-                            else:
-                                offset = self.address_descriptor[line[3]]['offset']
-                                self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
-                                self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
-                            # no need to update descriptor with rhs value
-                        # BOOL and CHAR
-                        elif(rhs_datatype == Datatypes.BOOL.value
-                                or rhs_datatype == Datatypes.CHAR.value):
-                            rhs_register = None
-                            # check if the variable is already in some register
-                            for reg in self.register_descriptor:
-                                if(self.register_descriptor[reg] == line[3]):
-                                    rhs_register = reg
-                                    break
-                            # loading the variable as a negative value
-                            if(rhs_register is not None):
-                                self.text_segment += f"sub {lhs[0]}, x0, {rhs_register}\n"
-                            else:
-                                offset = self.address_descriptor[line[3]]['offset']
-                                self.text_segment += f"lb {lhs[0]}, {-offset}(x8)\n"
-                                self.text_segment += f"sub {lhs[0]}, x0, {lhs[0]}\n"
-                            # no need to update descriptor with rhs value
+                        lhs_float = self.get_float_register(line[0])
+                        if(lhs_float[1] == 1):
+                            self.update_float_descriptors(lhs_float[0], line[0])
 
-                        if(rhs_datatype == Datatypes.INT.value):
+                        if(constant):
+                            # get an integer register to store the constant
+                            lhs_sup = self.get_register(line[0])
+                            if(lhs_sup[1] == 1 and line[-1].lower() != Datatypes.STR.value):
+                                self.update_descriptors(lhs_sup[0], line[0])
+
+                            ieee_rep=self.get_ieee_rep('-'+line[3])
+                                
+                            self.text_segment += f"addi {lhs_sup[0]}, x0, {ieee_rep}\n"
+                            offset = self.address_descriptor[line[0]]['offset']
+                            self.text_segment += f"sw {lhs_sup[0]}, {-offset}(x8)\n"
+                            self.text_segment += f"fmov.w.x {lhs_float[0]}, {lhs_sup[0]}\n"
+                            self.update_symbol_table(line[0], Datatypes.FLOAT)
+                        else:
+                            rhs_datatype = line[-1].lower()
+                            # let this condition be
+                            if(rhs_datatype == Datatypes.FLOAT.value):
+                                rhs_register = None
+                                # check if the variable is already in some register
+                                for reg in self.float_register_descriptor:
+                                    if(self.float_register_descriptor[reg] == line[3]):
+                                        rhs_register = reg
+                                        break
+                                if(rhs_register is not None):
+                                    self.text_segment += f"fsub.s {lhs_float[0]}, f0, {rhs_register}\n"
+                                else:
+                                    offset = self.address_descriptor[line[3]]['offset']
+                                    self.text_segment += f"flw {lhs_float[0]}, {-offset}(x8)\n"
+                                    self.text_segment += f"fsub.s {lhs_float[0]}, f0, {lhs_float[0]}\n"
+                            
                             self.update_symbol_table(
-                                subject=line[0], datatype=Datatypes.INT)
-                        elif(rhs_datatype == Datatypes.CHAR.value):
-                            self.update_symbol_table(
-                                subject=line[0], datatype=Datatypes.CHAR)
-                        elif(rhs_datatype == Datatypes.BOOL.value):
-                            self.update_symbol_table(
-                                subject=line[0], datatype=Datatypes.BOOL)
+                                subject=line[0], datatype=Datatypes.FLOAT)
 
                 elif(self.is_if_statement_without_relop(line)):
                     line = line.split(' ')
@@ -739,6 +835,15 @@ class CodeGenerator:
 
                         self.text_segment += f"bne {lhs[0]}, x0, {line[3]}\n"
                         self.text_segment += f"beq x0, x0, {line[6]}\n"
+                    elif(datatype == Datatypes.FLOAT):
+                        lhs = self.get_float_register(line[1])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"flw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_float_descriptors(lhs[0], line[1])
+
+                        self.text_segment += f"feq.s {lhs[0]}, f0, {line[6]}\n"
+                        self.text_segment += f"beq x0, x0, {line[3]}\n"
 
                 elif(self.is_if_statement_with_relop(line)):
                     line = line.split(' ')
@@ -774,6 +879,34 @@ class CodeGenerator:
                         elif(relop == '>'):
                             self.text_segment += f"blt x0, {lhs[0]}, {line[5]}\n"
                             self.text_segment += f"beq x0, x0, {line[8]}\n"
+                    elif(datatype == Datatypes.FLOAT):
+                        lhs = self.get_float_register(line[1])
+                        if(lhs[1] == 1):
+                            offset = self.address_descriptor[line[1]]['offset']
+                            self.text_segment += f"flw {lhs[0]}, {-offset}(x8)\n"
+                            self.update_float_descriptors(lhs[0], line[1])
+
+                        if(block != blocks[-1]):
+                            self.spill_all_registers()
+
+                        if(relop == '=='):
+                            self.text_segment += f"feq.s {lhs[0]}, f0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '!='):
+                            self.text_segment += f"feq.s {lhs[0]}, f0, {line[8]}\n"
+                            self.text_segment += f"beq x0, x0, {line[5]}\n"
+                        elif(relop == '<'):
+                            self.text_segment += f"flt.s {lhs[0]}, f0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '>='):
+                            self.text_segment += f"flt.s {lhs[0]}, f0, {line[8]}\n"
+                            self.text_segment += f"beq x0, x0, {line[5]}\n"
+                        elif(relop == '<='):
+                            self.text_segment += f"fle.s {lhs[0]}, f0, {line[5]}\n"
+                            self.text_segment += f"beq x0, x0, {line[8]}\n"
+                        elif(relop == '>'):
+                            self.text_segment += f"fle.s {lhs[0]}, f0 {line[8]}\n"
+                            self.text_segment += f"beq x0, x0, {line[5]}\n"
 
                 elif(self.is_input_statement(line)):
                     line = line.split(' ')
