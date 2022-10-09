@@ -1,24 +1,39 @@
-func:
-- arg INT a
-- arg INT c
-@t0 = 1 INT
-@t1 = a + @t0 INT
-- INT b
-b = @t1 INT
-return b INT
+ -----------------------
+INT
+ -----------------------
+INT
+hereFLOAT
+hereINT
+here
+hereFLOAT
+hereINT
+min:
+- arg INT f
+- arg FLOAT w
+- arg INT r
+@t0 = 0 INT
+return @t0 INT
+end:
+
+tem:
+- INT c
+- FLOAT d
+param c INT
+param d FLOAT
+param c INT
+param d FLOAT
+@t1 = @call min INT 3
+param @t1 
+@t2 = @call min INT 3
+- INT z
+z = @t2 INT
 end:
 
 main:
-- INT arr [ 2 ] 
-arr [ 0 ] = 1 INT
-arr [ 1 ] = 2 INT
-@t2 = 1 INT
-@t3 = arr [ @t2 ]  INT
-@t4 = 1 INT
-@t5 = @t3 + @t4 INT
-- INT a
-a = @t5 INT
-@t6 = 0 INT
-return @t6 INT
+- arg INT a
+- arg INT b
+@t3 = 5 INT
+- INT e
+e = @t3 INT
 end:
 

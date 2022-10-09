@@ -26,6 +26,7 @@
     bool check_declaration(string variable);
     bool multiple_declaration(string variable);
     bool is_reserved_word(string id);
+    bool function_check(string variable, int flag);
 
     struct var_info {
         string data_type;
@@ -46,6 +47,7 @@
     int temp_label;
 
     stack<int> loop_continue, loop_break;
+    stack<string> func_call_id;
 
     // for array declaration with initialization
     string curr_array;
@@ -62,6 +64,7 @@
 
     unordered_map<string, struct func_info> func_table;
     string curr_func_name;
+    vector<string> curr_func_param_type;
 
     vector<string> reserved = {"int", "float", "char", "void", "if", "elif", "else", "for", "while", "break", "continue", "main", "return", "switch", "case", "input", "output"};
 
@@ -86,7 +89,7 @@
 
 %token <node> INT CHAR FLOAT STRING VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call arg_list arg
 
 %right ASSIGN
 %left OR
@@ -539,23 +542,51 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         loop_break.pop();
                     }
 
-func_call       :   ID OC arg_list CC  {       
+func_call       :   ID {
+                        // func_call_id.push(string($1.lexeme));
+                        // if(func_table.find(string($1.lexeme)) == func_table.end()){
+                        //     printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
+                        //     exit(0);
+                        // }
+                        cout << " -----------------------\n";
+                        cout << func_table[string($1.lexeme)].return_type.c_str() << endl;
+                        strcpy($$.type, 'INT');
+                        } 
+                        OC arg_list CC  {
+                        // func_call_id.pop();
                         sprintf($$.lexeme, "@t%d", variable_count);
                         variable_count++;
 
                         // checking if function is declared
-                        if(func_table.find(string($1.lexeme)) != func_table.end()){
-                            printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
-                            exit(0);
-                        }
+                        
 
                         tac.push_back(string($$.lexeme) + " = @call " + string($1.lexeme) + " " + func_table[string($1.lexeme)].return_type + " " + to_string(func_table[string($1.lexeme)].num_params));
                     }
                     ;
 
-arg_list        :   arg COMMA arg_list
-                    | arg {}
-                    | {}
+arg_list        :   arg COMMA arg_list {
+                        // function_check(string($1.type), 1);
+                        cout << "here" << string($1.type) << endl;
+                        // int sz = func_table[string(func_call_id.top())].param_types.size();
+                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << "there" << type << endl;
+                        // func_table[func_call_id.top()].param_types.pop_back();
+                        // if(string($1.type) != type) {
+                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        // }
+                    }
+                    | arg {
+                        // function_check(string($1.type), 1);
+                        cout << "here" << string($1.type) << endl;
+                        // int sz = func_table[string(func_call_id.top())].param_types.size();
+                        // string type = func_table[func_call_id.top()].param_types[sz-1];
+                        // cout << "there" << type << endl;
+                        // func_table[func_call_id.top()].param_types.pop_back();
+                        // if(string($1.type) != type) {
+                        //     sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        // }
+                    }
+                    | 
                     ;
 
 arg             :   expr {

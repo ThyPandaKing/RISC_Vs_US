@@ -1,8 +1,13 @@
-void main(){
-    int a = 5;
-    int main;
-    int switch;
-    if(a==5){
-        a = 4;
-    }
+int min(int f, float w, int r){
+    return 0;
+}
+
+int tem(){
+    int c;
+    float d;
+    int z = min(c, d, min(c, d));
+}
+
+int main(int a, int b){
+    int e = 5;
 }
