@@ -91,8 +91,9 @@ class CodeOptimizer:
                 if(line[3] == '||'):
                     # t0 = t1 || t2
                     """
-                        if t1 != 0 GOTO ___L0
-                        if t2 == 0 GOTO ___L1
+                        if t1 != 0 GOTO ___L0 else GOTO ___L3
+                        ___L3:
+                        if t2 != 0 GOTO ___L0 else GOTO ___L1
                         ___L0:
                             t0 = 1
                             GOTO ___L2
@@ -103,19 +104,25 @@ class CodeOptimizer:
                     l0 = self.get_new_label()
                     l1 = self.get_new_label()
                     l2 = self.get_new_label()
-                    replacement_str += f"if {line[2]} != 0 GOTO {l0}\n"
-                    replacement_str += f"if {line[4]} == 0 GOTO {l1}\n"
+                    l3 = self.get_new_label()
+
+                    replacement_str += f"if {line[2]} != 0 GOTO {l0}\n else GOTO {l3}\n"
+                    replacement_str += f"{l3}:\n"
+                    replacement_str += f"if {line[4]} != 0 GOTO {l0}\n else GOTO {l1}\n"
                     replacement_str += f"{l0}:\n"
                     replacement_str += f"{line[0]} = 1\n"
                     replacement_str += f"GOTO {l2}\n"
                     replacement_str += f"{l1}:\n"
                     replacement_str += f"{line[0]} = 0\n"
                     replacement_str += f"{l2}:\n"
+                    modified_tac += replacement_str
+
                 elif(line[3] == '&&'):
                     # t0 = t1 && t2
                     """
-                        if t1 == 0 GOTO ___L1
-                        if t2 == 0 GOTO ___L1
+                        if t1 == 0 GOTO ___L1 else GOTO ___L3
+                        ___L3:
+                        if t2 == 0 GOTO ___L1 else GOTO ___L0
                         ___L0:
                             t0 = 1
                             GOTO ___L2
@@ -126,14 +133,17 @@ class CodeOptimizer:
                     l0 = self.get_new_label()
                     l1 = self.get_new_label()
                     l2 = self.get_new_label()
-                    replacement_str += f"if {line[2]} == 0 GOTO {l1}\n"
-                    replacement_str += f"if {line[4]} == 0 GOTO {l1}\n"
+                    l3 = self.get_new_label()
+                    replacement_str += f"if {line[2]} == 0 GOTO {l1} else GOTO {l3}\n"
+                    replacement_str += f"{l3}:\n"
+                    replacement_str += f"if {line[4]} == 0 GOTO {l1} else GOTO {l0}\n"
                     replacement_str += f"{l0}:\n"
                     replacement_str += f"{line[0]} = 1\n"
                     replacement_str += f"GOTO {l2}\n"
                     replacement_str += f"{l1}:\n"
                     replacement_str += f"{line[0]} = 0\n"
                     replacement_str += f"{l2}:\n"
+                    modified_tac += replacement_str
 
             if(self.is_condition_statement(line)):
                 relop = line.split()[3]
