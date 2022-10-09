@@ -1,24 +1,20 @@
-func:
-- arg INT a
-- arg INT c
-@t0 = 1 INT
-@t1 = a + @t0 INT
-- INT b
-b = @t1 INT
-return b INT
-end:
-
 main:
-- INT arr [ 2 ] 
-arr [ 0 ] = 1 INT
-arr [ 1 ] = 2 INT
-@t2 = 1 INT
-@t3 = arr [ @t2 ]  INT
-@t4 = 1 INT
-@t5 = @t3 + @t4 INT
+
+#L0:
+@t0 = 1 INT
+
+if @t0 GOTO #L1 else GOTO #L2
+
+#L1:
+- INT b
+GOTO #L0
+
+#L2:
+@t1 = 1 INT
+@t2 = b + @t1 INT
 - INT a
-a = @t5 INT
-@t6 = 0 INT
-return @t6 INT
+a = @t2 INT
+@t3 = 0 INT
+return @t3 INT
 end:
 
