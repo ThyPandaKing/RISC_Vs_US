@@ -407,16 +407,7 @@ class CodeGenerator:
 
                     elif(line[3] == Operators.RightShift.value):
                         self.text_segment += f"srl {lhs[0]}, {op1[0]}, {op2[0]}\n"
-
-                    # elif(line[3] == Operators.LogicalOr.value):
-                    #     # t0 = t1 || t2
                         
-
-
-                    # a = b && c
-                    # if (a && b)
-                    # elif(line[3] == Operators.LogicalAnd.value):
-
                     # adding/updating lhs in symbol table
                     if(self.symbol_table[line[2]]['datatype'] == Datatypes.CHAR.value or
                             self.symbol_table[line[4]]['datatype'] == Datatypes.CHAR.value):
