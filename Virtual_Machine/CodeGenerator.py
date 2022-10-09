@@ -430,7 +430,7 @@ class CodeGenerator:
                             'offset': self.offset,
                             'registers': None
                         }
-                        self.offset += 1
+                        self.offset += 4
                     elif(line[1].lower() == Datatypes.INT.value or line[1].lower() == Datatypes.FLOAT.value):
                         self.address_descriptor[line[2]] = {
                             'offset': self.offset,
