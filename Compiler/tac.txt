@@ -1,24 +1,32 @@
-func:
-- arg INT a
-- arg INT c
-@t0 = 1 INT
-@t1 = a + @t0 INT
-- INT b
-b = @t1 INT
-return b INT
+min:
+- arg INT f
+- arg FLOAT w
+- arg INT r
+@t0 = 0 INT
+return @t0 INT
 end:
 
 main:
-- INT arr [ 2 ] 
-arr [ 0 ] = 1 INT
-arr [ 1 ] = 2 INT
-@t2 = 1 INT
-@t3 = arr [ @t2 ]  INT
-@t4 = 1 INT
-@t5 = @t3 + @t4 INT
-- INT a
-a = @t5 INT
-@t6 = 0 INT
-return @t6 INT
+- arg INT a
+- arg INT b
+@t1 = 5 INT
+- INT e
+e = @t1 INT
 end:
 
+tem:
+- INT c
+- INT d
+- INT g
+param c INT
+param d INT
+param c INT
+param g INT
+@t2 = @call main INT 2
+param @t2 INT
+@t3 = @call min INT 3
+- INT z
+z = @t3 INT
+end:
+
+datatype for argument not matched in line 14
