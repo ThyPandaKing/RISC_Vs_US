@@ -482,7 +482,7 @@ class CodeGenerator:
                             self.update_symbol_table(line[0], Datatypes.INT)
                         # CHAR
                         elif(datatype == Datatypes.CHAR.value):
-                            self.text_segment += f"addi {lhs[0]}, x0, {ord(line[2])}\n"
+                            self.text_segment += f"addi {lhs[0]}, x0, {ord(line[2][1])}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sb {lhs[0]}, {-offset}(x8)\n"
                             self.update_symbol_table(line[0], Datatypes.CHAR)
@@ -743,7 +743,7 @@ class CodeGenerator:
                 # self.spill_all_registers()
 
         # print(self.register_descriptor)
-        # print(self.address_descriptor)
+        print(self.address_descriptor)
         # print(self.symbol_table)
 
         for var, (type, value) in self.data_segment_dict.items():
