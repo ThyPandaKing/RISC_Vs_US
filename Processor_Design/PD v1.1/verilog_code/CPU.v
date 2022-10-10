@@ -823,18 +823,6 @@ module InstructionMemory (
   );
 endmodule
 
-module ALUControl (
-  input ALUOp0,
-  input ALUOp1,
-  input [3:0] F,
-  output [3:0] Operation
-);
-  assign Operation[0] = (ALUOp1 & (F[3] | F[0]));
-  assign Operation[1] = (~ ALUOp1 | ~ F[2]);
-  assign Operation[2] = (ALUOp0 | (ALUOp1 & F[1]));
-  assign Operation[3] = (ALUOp0 & ~ ALUOp0);
-endmodule
-
 module And7Bit (
   input I0,
   input I1,
@@ -953,6 +941,216 @@ module OPCodeControlUnit (
   assign ALUop0 = ALUop0_temp;
 endmodule
 
+module And3bit (
+  input a0,
+  input a1,
+  input a2,
+  output out
+);
+  assign out = ((a0 & a1) & a2);
+endmodule
+
+module And6bit (
+  input a0,
+  input a1,
+  input a2,
+  input a3,
+  input a4,
+  input a5,
+  output out
+);
+  wire s0;
+  wire s1;
+  And3bit And3bit_i0 (
+    .a0( a0 ),
+    .a1( a1 ),
+    .a2( a2 ),
+    .out( s0 )
+  );
+  And3bit And3bit_i1 (
+    .a0( a3 ),
+    .a1( a4 ),
+    .a2( a5 ),
+    .out( s1 )
+  );
+  assign out = (s0 & s1);
+endmodule
+
+module alu_control_unit (
+  input ALUin1,
+  input ALUin0,
+  input [3:0] F,
+  output [3:0] Operation
+);
+  wire s0;
+  wire s1;
+  wire s2;
+  wire s3;
+  wire s4;
+  wire s5;
+  wire s6;
+  wire s7;
+  wire s8;
+  wire s9;
+  wire s10;
+  wire s11;
+  wire s12;
+  assign s9 = ~ ALUin0;
+  assign s4 = F[0];
+  assign s5 = F[1];
+  assign s6 = F[2];
+  assign s8 = F[3];
+  assign s2 = ~ s4;
+  assign s1 = ~ s5;
+  assign s0 = ~ s6;
+  assign s10 = ~ s8;
+  assign s11 = ~ s4;
+  And3bit And3bit_i0 (
+    .a0( s0 ),
+    .a1( s1 ),
+    .a2( s2 ),
+    .out( s3 )
+  );
+  And6bit And6bit_i1 (
+    .a0( ALUin1 ),
+    .a1( s9 ),
+    .a2( s10 ),
+    .a3( s6 ),
+    .a4( s5 ),
+    .a5( s11 ),
+    .out( s12 )
+  );
+  assign s7 = (s3 & (ALUin1 & ~ ALUin0));
+  assign Operation[0] = s12;
+  assign Operation[1] = (s7 | ~ ALUin1);
+  assign Operation[2] = ((~ ALUin1 & ALUin0) | (s8 & s7));
+  assign Operation[3] = 1'b0;
+endmodule
+
+module And4bit (
+  input a0,
+  input a1,
+  input a2,
+  input a3,
+  output out
+);
+  assign out = ((a0 & a1) & (a2 & a3));
+endmodule
+
+module Or6bit (
+  input a0,
+  input a1,
+  input a2,
+  input a3,
+  input a4,
+  input a5,
+  output out
+);
+  assign out = (((a0 | a1) | (a2 | a3)) | (a4 | a5));
+endmodule
+
+module branch_control_unit (
+  input zr,
+  input ng,
+  input Branch,
+  input [2:0] funct3,
+  output CBranch
+);
+  wire s0;
+  wire s1;
+  wire s2;
+  wire s3;
+  wire s4;
+  wire s5;
+  wire s6;
+  wire s7;
+  wire s8;
+  wire s9;
+  wire s10;
+  wire s11;
+  wire s12;
+  wire s13;
+  wire s14;
+  wire s15;
+  wire s16;
+  wire s17;
+  wire s18;
+  wire s19;
+  wire s20;
+  assign s7 = ~ zr;
+  assign s15 = (zr | ~ ng);
+  assign s6 = funct3[0];
+  assign s13 = funct3[1];
+  assign s9 = funct3[2];
+  assign s0 = ~ s9;
+  assign s1 = ~ s13;
+  assign s2 = ~ s6;
+  assign s4 = ~ s9;
+  assign s5 = ~ s13;
+  assign s10 = ~ s13;
+  assign s11 = ~ s6;
+  // BGEU
+  And4bit And4bit_i0 (
+    .a0( s9 ),
+    .a1( s13 ),
+    .a2( s6 ),
+    .a3( 1'b0 ),
+    .out( s19 )
+  );
+  assign s14 = ~ s13;
+  assign s17 = ~ s6;
+  // BEQ
+  And4bit And4bit_i1 (
+    .a0( s0 ),
+    .a1( s1 ),
+    .a2( s2 ),
+    .a3( zr ),
+    .out( s3 )
+  );
+  // BNE
+  And4bit And4bit_i2 (
+    .a0( s4 ),
+    .a1( s5 ),
+    .a2( s6 ),
+    .a3( s7 ),
+    .out( s8 )
+  );
+  // BLT
+  And4bit And4bit_i3 (
+    .a0( s9 ),
+    .a1( s10 ),
+    .a2( s11 ),
+    .a3( ng ),
+    .out( s12 )
+  );
+  // BGE
+  And4bit And4bit_i4 (
+    .a0( s9 ),
+    .a1( s14 ),
+    .a2( s6 ),
+    .a3( s15 ),
+    .out( s16 )
+  );
+  // BLTU
+  And4bit And4bit_i5 (
+    .a0( s9 ),
+    .a1( s13 ),
+    .a2( s17 ),
+    .a3( 1'b0 ),
+    .out( s18 )
+  );
+  Or6bit Or6bit_i6 (
+    .a0( s3 ),
+    .a1( s8 ),
+    .a2( s12 ),
+    .a3( s16 ),
+    .a4( s18 ),
+    .a5( s19 ),
+    .out( s20 )
+  );
+  assign CBranch = (s20 & Branch);
+endmodule
+
 module CPU (
   input Clock,
   output MemRead
@@ -978,8 +1176,8 @@ module CPU (
   wire [11:0] s18;
   wire [31:0] s19;
   wire [6:0] s20;
-  wire [3:0] s21;
-  wire s22;
+  wire [2:0] s21;
+  wire [3:0] s22;
   wire s23;
   wire s24;
   wire s25;
@@ -987,13 +1185,15 @@ module CPU (
   wire s27;
   wire s28;
   wire s29;
-  wire [23:0] s30;
-  wire s31;
-  wire [23:0] s32;
-  wire s33;
-  wire s34;
+  wire s30;
+  wire [23:0] s31;
+  wire s32;
+  wire [23:0] s33;
+  wire [3:0] s34;
   wire s35;
-  wire [3:0] s36;
+  wire s36;
+  wire s37;
+  wire s38;
   RegFile32Bit RegFile32Bit_i0 (
     .DataToWrite( s0 ),
     .writeEnable( s1 ),
@@ -1063,64 +1263,72 @@ module CPU (
     .out( s10 )
   );
   ALU32Bit ALU32Bit_i8 (
-    .Operation( s21 ),
+    .Operation( s22 ),
     .a( s5 ),
     .b( s17 ),
     .ALU_out( s14 ),
-    .zero( s22 )
+    .zero( s23 )
   );
   InstructionMemory InstructionMemory_i9 (
     .Clk( Clock ),
-    .Loc_addr( s30 ),
+    .Loc_addr( s31 ),
     .Data_in( s6 ),
-    .WriteToMem( s31 ),
+    .WriteToMem( s32 ),
     .Data_out( s15 )
   );
   InstructionMemory InstructionMemory_i10 (
     .Clk( Clock ),
-    .Loc_addr( s32 ),
+    .Loc_addr( s33 ),
     .Data_in( 32'b0 ),
     .WriteToMem( 1'b0 ),
     .Data_out( s19 )
   );
-  assign s12 = (s33 & s22);
-  ALUControl ALUControl_i11 (
-    .ALUOp0( s34 ),
-    .ALUOp1( s35 ),
-    .F( s36 ),
-    .Operation( s21 )
-  );
-  assign s36[0] = s19[30];
-  assign s36[3:1] = s19[14:12];
-  OPCodeControlUnit OPCodeControlUnit_i12 (
-    .I0( s29 ),
-    .I1( s28 ),
-    .I2( s27 ),
-    .I3( s26 ),
-    .I4( s25 ),
-    .I5( s24 ),
-    .I6( s23 ),
+  assign s34[0] = s19[30];
+  assign s34[3:1] = s21;
+  OPCodeControlUnit OPCodeControlUnit_i11 (
+    .I0( s30 ),
+    .I1( s29 ),
+    .I2( s28 ),
+    .I3( s27 ),
+    .I4( s26 ),
+    .I5( s25 ),
+    .I6( s24 ),
     .ALU_src( s16 ),
     .MemtoReg( s13 ),
     .RegWrite( s1 ),
     .MemRead( MemRead ),
-    .MemWrite( s31 ),
-    .Branch( s33 ),
-    .ALUop1( s35 ),
-    .ALUop0( s34 )
+    .MemWrite( s32 ),
+    .Branch( s35 ),
+    .ALUop1( s36 ),
+    .ALUop0( s37 )
+  );
+  alu_control_unit alu_control_unit_i12 (
+    .ALUin1( s37 ),
+    .ALUin0( s36 ),
+    .F( s34 ),
+    .Operation( s22 )
+  );
+  branch_control_unit branch_control_unit_i13 (
+    .zr( s23 ),
+    .ng( s38 ),
+    .Branch( s35 ),
+    .funct3( s21 ),
+    .CBranch( s12 )
   );
   assign s20 = s19[6:0];
   assign s2 = s19[11:7];
+  assign s21 = s19[14:12];
   assign s3 = s19[19:15];
   assign s4 = s19[24:20];
-  assign s23 = s20[0];
-  assign s24 = s20[1];
-  assign s25 = s20[2];
-  assign s26 = s20[3];
-  assign s27 = s20[4];
-  assign s28 = s20[5];
-  assign s29 = s20[6];
+  assign s24 = s20[0];
+  assign s25 = s20[1];
+  assign s26 = s20[2];
+  assign s27 = s20[3];
+  assign s28 = s20[4];
+  assign s29 = s20[5];
+  assign s30 = s20[6];
   assign s18 = s19[11:0];
-  assign s30 = s14[23:0];
-  assign s32 = s8[23:0];
+  assign s31 = s14[23:0];
+  assign s33 = s8[23:0];
+  assign s38 = s14[31];
 endmodule
