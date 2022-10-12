@@ -140,7 +140,7 @@ func_data_type  :   data_type {
 param_list      :   param {
                         func_table[curr_func_name].param_types.push_back(string($1.type));
                         func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), 0, 0, countn+1 };
-                        tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));                       
+                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));                       
                     }
                     COMMA param_list {
                         $$.nParams = $4.nParams + 1;
@@ -149,7 +149,7 @@ param_list      :   param {
                         $$.nParams = 1;
                         func_table[curr_func_name].param_types.push_back(string($1.type));
                         func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), 0, 0, countn+1 };
-                        tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));
+                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));
                     }
                     | {
                         $$.nParams = 0;
@@ -192,6 +192,10 @@ stmt   		    :   declaration
                     | OUTPUT OC expr CC SCOL {
                         tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
                     }
+                    | OUTPUT OC STR CC SCOL {
+                        tac.push_back("output " + string($3.lexeme) + " STR");
+                    }
+
                     ;
  
 declaration     :   data_type ID SCOL { 
@@ -200,11 +204,11 @@ declaration     :   data_type ID SCOL {
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
-                    /* | STRING ID ASSIGN STR SCOL {
+                    | STRING ID ASSIGN STR SCOL {
                         tac.push_back("- STR " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
-                    } */
+                    }
                     | data_type ID ASSIGN expr SCOL {
                         is_reserved_word(string($2.lexeme));
                         multiple_declaration(string($2.lexeme));
@@ -399,7 +403,6 @@ assign          :   ID ASSIGN expr {
                         }
                         tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
-
 
 if_stmt         :   IF  {
                         sprintf($1.parentNext, "#L%d", label_counter++);

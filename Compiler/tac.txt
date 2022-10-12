@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 min:
 - arg INT f
 - arg FLOAT w
@@ -27,6 +28,26 @@ param @t2 INT
 @t3 = @call min INT 3
 - INT z
 z = @t3 INT
+=======
+main:
+
+#L0:
+@t0 = 1 INT
+
+if @t0 GOTO #L1 else GOTO #L2
+
+#L1:
+- INT b
+GOTO #L0
+
+#L2:
+@t1 = 1 INT
+@t2 = b + @t1 INT
+- INT a
+a = @t2 INT
+@t3 = 0 INT
+return @t3 INT
+>>>>>>> kishor
 end:
 
 datatype for argument not matched in line 14
