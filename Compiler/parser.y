@@ -8,6 +8,20 @@
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
         sprintf($$.lexeme, "@t%d", variable_count);\
         variable_count++;\
+        string lt=string($1.type);\
+        string rt=string($3.type);\
+        if((lt == "CHAR" && rt == "INT") || (rt == "CHAR" && lt == "INT")){\
+            strcpy($$.type, "INT");\
+        }\
+        else if((lt == "FLOAT" && rt == "INT") || (rt == "FLOAT" && lt == "INT")){\
+            strcpy($$.type, "FLOAT");\
+        }\
+        else if((lt == "FLOAT" && rt == "FLOAT") || (lt == "INT" && rt == "INT") || (lt == "CHAR" && rt == "CHAR")){\
+            strcpy($$.type, $1.type);\
+        }\
+        else{\
+            sem_errors.push_back("Cannot convert between CHAR and FLOAT in line : " + to_string(countn+1));\
+        }\
         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
     
     #include <iostream>
@@ -27,6 +41,7 @@
     bool multiple_declaration(string variable);
     bool is_reserved_word(string id);
     bool function_check(string variable, int flag);
+    bool check_type(string l, string r);
 
     struct var_info {
         string data_type;
@@ -36,7 +51,7 @@
     };
 
     vector<string> tac;
-    unordered_map<string, struct var_info> symbol_table;
+    // unordered_map<string, struct var_info> symbol_table;
 
     int variable_count = 0;
     int label_counter = 0;
@@ -66,7 +81,7 @@
     string curr_func_name;
     vector<string> curr_func_param_type;
 
-    vector<string> reserved = {"int", "float", "char", "void", "if", "elif", "else", "for", "while", "break", "continue", "main", "return", "switch", "case", "input", "output"};
+    vector<string> reserved = {"int", "float", "char", "string", "void", "if", "elif", "else", "for", "while", "break", "continue", "main", "return", "switch", "case", "input", "output"};
 
 %}
 
@@ -187,7 +202,7 @@ stmt   		    :   declaration
                     | switch_stmt
                     | INPUT OC ID CC SCOL  {
                         check_declaration($3.lexeme);
-                        tac.push_back("input " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
+                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
                     | OUTPUT OC expr CC SCOL {
                         tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
@@ -205,6 +220,8 @@ declaration     :   data_type ID SCOL {
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
                     }
                     | STRING ID ASSIGN STR SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- STR " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
@@ -212,6 +229,7 @@ declaration     :   data_type ID SCOL {
                     | data_type ID ASSIGN expr SCOL {
                         is_reserved_word(string($2.lexeme));
                         multiple_declaration(string($2.lexeme));
+                        check_type(string($1.type), string($4.type));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), 0, 0, countn+1 };
@@ -232,26 +250,29 @@ declaration     :   data_type ID SCOL {
                     ;
 
 arr_values      :   const {
-                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + string($1.type));
+                        check_type(func_table[curr_func_name].symbol_table[curr_array].data_type, string($1.type));
+                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + func_table[curr_func_name].symbol_table[curr_array].data_type);
                         if(arr_index > func_table[curr_func_name].symbol_table[curr_array].size){
-                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(symbol_table[curr_array].size) + "]’");
+                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(func_table[curr_func_name].symbol_table[curr_array].size) + "]’");
                         }
                     } 
                     COMMA arr_values
                     | const {
-                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + string($1.type));
+                        check_type(func_table[curr_func_name].symbol_table[curr_array].data_type, string($1.type));
+                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + func_table[curr_func_name].symbol_table[curr_array].data_type);
                         if(arr_index > func_table[curr_func_name].symbol_table[curr_array].size){
-                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(symbol_table[curr_array].size) + "]’");
+                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(func_table[curr_func_name].symbol_table[curr_array].size) + "]’");
                         }
                         arr_index=0;
                     }
                     ;
                    
 return_stmt     :   RETURN expr {
-                        tac.push_back("return " + string($2.lexeme) + " " + string($2.type));
+                        check_type(func_table[curr_func_name].return_type, string($2.type));
+                        tac.push_back("return " + string($2.lexeme) + " " + func_table[curr_func_name].return_type);
                     }
                     ;
- 
+
 data_type       :   INT {
                         strcpy($$.type, "INT");
                     }
@@ -393,11 +414,13 @@ const           :   INT_NUM {
                     ;
                    
 assign          :   ID ASSIGN expr {
+                        check_type(func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type, string($3.type));
                         check_declaration(string($1.lexeme));
                         tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
                     |
                     ID OS expr CS ASSIGN expr {
+                        check_type(func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type, string($6.type));
                         if(check_declaration(string($1.lexeme)) && func_table[curr_func_name].symbol_table[string($1.lexeme)].isArray == 0) { 
                             sem_errors.push_back("Line no " + to_string(countn+1) + " : Variable is not an array"); 
                         }
@@ -613,8 +636,20 @@ bool check_declaration(string variable){
 }
 
 bool multiple_declaration(string variable){
-    if(!(symbol_table.find(variable) == symbol_table.end())){
+    if(!(func_table[curr_func_name].symbol_table.find(variable) == func_table[curr_func_name].symbol_table.end())){
         sem_errors.push_back("redeclaration of '" + variable + "' in line " + to_string(countn+1));
+        return false;
+    }
+    return true;
+}
+
+bool check_type(string l, string r){
+    if(r == "FLOAT" && l == "CHAR"){
+        sem_errors.push_back("Cannot convert type FLOAT to CHAR in line " + to_string(countn+1));
+        return false;
+    }
+    if(l == "FLOAT" && r == "CHAR"){
+        sem_errors.push_back("Cannot convert typr CHAR to FLOAT in line " + to_string(countn+1));
         return false;
     }
     return true;

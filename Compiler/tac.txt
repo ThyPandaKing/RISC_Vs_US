@@ -1,53 +1,10 @@
-<<<<<<< HEAD
-min:
-- arg INT f
-- arg FLOAT w
-- arg INT r
-@t0 = 0 INT
-return @t0 INT
-end:
-
 main:
-- arg INT a
-- arg INT b
-@t1 = 5 INT
-- INT e
-e = @t1 INT
-end:
-
-tem:
-- INT c
-- INT d
-- INT g
-param c INT
-param d INT
-param c INT
-param g INT
-@t2 = @call main INT 2
-param @t2 INT
-@t3 = @call min INT 3
-- INT z
-z = @t3 INT
-=======
-main:
-
-#L0:
+- CHAR b
 @t0 = 1 INT
-
-if @t0 GOTO #L1 else GOTO #L2
-
-#L1:
-- INT b
-GOTO #L0
-
-#L2:
-@t1 = 1 INT
-@t2 = b + @t1 INT
-- INT a
-a = @t2 INT
-@t3 = 0 INT
-return @t3 INT
->>>>>>> kishor
+@t1 = b + @t0 INT
+- FLOAT a
+a = @t1 FLOAT
+@t2 = 0 INT
+return @t2 INT
 end:
 
-datatype for argument not matched in line 14
