@@ -27,6 +27,7 @@
     bool multiple_declaration(string variable);
     bool is_reserved_word(string id);
     bool function_check(string variable, int flag);
+    bool type_check(string type1, string type2);
 
     struct var_info {
         string data_type;
@@ -565,7 +566,8 @@ arg_list        :   arg COMMA arg_list {
                         string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
-                        if(string($1.type) != type) {
+                        cout << type << endl;
+                        if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
@@ -576,7 +578,7 @@ arg_list        :   arg COMMA arg_list {
                         string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
-                        if(string($1.type) != type) {
+                        if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
@@ -624,6 +626,13 @@ bool is_reserved_word(string id){
     auto iterator = find(reserved.begin(), reserved.end(), id);
     if(iterator != reserved.end()){
         sem_errors.push_back("usage of reserved keyword '" + id + "' in line " + to_string(countn+1));
+        return true;
+    }
+    return false;
+}
+
+bool type_check(string type1, string type2) {
+    if((type1 == "FLOAT" and type2 == "CHAR") or (type1 == "CHAR" and type2 == "FLOAT")) {
         return true;
     }
     return false;

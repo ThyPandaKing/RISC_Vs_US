@@ -1,3 +1,12 @@
+c: 
+INT
+INT
+d: 
+INT
+FLOAT
+c: 
+INT
+INT
 min:
 - arg INT f
 - arg FLOAT w
@@ -29,4 +38,3 @@ param @t2 INT
 z = @t3 INT
 end:
 
-datatype for argument not matched in line 14
