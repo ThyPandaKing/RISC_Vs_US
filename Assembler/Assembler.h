@@ -1,5 +1,5 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef ASSEMBLER_H
+#define ASSEMBLER_H
 
 #include<unordered_map>
 #include<cstring>
@@ -7,7 +7,7 @@
 #include<iostream>
 #include<fstream>
 #include<bitset>
-#include <fcntl.h>
+#include<fcntl.h>
 using namespace std;
 class OPERATIONS
 {
@@ -43,10 +43,43 @@ class Map
 		static Map* instance;
 		REGISTERS* registers;
 		OPERATIONS* operations;
+		
 	public:
 		Map();
 		static Map* getInstance();
 		REGISTERS* getRegisters();
 		OPERATIONS* getOperations();
+};
+struct ST_Entry
+{
+	int value;
+	/*
+		type can be used to denote
+		0 - labels
+		1 - variables
+	*/
+	int type;
+	ST_Entry();
+	ST_Entry(int type, int value);
+	void ST_Print();
+};
+class Assembler
+{
+	private:
+		int baseAddress;
+		int runningAddress;
+		unordered_map<string, ST_Entry> symbol_table;
+		string regex_labels;
+		string regex_comment;
+
+	public:
+		Assembler();
+		int terminate(int code);
+		string extractLabel(string vm_line, bool sectionType);
+		int extractTypeAndValue(string label, string vm_line);
+		void printST();
+		// To create the symbol table
+		int firstPass(string vmout);
+		int secondPass(string vmout, string asmout);
 };
 #endif
