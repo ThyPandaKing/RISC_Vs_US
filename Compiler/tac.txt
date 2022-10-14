@@ -1,34 +1,36 @@
+max:
+- arg INT a
+- arg INT b
+@t0 = a + b INT
+return @t0 INT
+end:
+
 main:
-@t0 = 10 INT
-- INT a
-a = @t0 INT
 @t1 = 10 INT
-@t2 = a == @t1 INT
-if @t2 GOTO #L1 else GOTO #L2
+- INT a
+a = @t1 INT
+@t2 = 10 INT
+@t3 = a == @t2 INT
+if @t3 GOTO #L1 else GOTO #L2
 #L1:
-@t3 = 5 INT
+@t4 = 5 INT
 - INT b
-b = @t3 INT
+b = @t4 INT
 GOTO #L0
 #L2:
 #L0:
-@t4 = 11 INT
-@t5 = a == @t4 INT
-if @t5 GOTO #L4 else GOTO #L5
+@t5 = 11 INT
+@t6 = a == @t5 INT
+if @t6 GOTO #L4 else GOTO #L5
 #L4:
 - INT c
-@t6 = 1 INT
-b = @t6 INT
+@t7 = 1 INT
+b = @t7 INT
 GOTO #L3
 #L5:
 #L3:
-@t7 = 0 INT
-return @t7 INT
+@t8 = 0 INT
+return @t8 INT
 end:
 
-Scope of variable 'b' not marching in line 11.
-
-Symbol table
-c ---> 3
-b ---> 2
-a ---> 1
+Scope of variable 'b' not marching in line 15.

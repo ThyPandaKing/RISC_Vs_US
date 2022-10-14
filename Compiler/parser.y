@@ -149,7 +149,7 @@ func_data_type  :   data_type {
  
 param_list      :   param {
                         func_table[curr_func_name].param_types.push_back(string($1.type));
-                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), 0, 0, countn+1 };
+                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
                         tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));                       
                     }
                     COMMA param_list {
@@ -158,7 +158,7 @@ param_list      :   param {
                     | param {
                         $$.nParams = 1;
                         func_table[curr_func_name].param_types.push_back(string($1.type));
-                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), 0, 0, countn+1 };
+                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
                         tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));
                     }
                     | {
@@ -169,8 +169,7 @@ param_list      :   param {
 param           :   data_type ID {
                         $$.nParams = 1;
                         strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $2.lexeme);
-                    }
+                        strcpy($$.lexeme, $2.lexeme);                    }
                     ;
  
 stmt_list       :   stmt stmt_list 
@@ -597,7 +596,7 @@ arg_list        :   arg COMMA arg_list {
                         string type = func_call_id.top().second[sz-1];
                         // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
-                        cout << type << endl;
+                        // cout << type << endl;
                         if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
@@ -632,10 +631,10 @@ int main(int argc, char *argv[]) {
         cout << item << endl;
     /* for(auto item: func_table[curr_func_name].symbol_table)
         cout << item.first << "-->" << item.second.data_type << endl; */
-    cout << endl << "Symbol table" << endl;
-    for(auto item : func_table["main"].symbol_table){
-        cout << item.first << " ---> " << item.second.scope <<endl;
-    }
+    // cout << endl << "Symbol table" << endl;
+    // for(auto item : func_table["main"].symbol_table){
+    //     cout << item.first << " ---> " << item.second.scope <<endl;
+    // }
 }
 
 bool check_declaration(string variable){
