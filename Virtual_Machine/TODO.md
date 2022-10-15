@@ -10,3 +10,5 @@
 
 - [x] input translations
 - [x] logical operators translations
+
+### Wrong Test Cases:
