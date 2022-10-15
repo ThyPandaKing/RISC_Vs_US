@@ -1,5 +1,5 @@
 main:
-@t0 = 2 INT
+@t0 = 4 INT
 - INT a
 a = @t0 INT
 @t1 = 1 INT

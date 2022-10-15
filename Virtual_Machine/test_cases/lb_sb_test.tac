@@ -19,7 +19,9 @@ c = @t5 INT
 @t7 = c == @t6 INT
 if @t7 GOTO #L1 else GOTO #L2
 #L1:
-@t8 = x - y CHAR
+- INT l
+l = 1 INT
+@t8 = x - l CHAR
 x = @t8 CHAR
 GOTO #L0
 #L2:

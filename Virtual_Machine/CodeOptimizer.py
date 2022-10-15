@@ -1,4 +1,5 @@
-import imp
+# -*- coding: future_fstrings -*-
+from operator import mod
 import re
 from CodeGenerator import CodeGenerator
 import os
@@ -28,7 +29,7 @@ class CodeOptimizer:
         self.temp_index = 0
         self.register_allocation = CodeGenerator()
 
-    def is_condition_statement(self, instruction) -> bool:
+    def is_condition_statement(self, instruction) :
         """
         returns true if the given instruction
         is a condition statement
@@ -41,7 +42,7 @@ class CodeOptimizer:
             return True
         return False
 
-    def is_logical_statement(self, instruction) -> bool:
+    def is_logical_statement(self, instruction) :
         """
         returns true if the given instruction
         is a condition statement
@@ -54,30 +55,30 @@ class CodeOptimizer:
             return True
         return False
 
-    def get_new_temp(self) -> str:
+    def get_new_temp(self) :
         temp = '@_t'+str(self.temp_index)
         self.temp_index += 1
         return temp
 
-    def get_new_label(self) -> str:
+    def get_new_label(self) :
         label = '___L'+str(self.label_index)
         self.label_index += 1
         return label
 
-    def get_node(self, graph, index) -> Node:
+    def get_node(self, graph, index) :
         for node in graph:
             if node.index == index:
                 return node
         return None
 
-    def DFS(self, visited=None, graph=[], node=None) -> None:
+    def DFS(self, visited=None, graph=[], node=None) :
         if node not in visited:
             visited.add(node)
             for neighbour_index in node.next:
                 neighbour = self.get_node(graph, neighbour_index)
                 self.DFS(visited, graph, neighbour)
 
-    def generate_target_code(self, tac_code) -> None:
+    def generate_target_code(self, tac_code) :
         """
         basic blocks will be built here
         by reading the tac code
@@ -86,6 +87,43 @@ class CodeOptimizer:
         modified_tac = ''
         for line in tac_code.splitlines():
             # directly converting to risc v code
+            # if("*" in line):
+            #     line=line.split(' ')
+            #     if(line[-1]=='INT'):
+            #         t0 = self.get_new_temp()
+            #         t1 = self.get_new_temp()
+            #         t2 = self.get_new_temp()
+            #         l0 = self.get_new_label()
+            #         l1 = self.get_new_label()
+            #         l2 = self.get_new_label()
+            #         """
+            #         a=b*c
+
+            #         a=0
+            #         t0=0
+            #         t2=1
+            #         L0:
+            #         t1=t0<c
+            #         if t1 goto L1 else goto L2
+            #         L1:
+            #         a=a+b
+            #         t0=t0+t2
+            #         goto L0
+            #         L2:
+            #         """
+            #         modified_tac += f"{line[0]} = 0 INT\n"
+            #         modified_tac += f"{t0} = 0 INT\n"
+            #         modified_tac += f"{t2} = 1 INT\n"
+            #         modified_tac += f"{t1} = 0 INT\n"
+            #         modified_tac += f"{l0}:\n"
+            #         modified_tac += f"{t1} = {t0} - {line[4]} INT\n"
+            #         modified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
+            #         modified_tac += f"{l1}:\n"
+            #         modified_tac += f"{line[0]} = {line[0]} + {line[2]}\n"
+            #         modified_tac += f"{t0} = {t0} + {t2}\n"
+            #         modified_tac += f"GOTO {l0}\n"
+            #         modified_tac += f"{l2}:\n"
+
             if(self.is_logical_statement(line)):
                 line = line.split(' ')
                 if(line[3] == '||'):
@@ -155,7 +193,11 @@ class CodeOptimizer:
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
+                # replacement_str += f"print {left_operand} INT\n"
+                # replacement_str += f"print {right_operand} INT\n"
+                # replacement_str += f"print {t0} INT\n"
                 replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
+                # replacement_str += f"if {t0} <= 0 GOTO {l0} else GOTO {l1}\n"
                 replacement_str += f"{l0}:\n"
                 replacement_str += f"{temp} = 1 INT\n"
                 replacement_str += f"GOTO {l2}\n"
@@ -163,6 +205,7 @@ class CodeOptimizer:
                 replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+
             else:
                 modified_tac += line+'\n'
 
@@ -179,9 +222,8 @@ class CodeOptimizer:
         # replacing '#' with '__' for labels
         final_tac = final_tac.replace('#', '__')
 
-        # print(final_tac)
-
         final_tac = self.pre_optimizations(final_tac)
+        # print(final_tac)
 
         block_lines = ''
         for line in final_tac.splitlines():
@@ -210,7 +252,7 @@ class CodeOptimizer:
 
         self.optimize()
 
-    def pre_optimizations(self, intermediate_code) -> str:
+    def pre_optimizations(self, intermediate_code) :
         """
         function that performs basic
         optimizations before generating blocks 
@@ -320,7 +362,7 @@ class CodeOptimizer:
 
         return optimized_code4
 
-    def eliminate_dead_code(self, blocks) -> list:
+    def eliminate_dead_code(self, blocks) :
         """
         function that eliminates dead code
         """
@@ -377,11 +419,15 @@ class CodeOptimizer:
                 for search_node in CFG:
                     if search_node.leading_label is not None and search_node.leading_label == label:
                         node.next.add(search_node.index)
+                label = words[-4]
+                for search_node in CFG:
+                    if search_node.leading_label is not None and search_node.leading_label == label:
+                        node.next.add(search_node.index)
             # Identify the return statements and connect them to the points where they are called
             if len(words) >= 1 and words[0] == 'return':
                 index = return_map[return_pointer]
                 # Returns the location of the current return statement in the list of all code lines
-                # we go upwards and search for the first functin label -> This is the function that this return statement belongs to
+                # we go upwards and search for the first functin label 
                 # Hence we need to find all calls to this functin and make a connection going from this return statement to the next line after the specific function call
                 while index >= 0:
                     words = all_lines[index].split(' ')
@@ -414,7 +460,7 @@ class CodeOptimizer:
 
             # print("Current node index", node.index)
             # print('Current node code\n', node.code_block)
-            # print('in case of a call -> Function next stores: ', node.function_next)
+            # print('in case of a call : ', node.function_next)
             # print('Next blocks', node.next)
             # print("================================================")
 
@@ -427,7 +473,6 @@ class CodeOptimizer:
             if node.leading_label == 'main':
                 start_block = node
                 break
-        # print('start_block', start_block, type(start_block))
         visited = set()
         # Call DFS and obtin the visited blocks
         self.DFS(visited=visited, graph=CFG, node=start_block)
@@ -445,12 +490,12 @@ class CodeOptimizer:
         return blocks
 
 
-    def optimize(self) -> None:
+    def optimize(self) :
         """
         all optimizations occur here
         """
 
-        self.eliminate_dead_code(self.blocks)
+        self.blocks = self.eliminate_dead_code(self.blocks)
 
         final_asm = self.register_allocation.main(self.blocks)
 

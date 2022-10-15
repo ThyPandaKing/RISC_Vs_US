@@ -11,8 +11,19 @@ b = 3 INT
 c = a / b INT
 
 @t0 = a * c INT
-@t1 = a + b INT
-c = @t1 - @t0 INT
+print @t0 INT
+
+return 0 INT
+- FLOAT x
+x = -4.3 FLOAT
+- FLOAT y
+y = 2.0 FLOAT
+- FLOAT z
+z = x / y FLOAT
+print z FLOAT
+- FLOAT Z
+Z = x * y FLOAT
+print Z FLOAT
 
 return 0 INT
 

@@ -1,5 +1,5 @@
-all: Map.cpp Map.h
-	g++ Map.cpp -o assemble.o
+all: Assembler.cpp Assembler.h
+	g++ Assembler.cpp -o assemble.o
 
 run:
 	assemble.o
