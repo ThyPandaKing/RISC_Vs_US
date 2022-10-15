@@ -10,5 +10,9 @@
 
 - [x] input translations
 - [x] logical operators translations
+- [x] float and string
+- [ ] optimizations (loop unrolling)
 
 ### Wrong Test Cases:
+
+1. lb_sb_test.tac

@@ -9,7 +9,7 @@ addi x30, x0, 97
 sb x30, -4(x8)
 # ---- end of spill ----
 lw a0, -4(x8)
-li a7, 11
+addi a7, x0, 11
 ecall
 lui x30, 0xc0b5c
 addi x30, x30, 0x28f
@@ -19,5 +19,5 @@ fmv.w.x f3, x30
 fsw f3, -8(x8)
 # ---- end of spill ----
 flw fa0, -8(x8)
-li a7, 2
+addi a7, x0, 2
 ecall

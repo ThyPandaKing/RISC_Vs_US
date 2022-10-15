@@ -386,8 +386,9 @@ class CodeGenerator:
         """
         hex=''.join('{:02x}'.format(ord(x))[::-1] for x in struct.pack('f',float(value)))[::-1]
         upper = hex[:5]
-        lower = hex[5:]
-        return ('0x'+upper,'0x'+lower)
+        mid = hex[5]
+        lower = hex[6:]
+        return ('0x'+upper, '0x'+mid, '0x'+lower)
 
     def update_symbol_table(self, subject, datatype) :
         """
@@ -406,7 +407,6 @@ class CodeGenerator:
         at the end of each block
         """
 
-        print(self.address_descriptor)
         self.text_segment += '# ---- end of block ----\n'
         for var, val in self.address_descriptor.items():
             reg = val['registers']
@@ -669,7 +669,6 @@ class CodeGenerator:
                                     subject=line[0], datatype=Datatypes.STR)
                     # FLOAT
                     else:
-                        print(line)
                         lhs_float = self.get_float_register(line[0])
                         if(lhs_float[1] == 1):
                             self.update_float_descriptors(lhs_float[0], line[0])
@@ -680,9 +679,10 @@ class CodeGenerator:
                             # if(lhs_sup[1] == 1 and line[-1].lower() != Datatypes.STR):
                                 # self.update_descriptors(lhs_sup[0], line[0])
 
-                            upper,lower=self.get_ieee_rep(line[2])
+                            upper,mid,lower=self.get_ieee_rep(line[2])
                                 
                             self.text_segment += f"lui {lhs_sup[0]}, {upper}\n"
+                            self.text_segment += f"addi {lhs_sup[0]}, {lhs_sup[0]}, {mid}\n"
                             self.text_segment += f"addi {lhs_sup[0]}, {lhs_sup[0]}, {lower}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs_sup[0]}, {-offset}(x8)\n"
@@ -797,9 +797,10 @@ class CodeGenerator:
                             if(lhs_sup[1] == 1 and line[-1].lower() != Datatypes.STR):
                                 self.update_descriptors(lhs_sup[0], line[0])
 
-                            upper,lower=self.get_ieee_rep('-'+line[3])
+                            upper,mid,lower=self.get_ieee_rep('-'+line[3])
                                 
                             self.text_segment += f"lui {lhs_sup[0]}, {upper}\n"
+                            self.text_segment += f"addi {lhs_sup[0]}, {lhs_sup[0]}, {mid}\n"
                             self.text_segment += f"addi {lhs_sup[0]}, {lhs_sup[0]}, {lower}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"sw {lhs_sup[0]}, {-offset}(x8)\n"
@@ -921,26 +922,26 @@ class CodeGenerator:
                     datatype = self.symbol_table[line[1]]
                     # taking integer input
                     if(datatype == Datatypes.INT):
-                        self.text_segment += "li a7, 5\necall\n"
+                        self.text_segment += "addi a7, x0, 5\necall\n"
                         offset = self.address_descriptor[line[1]]['offset']
                         self.text_segment += f"sw a0, {-offset}(x8)\n"
 
                     # taking char input
                     elif(datatype == Datatypes.CHAR):
-                        self.text_segment += "li a7, 12\necall\n"
+                        self.text_segment += "addi a7, x0, 12\necall\n"
                         offset = self.address_descriptor[line[1]]['offset']
                         self.text_segment += f"sw a0, {-offset}(x8)\n"
 
                     # taking float input
                     elif(datatype == Datatypes.FLOAT):
-                        self.text_segment += "li a7, 6\necall\n"
+                        self.text_segment += "addi a7, x0, 6\necall\n"
                         offset = self.address_descriptor[line[1]]['offset']
                         self.text_segment += f"sw fa0, {-offset}(x8)\n"
 
                     # taking string input (INCOMPLETE)
                     # elif(datatype == Datatypes.STRING):
                     #     self.text_segment += f"la a0, {line[1]}\n"
-                    #     self.text_segment += "li a7, 8\necall\n"
+                    #     self.text_segment += "addi a7, x0, 8\necall\n"
 
                 elif(self.is_output_statement(line)):
                     line = line.split(' ')
@@ -961,41 +962,42 @@ class CodeGenerator:
                         else:
                             self.text_segment += f"la a0, {line[1]}\n"
 
-                        self.text_segment += "li a7, 4\necall\n"
+                        self.text_segment += "addi a7, x0, 4\necall\n"
 
                     # printing integers
                     if(line[2].lower() == Datatypes.INT):
                         constant, datatype = self.is_constant(line[1])
                         if(constant):
-                            self.text_segment += f"li a0, {line[1]}\n"
+                            self.text_segment += f"addi a0, x0, {line[1]}\n"
                         else:
                             offset = self.address_descriptor[line[1]]['offset']
                             self.text_segment += f"lw a0, {-offset}(x8)\n"
-                        self.text_segment += "li a7, 1\necall\n"
+                        self.text_segment += "addi a7, x0, 1\necall\n"
 
                     # printing char
                     elif(line[2].lower() == Datatypes.CHAR):
                         constant, datatype = self.is_constant(line[1])
                         if(constant):
-                            self.text_segment += f"li a0, {line[1]}\n"
+                            self.text_segment += f"addi a0, x0, {line[1]}\n"
                         else:
                             offset = self.address_descriptor[line[1]]['offset']
                             self.text_segment += f"lw a0, {-offset}(x8)\n"
-                        self.text_segment += "li a7, 11\necall\n"
+                        self.text_segment += "addi a7, x0, 11\necall\n"
 
                     # printing floats
                     elif(line[2].lower() == Datatypes.FLOAT):
                         constant, datatype = self.is_constant(line[1])
                         if(constant):
-                            upper,lower=self.get_ieee_rep(line[1])
+                            upper,mid,lower=self.get_ieee_rep(line[1])
                             self.text_segment += f"lui a0, {upper}\n"
+                            self.text_segment += f"addi a0, a0, {mid}\n"
                             self.text_segment += f"addi a0, a0, {lower}\n"
                             offset = self.address_descriptor[line[0]]['offset']
                             self.text_segment += f"fmv.w.x fa0, a0\n"
                         else:
                             offset = self.address_descriptor[line[1]]['offset']
                             self.text_segment += f"flw fa0, {-offset}(x8)\n"
-                        self.text_segment += "li a7, 2\necall\n"
+                        self.text_segment += "addi a7, x0, 2\necall\n"
 
             # spill all here
             # if(block != blocks[-1]):
