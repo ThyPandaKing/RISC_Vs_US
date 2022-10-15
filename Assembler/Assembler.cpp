@@ -1,3 +1,5 @@
+// https://itnext.io/risc-v-instruction-set-cheatsheet-70961b4bbe8
+// https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
 #include "Assembler.h"
 
 Map* Map::instance=0;
@@ -16,7 +18,15 @@ OPERATIONS::OPERATIONS()
 		{"lw", 0b0000011},
 
 		// S - Type
-		{"sw", 0b0100011}
+		{"sw", 0b0100011},
+
+		// B - Type
+		{"beq", 0b1100011},
+		{"bne", 0b1100011},
+		{"blt", 0b1100011},
+		{"bge", 0b1100011},
+		{"bltu", 0b1100011},
+		{"bgeu", 0b1100011},
 	};
 
 	funct3={
@@ -30,7 +40,15 @@ OPERATIONS::OPERATIONS()
 		{"lw", 0b010},
 
 		// S -Type
-		{"sw", 0b010}
+		{"sw", 0b010},
+
+		// B - Type
+		{"beq", 0b000},
+		{"bne", 0b001},
+		{"blt", 0b100},
+		{"bge", 0b101},
+		{"bltu", 0b110},
+		{"bgeu", 0b111},
 	};
 
 	funct7={
@@ -42,7 +60,7 @@ OPERATIONS::OPERATIONS()
 	};
 	
 	uid={
-
+		{"ecall", 0b1110011},
 	};
 
 	type={
@@ -55,7 +73,15 @@ OPERATIONS::OPERATIONS()
 		{"lw", 'I'},
 
 		// S -Type
-		{"sw", 'S'}
+		{"sw", 'S'},
+
+		// B - Type
+		{"beq", 'B'},
+		{"bne", 'B'},
+		{"blt", 'B'},
+		{"bge", 'B'},
+		{"bltu", 'B'},
+		{"bgeu", 'B'},
 	};
 }
 REGISTERS::REGISTERS()
@@ -65,6 +91,7 @@ REGISTERS::REGISTERS()
 	};
 	regex_reg="[x]\\d{1,2}";
 	regex_reg_imm="(\\d)+\\([x]\\d{1,2}\\)";
+	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
 {
@@ -158,12 +185,50 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 	}
 	return 0;
 }
+int REGISTERS::extractLabel(vector<int> &regs, string reg)
+{
+	string label="";
+	try
+	{
+		regex regexp(regex_labels);
+		sregex_iterator next(reg.begin(), reg.end(), regexp);
+		sregex_iterator end;
+		
+		smatch match = *next;
+		label=match.str();
+		
+		int val;
+		if((val=getSymbolTableValue(label))==-1)
+		{
+			perror("Invalid Label not found");
+			return 3;
+		}
+		
+		regs.resize(regs.size()+1, val);
+		next++;
+		
+		if(next != end)
+		{
+			perror("Invalid Syntax");
+			reg.resize(regs.size()-1);
+			return 1;
+		}
+	}
+	catch (const regex_error& e)
+	{
+    	perror("Invalid Syntax for Labels");
+		return 2;
+	}
+	return 0;
+}
 
 vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 {
 	vector<int> regs=extractRegisters(reg, type);
 	if(type == 'I' || type=='S')
 		extractImmediate(regs, reg, type);
+	if(type == 'B')
+		extractLabel(regs, reg);
 	return regs;	
 }
 int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
@@ -238,7 +303,44 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 		ins=ins|((regs[2]&31)<<7);
 		ins=ins|((regs[2]&4064)>>5<<25);
 	}
+	else if(type=='B')
+	{
+		if(regs.size() != 3)
+		{
+			perror("Invalid Syntax");
+			return 1;
+		}
+		// reg[0] is source(rs1) reg[1] is source(rs2)
+		// reg[2] has the immediate value i.e. the line number to which jump has to be made
+
+		// rs1
+		ins=ins|(regs[0]<<15);
+		// rs2
+		ins=ins|(regs[1]<<20);
+
+		// imm
+		// imm is split into 4 segments
+		// bit 11 from LSB at index 7 of ins
+		// bits 1 to 4 from LSB - starting from index 8 of ins
+		// bits 5 to 10 from LSB - starting from index 25 of ins
+		// bit 12 from LSB at index 31 of ins
+		ins=ins|(((regs[2]>>10)&1)<<7);
+		ins=ins|((regs[2]&15)<<8);
+		ins=ins|((regs[2]&1008)>>4<<25);
+		ins=ins|(((regs[2]>>11)&1)<<31);
+	}
 	return 0;
+}
+void REGISTERS::setSymbolTable(unordered_map<string, ST_Entry> &symbol_table)
+{
+	this->symbol_table=symbol_table;
+}
+int REGISTERS::getSymbolTableValue(string symbol)
+{
+	unordered_map<string, ST_Entry>::iterator pos;
+	if(symbol_table.find(symbol) == symbol_table.end())
+		return -1;
+	return symbol_table[symbol].value;
 }
 unsigned char OPERATIONS::setIns(int &ins, string op)
 {
@@ -260,12 +362,11 @@ unsigned char OPERATIONS::setIns(int &ins, string op)
 	}
 	return type[op];
 }
-ST_Entry::ST_Entry()
-{}
+ST_Entry::ST_Entry(){}
 ST_Entry::ST_Entry(int type, int value)
 {
-	ST_Entry::type=type;
-	ST_Entry::value=value;
+	this->type=type;
+	this->value=value;
 }
 void ST_Entry::ST_Print()
 {
@@ -460,6 +561,8 @@ int Assembler::firstPass(string vmout)
 		perror("Text section not found");
 		return terminate(7);
 	}
+
+	Map::getInstance()->getRegisters()->setSymbolTable(symbol_table);
 	return 0;
 }
 int Assembler::secondPass(string vmout, string asmout)
@@ -476,12 +579,58 @@ int Assembler::secondPass(string vmout, string asmout)
 	string op, reg_list;
 	int ins=0;
 	unsigned char type='\0';
+
+	// Run through till .section .text
 	while(getline(fin, ins_tac))
 	{
+		if(ins_tac==".section")
+		{
+			getline(fin, ins_tac);
+			if(ins_tac==".data")
+				continue;
+			else if(ins_tac==".text")
+				break;
+			else
+			{
+				perror("Invalid Syntax");
+				return terminate(2);
+			}
+		}
+	}
+
+	while(getline(fin, ins_tac))
+	{
+		// TODO : Labels
+
+		// Some ins have info hardcoded in uid (independent of registers, immediate etc)
+		// If more such ins should be added (We can add in a set and check)
+		if(ins_tac=="ecall")
+		{
+			// OP
+			try
+			{
+				type=Map::getInstance()->getOperations()->setIns(ins, ins_tac);
+			}
+			catch(const exception& e)
+			{
+				perror("Invalid Operation");
+				return terminate(3);
+			}
+			if(type=='\0')
+			{
+				perror("Invalid Operation");
+				return terminate(4);
+			}	
+			continue;
+		}
+
+
 		istringstream iss(ins_tac);
+
 		if(!(iss>>op>>reg_list))
 		{
 			perror("Invalid Syntax");
+			cout<<ins_tac<<endl;
 			return terminate(2);
 		}
 		
@@ -501,14 +650,13 @@ int Assembler::secondPass(string vmout, string asmout)
 			return terminate(4);
 		}
 		
-
 		// REG_LIST
 		try
 		{
 			if(Map::getInstance()->getRegisters()->setRegCode(ins, reg_list, type)!=0)
 			{
 				perror("Invalid Syntax");
-				return 5;
+				return terminate(5);
 			}
 			bitset<32> binary(ins);
 			fout<<binary<<endl;
@@ -517,10 +665,11 @@ int Assembler::secondPass(string vmout, string asmout)
 		catch(const exception& e)
 		{
 			perror("Invalid Syntax");
-			return 6;
+			return terminate(6);
 		}
 		op.clear();
 		reg_list.clear();
+		type='\0';
 	}
     fin.close();
 	fout.close();
@@ -533,9 +682,24 @@ int main()
 	string asmout="asmout.o";
 
 	cout<<"------STARTED\n";
+
 	Assembler A;
-	cout<<A.firstPass(vmout)<<endl;
-	A.printST();
-	//A.secondPass(vmout, asmout);
+	int flag=A.firstPass(vmout);
+	if(flag==0)
+	{
+		cout<<"\nFIRST PASS COMPLETE\n";
+		A.printST();
+		flag=A.secondPass(vmout, asmout);
+	}
+
+	if(flag==0)
+		cout<<"\nSECOND PASS COMPLETE\n";
+	else
+	{
+		cout<<flag<<endl;
+		perror("Invalid Code");
+		return 1;
+	}
+
 	cout<<"ENDED------\n";
 }
