@@ -1,6 +1,7 @@
 # -*- coding: future_fstrings -*-
 import enum
 import struct
+import operator
 
 class Operators(enum.Enum):
     Plus = '+'
@@ -101,6 +102,7 @@ class CodeGenerator:
         self.ds_variables = {}
         self.offset = 4     # for stack pointer (spill)
         self.symbol_table = {}      # a custom symbol table
+        self.data_segment_start = 0x10010000        # start address of datasegment
 
     def get_data_type(self, instruction) :
         """
@@ -379,12 +381,13 @@ class CodeGenerator:
         # update register descriptor
         self.float_register_descriptor[register] = None
 
-    def get_ieee_rep(self, value):
+    def get_ieee_rep(self, value, hex=None):
         """
         function that converts a constant
         into IEEE 754 floating point representation
         """
-        hex=''.join('{:02x}'.format(ord(x))[::-1] for x in struct.pack('f',float(value)))[::-1]
+        if hex is None:
+            hex=''.join('{:02x}'.format(ord(x))[::-1] for x in struct.pack('f',float(value)))[::-1]
         upper = hex[:5]
         mid = hex[5]
         lower = hex[6:]
@@ -622,7 +625,10 @@ class CodeGenerator:
                             elif(datatype == Datatypes.STR):
                                 const = line[2]
                                 var = line[0]
-                                self.data_segment_dict[var] = (".asciz", const)
+                                const = const[1:-1].decode('string_escape')
+                                length=len(const)
+                                self.data_segment_dict[var] = [".asciz", line[2], self.data_segment_start, length]
+                                self.data_segment_start += length+1
                                 self.update_symbol_table(var, Datatypes.STR)
                         else:
                             rhs_datatype = line[-1].lower()
@@ -654,8 +660,9 @@ class CodeGenerator:
                                     self.text_segment += f"lb {lhs[0]}, {-offset}(x8)\n"
                             # STR
                             elif(rhs_datatype == Datatypes.STR):
-                                self.data_segment_dict[line[0]
-                                                    ] = self.data_segment_dict[line[2]]
+                                self.data_segment_dict[line[0]] = [i for i in self.data_segment_dict[line[2]]]
+                                self.data_segment_dict[line[0]][2] = self.data_segment_start
+                                self.data_segment_start += self.data_segment_dict[line[0]][-1]+1
 
                             if(rhs_datatype == Datatypes.INT):
                                 self.update_symbol_table(
@@ -941,7 +948,7 @@ class CodeGenerator:
                         self.text_segment += f"sw fa0, {-offset}(x8)\n"
 
                     # taking string input (INCOMPLETE)
-                    # elif(datatype == Datatypes.STRING):
+                    # elif(datatype == Datatypes.STR):
                     #     self.text_segment += f"la a0, {line[1]}\n"
                     #     self.text_segment += "addi a7, x0, 8\necall\n"
 
@@ -956,13 +963,22 @@ class CodeGenerator:
                             if(self.ds_variables.get(line[1]) == None):
                                 var = f"ds{len(self.ds_variables)}"
                                 self.ds_variables[line[1]] = var
-                                # self.data_segment += f"{var}:\t.ascii {line[1]}\n"
                                 self.data_segment_dict[var] = (
                                     ".asciz", line[1])
                             var_name = self.ds_variables[line[1]]
-                            self.text_segment += f"la a0, {var_name}\n"
+                            total = hex(self.data_segment_dict[var_name][2])[2:]
+                            upper,mid,lower = self.get_ieee_rep(None,total)
+
+                            self.text_segment += f"lui a0, {upper}\n"
+                            self.text_segment += f"addi a0, a0, {mid}\n"
+                            self.text_segment += f"addi a0, a0, {lower}\n"
                         else:
-                            self.text_segment += f"la a0, {line[1]}\n"
+                            total = hex(self.data_segment_dict[line[1]][2])[2:]
+                            upper,mid,lower = self.get_ieee_rep(None,total)
+
+                            self.text_segment += f"lui a0, {upper}\n"
+                            self.text_segment += f"addi a0, a0, {mid}\n"
+                            self.text_segment += f"addi a0, a0, {lower}\n"
 
                         self.text_segment += "addi a7, x0, 4\necall\n"
 
@@ -1009,7 +1025,9 @@ class CodeGenerator:
         print(self.address_descriptor)
         # print(self.symbol_table)
 
-        for var, (type, value) in self.data_segment_dict.items():
+        sorted_list = sorted(self.data_segment_dict.items(),key=lambda x: x[1][2])
+
+        for var, (type, value, _, __) in sorted_list:
             self.data_segment += f"{var}:\n\t{type} {value}\n"
 
         final_asm = self.data_segment+'\n'+self.text_segment
