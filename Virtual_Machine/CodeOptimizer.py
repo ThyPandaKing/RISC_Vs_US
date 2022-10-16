@@ -419,6 +419,10 @@ class CodeOptimizer:
                 for search_node in CFG:
                     if search_node.leading_label is not None and search_node.leading_label == label:
                         node.next.add(search_node.index)
+                label = words[-4]
+                for search_node in CFG:
+                    if search_node.leading_label is not None and search_node.leading_label == label:
+                        node.next.add(search_node.index)
             # Identify the return statements and connect them to the points where they are called
             if len(words) >= 1 and words[0] == 'return':
                 index = return_map[return_pointer]
@@ -469,7 +473,6 @@ class CodeOptimizer:
             if node.leading_label == 'main':
                 start_block = node
                 break
-        # print('start_block', start_block, type(start_block))
         visited = set()
         # Call DFS and obtin the visited blocks
         self.DFS(visited=visited, graph=CFG, node=start_block)
@@ -492,11 +495,7 @@ class CodeOptimizer:
         all optimizations occur here
         """
 
-        # self.blocks = self.eliminate_dead_code(self.blocks)
-
-        # for block in self.blocks:
-        #     print(block)
-        #     print('*********************')
+        self.blocks = self.eliminate_dead_code(self.blocks)
 
         final_asm = self.register_allocation.main(self.blocks)
 

@@ -9,9 +9,6 @@ x:
 
 .section
 .text
-.global main
-# ---- start of spill ----
-# ---- end of spill ----
 main:
 addi x30, x0, 3
 # ---- start of spill ----
