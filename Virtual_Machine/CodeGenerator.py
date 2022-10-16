@@ -122,7 +122,7 @@ class CodeGenerator:
             return False
         return True
 
-    def update_descriptors(self, register, variable) :
+    def update_descriptors(self, register, variable, line=None) :
         """
         updates register descriptor and
         address descriptor
@@ -137,6 +137,7 @@ class CodeGenerator:
             self.offset += 4
 
         self.register_descriptor[register] = variable
+        print(self.register_descriptor)
 
     def update_float_descriptors(self, register, variable) :
         """
@@ -461,9 +462,11 @@ class CodeGenerator:
                             lhs = self.get_register(line[0])
                             if(lhs[1] == 1):
                                 offset = self.address_descriptor[line[0]]['offset']
-                                # self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
+                                self.text_segment += f"lw {lhs[0]}, {-offset}(x8)\n"
                                 self.update_descriptors(lhs[0], line[0])
+                            # x=' '.join(line)
 
+                            # print(self.register)
                             op1 = self.get_register(line[2])
                             if(op1[1] == 1):
                                 # print('abcd')
@@ -477,6 +480,7 @@ class CodeGenerator:
                                 offset = self.address_descriptor[line[4]]['offset']
                                 self.text_segment += f"{ld_command} {op2[0]}, {-offset}(x8)\n"
                                 self.update_descriptors(op2[0], line[4])
+                            
 
                         if(line[3] == Operators.Plus):
                             self.text_segment += f"add {lhs[0]}, {op1[0]}, {op2[0]}\n"
@@ -928,7 +932,7 @@ class CodeGenerator:
 
                 elif(self.is_input_statement(line)):
                     line = line.split(' ')
-                    datatype = self.symbol_table[line[1]]
+                    datatype = self.symbol_table[line[1]]['datatype']
                     # taking integer input
                     if(datatype == Datatypes.INT):
                         self.text_segment += "addi a7, x0, 5\necall\n"
@@ -948,9 +952,23 @@ class CodeGenerator:
                         self.text_segment += f"sw fa0, {-offset}(x8)\n"
 
                     # taking string input (INCOMPLETE)
-                    # elif(datatype == Datatypes.STR):
-                    #     self.text_segment += f"la a0, {line[1]}\n"
-                    #     self.text_segment += "addi a7, x0, 8\necall\n"
+                    
+                    elif(datatype == Datatypes.STR):
+                        null_str ='"'+ '\\0'*30+'"'
+                        self.data_segment_dict[line[1]] = [".asciz", null_str, self.data_segment_start, 31]
+                        self.data_segment_start += 32
+                        self.update_symbol_table(line[1], Datatypes.STR)
+
+                        total = hex(self.data_segment_dict[line[1]][2])[2:]
+                        upper,mid,lower = self.get_ieee_rep(None,total)
+
+                        self.text_segment += f"lui a0, {upper}\n"
+                        self.text_segment += f"addi a0, a0, {mid}\n"
+                        self.text_segment += f"addi a0, a0, {lower}\n"
+
+                        # self.text_segment += f"la a0, {line[1]}\n"
+                        self.text_segment += "addi a1, x0, 30\n" 
+                        self.text_segment += "addi a7, x0, 8\necall\n"
 
                 elif(self.is_output_statement(line)):
                     line = line.split(' ')
