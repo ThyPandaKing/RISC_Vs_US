@@ -87,42 +87,42 @@ class CodeOptimizer:
         modified_tac = ''
         for line in tac_code.splitlines():
             # directly converting to risc v code
-            # if("*" in line):
-            #     line=line.split(' ')
-            #     if(line[-1]=='INT'):
-            #         t0 = self.get_new_temp()
-            #         t1 = self.get_new_temp()
-            #         t2 = self.get_new_temp()
-            #         l0 = self.get_new_label()
-            #         l1 = self.get_new_label()
-            #         l2 = self.get_new_label()
-            #         """
-            #         a=b*c
+            if("*" in line):
+                splitted_line = line.split(' ')
+                if(splitted_line[-1]=='INT'):
+                    t0 = self.get_new_temp()
+                    t1 = self.get_new_temp()
+                    t2 = self.get_new_temp()
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+                    """
+                    a=b*c
 
-            #         a=0
-            #         t0=0
-            #         t2=1
-            #         L0:
-            #         t1=t0<c
-            #         if t1 goto L1 else goto L2
-            #         L1:
-            #         a=a+b
-            #         t0=t0+t2
-            #         goto L0
-            #         L2:
-            #         """
-            #         modified_tac += f"{line[0]} = 0 INT\n"
-            #         modified_tac += f"{t0} = 0 INT\n"
-            #         modified_tac += f"{t2} = 1 INT\n"
-            #         modified_tac += f"{t1} = 0 INT\n"
-            #         modified_tac += f"{l0}:\n"
-            #         modified_tac += f"{t1} = {t0} - {line[4]} INT\n"
-            #         modified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
-            #         modified_tac += f"{l1}:\n"
-            #         modified_tac += f"{line[0]} = {line[0]} + {line[2]}\n"
-            #         modified_tac += f"{t0} = {t0} + {t2}\n"
-            #         modified_tac += f"GOTO {l0}\n"
-            #         modified_tac += f"{l2}:\n"
+                    a=0
+                    t0=0
+                    t2=1
+                    L0:
+                    t1=t0<c
+                    if t1 goto L1 else goto L2
+                    L1:
+                    a=a+b
+                    t0=t0+t2
+                    goto L0
+                    L2:
+                    """
+                    modified_tac += f"{splitted_line[0]} = 0 INT\n"
+                    modified_tac += f"{t0} = 0 INT\n"
+                    modified_tac += f"{t2} = 1 INT\n"
+                    modified_tac += f"{t1} = 0 INT\n"
+                    modified_tac += f"{l0}:\n"
+                    modified_tac += f"{t1} = {t0} - {splitted_line[4]} INT\n"
+                    modified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
+                    modified_tac += f"{l1}:\n"
+                    modified_tac += f"{splitted_line[0]} = {splitted_line[0]} + {splitted_line[2]}\n"
+                    modified_tac += f"{t0} = {t0} + {t2}\n"
+                    modified_tac += f"GOTO {l0}\n"
+                    modified_tac += f"{l2}:\n"
 
             if(self.is_logical_statement(line)):
                 line = line.split(' ')
