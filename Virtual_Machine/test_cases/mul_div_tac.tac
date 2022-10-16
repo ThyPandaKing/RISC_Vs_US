@@ -9,11 +9,11 @@ b = 3 INT
 - INT c
 
 c = a / b INT
-print c INT
 
 @t0 = a * c INT
 print @t0 INT
 
+return 0 INT
 - FLOAT x
 x = -4.3 FLOAT
 - FLOAT y

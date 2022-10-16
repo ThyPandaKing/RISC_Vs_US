@@ -1,4 +1,5 @@
 # -*- coding: future_fstrings -*-
+from operator import mod
 import re
 from CodeGenerator import CodeGenerator
 import os
@@ -86,6 +87,43 @@ class CodeOptimizer:
         modified_tac = ''
         for line in tac_code.splitlines():
             # directly converting to risc v code
+            # if("*" in line):
+            #     line=line.split(' ')
+            #     if(line[-1]=='INT'):
+            #         t0 = self.get_new_temp()
+            #         t1 = self.get_new_temp()
+            #         t2 = self.get_new_temp()
+            #         l0 = self.get_new_label()
+            #         l1 = self.get_new_label()
+            #         l2 = self.get_new_label()
+            #         """
+            #         a=b*c
+
+            #         a=0
+            #         t0=0
+            #         t2=1
+            #         L0:
+            #         t1=t0<c
+            #         if t1 goto L1 else goto L2
+            #         L1:
+            #         a=a+b
+            #         t0=t0+t2
+            #         goto L0
+            #         L2:
+            #         """
+            #         modified_tac += f"{line[0]} = 0 INT\n"
+            #         modified_tac += f"{t0} = 0 INT\n"
+            #         modified_tac += f"{t2} = 1 INT\n"
+            #         modified_tac += f"{t1} = 0 INT\n"
+            #         modified_tac += f"{l0}:\n"
+            #         modified_tac += f"{t1} = {t0} - {line[4]} INT\n"
+            #         modified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
+            #         modified_tac += f"{l1}:\n"
+            #         modified_tac += f"{line[0]} = {line[0]} + {line[2]}\n"
+            #         modified_tac += f"{t0} = {t0} + {t2}\n"
+            #         modified_tac += f"GOTO {l0}\n"
+            #         modified_tac += f"{l2}:\n"
+
             if(self.is_logical_statement(line)):
                 line = line.split(' ')
                 if(line[3] == '||'):
@@ -155,7 +193,11 @@ class CodeOptimizer:
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
+                # replacement_str += f"print {left_operand} INT\n"
+                # replacement_str += f"print {right_operand} INT\n"
+                # replacement_str += f"print {t0} INT\n"
                 replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
+                # replacement_str += f"if {t0} <= 0 GOTO {l0} else GOTO {l1}\n"
                 replacement_str += f"{l0}:\n"
                 replacement_str += f"{temp} = 1 INT\n"
                 replacement_str += f"GOTO {l2}\n"
@@ -163,6 +205,7 @@ class CodeOptimizer:
                 replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+
             else:
                 modified_tac += line+'\n'
 
@@ -179,9 +222,8 @@ class CodeOptimizer:
         # replacing '#' with '__' for labels
         final_tac = final_tac.replace('#', '__')
 
-        # print(final_tac)
-
         final_tac = self.pre_optimizations(final_tac)
+        # print(final_tac)
 
         block_lines = ''
         for line in final_tac.splitlines():
@@ -450,7 +492,11 @@ class CodeOptimizer:
         all optimizations occur here
         """
 
-        self.blocks = self.eliminate_dead_code(self.blocks)
+        # self.blocks = self.eliminate_dead_code(self.blocks)
+
+        # for block in self.blocks:
+        #     print(block)
+        #     print('*********************')
 
         final_asm = self.register_allocation.main(self.blocks)
 

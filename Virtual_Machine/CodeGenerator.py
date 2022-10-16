@@ -407,7 +407,7 @@ class CodeGenerator:
         at the end of each block
         """
 
-        self.text_segment += '# ---- end of block ----\n'
+        self.text_segment += '# ---- start of spill ----\n'
         for var, val in self.address_descriptor.items():
             reg = val['registers']
             if(reg is not None):
@@ -451,7 +451,7 @@ class CodeGenerator:
 
                     if(line[-1].lower()==Datatypes.INT or line[-1].lower()==Datatypes.BOOL \
                         or line[-1].lower()==Datatypes.CHAR):
-                        ld_command = 'lw' if exp_datatype == Datatypes.INT else 'lb'
+                        ld_command = 'lw' if exp_datatype.lower() == Datatypes.INT else 'lb'
 
                         if(line[3] == Operators.Plus or line[3] == Operators.Minus
                                 or line[3] == Operators.Mul or Operators.Div):
@@ -463,12 +463,14 @@ class CodeGenerator:
 
                             op1 = self.get_register(line[2])
                             if(op1[1] == 1):
+                                # print('abcd')
                                 offset = self.address_descriptor[line[2]]['offset']
                                 self.text_segment += f"{ld_command} {op1[0]}, {-offset}(x8)\n"
                                 self.update_descriptors(op1[0], line[2])
 
                             op2 = self.get_register(line[4])
                             if(op2[1] == 1):
+                                # print('efgh')
                                 offset = self.address_descriptor[line[4]]['offset']
                                 self.text_segment += f"{ld_command} {op2[0]}, {-offset}(x8)\n"
                                 self.update_descriptors(op2[0], line[4])
@@ -1000,8 +1002,8 @@ class CodeGenerator:
                         self.text_segment += "addi a7, x0, 2\necall\n"
 
             # spill all here
-            # if(block != blocks[-1]):
-                # self.spill_all_registers()
+            if(block != blocks[-1]):
+                self.spill_all_registers()
 
         # print(self.register_descriptor)
         print(self.address_descriptor)

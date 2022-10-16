@@ -27,5 +27,6 @@ j = @t8 INT
 GOTO #L3
 
 #L2:
+print j INT
 end:
 

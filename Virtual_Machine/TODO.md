@@ -5,13 +5,13 @@
 - [x] Change output conversions for variables. If it is a variable, do not write 'lw a0, x'. Instead, write 'lw a0, -offset(x8)'.
 - [x] Use .asciz instead of .ascii, because it is null terminated.
 - [ ] Taking string as input.
+- [ ] Deadcode not working.
 
 ### Checkpoint 3:
 
 - [x] input translations
 - [x] logical operators translations
 - [x] float and string
-- [ ] optimizations (loop unrolling)
 
 ### Wrong Test Cases:
 
