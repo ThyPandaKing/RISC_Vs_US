@@ -74,6 +74,7 @@ class Assembler
 		int baseAddress;
 		int runningAddress;
 		unordered_map<string, ST_Entry> symbol_table;
+		unordered_map<char, char> escapeChars;
 		string regex_labels;
 		string regex_comment;
 
