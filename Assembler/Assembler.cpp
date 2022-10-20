@@ -414,6 +414,10 @@ Assembler::Assembler()
 			Variables to memory addresses starting from a base address
 		*/
 	};
+	escapeChars={
+		{'n','\n'},
+		{'t', '\t'}
+	};
 	regex_labels="^[a-zA-Z_][a-zA-Z_0-9]*";
 	regex_comment="^# (.)*";
 }
@@ -497,15 +501,33 @@ int Assembler::extractTypeAndValue(string label, string vm_line)
 	if(type==".asciz" || type==".string")
 	{
 		int l=value.length();
-		if(value[0]!='\"' || value.find("\\n\"")!=l-3)
+		if(value[0]!='\"' || value[l-1]!='\"')
 		{
 			perror("Invalid Syntax for Strings");
 			return 2;
 		}
-		// Just need the length of the string
-		// value=value.substr(1, l-4)+"\n";
 		
-		l-=3;
+		value=value.substr(1, l-2);
+		// Need to extract escape characters from the string
+		int i=value.find("\\");
+		while(i!=string::npos)
+		{
+			char c=escapeChars[value[i+1]];
+			if(c!='\0')
+			{
+				value=value.substr(0, i)+c+value.substr(i+2);
+				i=value.find("\\", i+1);
+			}
+			else
+			{
+				perror("Invalid Syntax for Strings");
+				return 3;
+			}
+		}
+
+		// Including terminating '\0' character
+		value.shrink_to_fit();
+		l=value.length()+1;
 		ST_Entry S(1, runningAddress);
 
 		// Each character is 1 byte

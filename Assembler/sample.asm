@@ -3,7 +3,7 @@
 s:	
 	.word 15
 a:
-	.asciz "Hello\n"
+	.asciz "He\tllo\nt"
 b:
 	.word 18
 .section
