@@ -84,45 +84,104 @@ class CodeOptimizer:
         by reading the tac code
         """
 
-        modified_tac = ''
+        simplified_tac = ''
         for line in tac_code.splitlines():
-            # directly converting to risc v code
-            # if("*" in line):
-            #     line=line.split(' ')
-            #     if(line[-1]=='INT'):
-            #         t0 = self.get_new_temp()
-            #         t1 = self.get_new_temp()
-            #         t2 = self.get_new_temp()
-            #         l0 = self.get_new_label()
-            #         l1 = self.get_new_label()
-            #         l2 = self.get_new_label()
-            #         """
-            #         a=b*c
+            if("*" in line):
+                splitted_line = line.split(' ')
+                if(splitted_line[-1]=='INT' or splitted_line[-1] == 'BOOL'):
+                    t0 = self.get_new_temp()
+                    t1 = self.get_new_temp()
+                    t2 = self.get_new_temp()
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+                    """
+                    a=b*c
 
-            #         a=0
-            #         t0=0
-            #         t2=1
-            #         L0:
-            #         t1=t0<c
-            #         if t1 goto L1 else goto L2
-            #         L1:
-            #         a=a+b
-            #         t0=t0+t2
-            #         goto L0
-            #         L2:
-            #         """
-            #         modified_tac += f"{line[0]} = 0 INT\n"
-            #         modified_tac += f"{t0} = 0 INT\n"
-            #         modified_tac += f"{t2} = 1 INT\n"
-            #         modified_tac += f"{t1} = 0 INT\n"
-            #         modified_tac += f"{l0}:\n"
-            #         modified_tac += f"{t1} = {t0} - {line[4]} INT\n"
-            #         modified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
-            #         modified_tac += f"{l1}:\n"
-            #         modified_tac += f"{line[0]} = {line[0]} + {line[2]}\n"
-            #         modified_tac += f"{t0} = {t0} + {t2}\n"
-            #         modified_tac += f"GOTO {l0}\n"
-            #         modified_tac += f"{l2}:\n"
+                    a=0
+                    t0=0
+                    t2=1
+                    L0:
+                    t1=t0<c
+                    if t1 goto L1 else goto L2
+                    L1:
+                    a=a+b
+                    t0=t0+t2
+                    goto L0
+                    L2:
+                    """
+                    simplified_tac += f"{splitted_line[0]} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t2} = 1 {splitted_line[-1]}\n"
+                    simplified_tac += f"{l0}:\n"
+                    simplified_tac += f"{t1} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    simplified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
+                    simplified_tac += f"{l1}:\n"
+                    simplified_tac += f"{splitted_line[0]} = {splitted_line[0]} + {splitted_line[2]} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {t0} + {t2} {splitted_line[-1]}\n"
+                    simplified_tac += f"GOTO {l0}\n"
+                    simplified_tac += f"{l2}:\n"
+                    if(splitted_line[-1] == 'BOOL'):
+                        l3 = self.get_new_label()
+                        l4 = self.get_new_label()
+                        simplified_tac += f"if {splitted_line[0]} != 0 GOTO {l3} else GOTO {l4}\n"
+                        simplified_tac += f"{l3}:\n"
+                        simplified_tac += f"{splitted_line[0]} = 1 BOOL\n"
+                        simplified_tac += f"{l4}:\n"
+
+            elif("/" in line):
+                splitted_line = line.split(' ')
+                if(splitted_line[-1] == 'INT' or splitted_line[-1] == 'BOOL'):
+                    """
+                    a=b/c
+
+                    a=0
+                    t0=b
+                    t2=1
+                    L0:
+                    t1=t0>=c
+                    if t1 goto L1 else goto L2
+                    L1:
+                    a=a+t2
+                    t0=t0-c
+                    goto L0
+                    L2:
+                    """
+                    t0 = self.get_new_temp()
+                    t1 = self.get_new_temp()
+                    t2 = self.get_new_temp()
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+
+                    simplified_tac += f"{splitted_line[0]} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {splitted_line[2]} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t2} = 1 {splitted_line[-1]}\n"
+                    simplified_tac += f"{l0}:\n"
+                    simplified_tac += f"{t1} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    # simplified_tac += f"print {t1} INT\n"
+                    simplified_tac += f"if {t1} >= 0 GOTO {l1} else GOTO {l2}\n"
+                    simplified_tac += f"{l1}:\n"
+                    simplified_tac += f"{splitted_line[0]} = {splitted_line[0]} + {t2} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    # simplified_tac += f"print {splitted_line[0]} INT\n"
+                    simplified_tac += f"GOTO {l0}\n"
+                    simplified_tac += f"{l2}:\n"
+                    if(splitted_line[-1] == 'BOOL'):
+                        l3 = self.get_new_label()
+                        l4 = self.get_new_label()
+                        simplified_tac += f"if {splitted_line[0]} != 0 GOTO {l3} else GOTO {l4}\n"
+                        simplified_tac += f"{l3}:\n"
+                        simplified_tac += f"{splitted_line[0]} = 1 BOOL\n"
+                        simplified_tac += f"{l4}:\n"
+            else:
+                simplified_tac += line + '\n'
+
+        # print(simplified_tac)
+
+        modified_tac = ''
+        for line in simplified_tac.splitlines():
+            # directly converting to risc v code
 
             if(self.is_logical_statement(line)):
                 line = line.split(' ')
@@ -183,7 +242,7 @@ class CodeOptimizer:
                     replacement_str += f"{l2}:\n"
                     modified_tac += replacement_str
 
-            if(self.is_condition_statement(line)):
+            elif(self.is_condition_statement(line)):
                 relop = line.split()[3]
                 temp = line.split()[0]
                 t0 = self.get_new_temp()
@@ -223,7 +282,7 @@ class CodeOptimizer:
         final_tac = final_tac.replace('#', '__')
 
         final_tac = self.pre_optimizations(final_tac)
-        # print(final_tac)
+        print(final_tac)
 
         block_lines = ''
         for line in final_tac.splitlines():
@@ -501,7 +560,6 @@ class CodeOptimizer:
 
         final_asm = self.post_optimizations(final_asm)
 
-        # print(final_asm)
         script_dir = os.path.dirname(__file__)
         rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
         abs_file_path = os.path.join(script_dir, rel_path)
@@ -514,7 +572,6 @@ class CodeOptimizer:
         function that performs optimizations
         on asm code generated
         """
-
         final_asm=''
 
         # sw x5, -4(x8)
@@ -527,10 +584,14 @@ class CodeOptimizer:
             while(j<len(lines) and lines[j].startswith('#')):
                 j+=1
             # print(lines[i],lines[j])
+            if(j>=len(lines)):
+                j=len(lines)-1
             if(lines[i]!=lines[j]):
                 final_asm+=lines[i]+'\n'
             i+=1
         final_asm+=lines[-1]
+
+        # print(lines[-1])
         
         return final_asm
             

@@ -68,24 +68,6 @@
       <pos x="1060" y="100"/>
     </visualElement>
     <visualElement>
-      <elementName>BitExtender</elementName>
-      <elementAttributes>
-        <entry>
-          <string>inputBits</string>
-          <int>12</int>
-        </entry>
-        <entry>
-          <string>Label</string>
-          <string>ImmGen</string>
-        </entry>
-        <entry>
-          <string>outputBits</string>
-          <int>32</int>
-        </entry>
-      </elementAttributes>
-      <pos x="920" y="460"/>
-    </visualElement>
-    <visualElement>
       <elementName>Splitter</elementName>
       <elementAttributes>
         <entry>
@@ -131,20 +113,6 @@
         </entry>
       </elementAttributes>
       <pos x="160" y="800"/>
-    </visualElement>
-    <visualElement>
-      <elementName>Splitter</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Input Splitting</string>
-          <string>32</string>
-        </entry>
-        <entry>
-          <string>Output Splitting</string>
-          <string>12, 20</string>
-        </entry>
-      </elementAttributes>
-      <pos x="700" y="460"/>
     </visualElement>
     <visualElement>
       <elementName>InstructionMemory.dig</elementName>
@@ -304,6 +272,11 @@
       </elementAttributes>
       <pos x="1360" y="460"/>
     </visualElement>
+    <visualElement>
+      <elementName>ImmediateGenerator.dig</elementName>
+      <elementAttributes/>
+      <pos x="920" y="460"/>
+    </visualElement>
   </visualElements>
   <wires>
     <wire>
@@ -391,16 +364,12 @@
       <p2 x="1040" y="460"/>
     </wire>
     <wire>
-      <p1 x="680" y="460"/>
-      <p2 x="700" y="460"/>
-    </wire>
-    <wire>
-      <p1 x="720" y="460"/>
-      <p2 x="920" y="460"/>
-    </wire>
-    <wire>
       <p1 x="1340" y="460"/>
       <p2 x="1360" y="460"/>
+    </wire>
+    <wire>
+      <p1 x="680" y="460"/>
+      <p2 x="920" y="460"/>
     </wire>
     <wire>
       <p1 x="1040" y="140"/>

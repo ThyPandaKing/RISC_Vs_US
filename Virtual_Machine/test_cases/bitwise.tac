@@ -26,3 +26,17 @@ print g INT
 return 0 INT
 
 end:
+
+----------------- (code of mul_div.tac)
+- FLOAT x
+x = -4.3 FLOAT
+- FLOAT y
+y = 2.0 FLOAT
+- FLOAT z
+z = x / y FLOAT
+print z FLOAT
+- FLOAT Z
+Z = x * y FLOAT
+print Z FLOAT
+
+return 0 INT
