@@ -8,6 +8,16 @@ Table of contents
 * [Usage](#usage)
 * [Known issues and limitations](#known-issues-and-limitations)
 
+## Folder Structure
+
+    .
+    ├── ...
+    ├── test                    # Test files (alternatively `spec` or `tests`)
+    │   ├── benchmarks          # Load and stress tests
+    │   ├── integration         # End-to-end, integration tests (alternatively `e2e`)
+    │   └── unit                # Unit tests
+    └── ...
+
 
 ## Installation
 1. Clone the repository from (https://github.com/cs19b001iittp/RISC_Vs_US.git) [Link will be updated for final presentation, as of now we will be cloning from compiler-dev branch].
