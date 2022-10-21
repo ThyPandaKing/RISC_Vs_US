@@ -10,9 +10,9 @@ x:
 .section
 .text
 main:
-addi x30, x0, 3
+addi x5, x0, 3
 # ---- start of spill ----
-sw x30, -4(x8)
+sw x5, -4(x8)
 # ---- end of spill ----
 lui a0, 0x10010
 addi a0, a0, 0x0

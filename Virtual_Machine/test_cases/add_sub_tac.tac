@@ -11,7 +11,6 @@ b = 3 INT
 c = a + b INT
 print c INT
 
-
 @t0 = a + b INT
 @t1 = @t0 - a INT
 c = @t1 + b INT

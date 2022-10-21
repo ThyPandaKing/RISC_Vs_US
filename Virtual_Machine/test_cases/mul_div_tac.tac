@@ -6,10 +6,10 @@ main:
 a = 24 INT
 - INT b
 b = 5 INT
-- BOOL c
+- INT c
 
-c = a / b BOOL
-print c BOOL
+c = a / b INT
+print c INT
 
 return 0 INT
 
