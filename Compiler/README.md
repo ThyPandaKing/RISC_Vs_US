@@ -11,24 +11,23 @@ Table of contents
 ## Folder Structure
 
     .
-    ├── ...
-    ├── Optimization                    # Test files (alternatively `spec` or `tests`)
-    │   ├── a.out                       # Load and stress tests
-    │   ├── layer1.cpp                  # End-to-end, integration tests (alternatively `e2e`)
-    ├── test-cases                      # Test files (alternatively `spec` or `tests`)
-    │   ├── a.out                       # Load and stress tests
-    │   ├── layer1.cpp                  # End-to-end, integration tests (alternatively `e2e`)
-    │   └── unit                # Unit tests
-    ├── Makefile                        # Test files (alternatively `spec` or `tests`)
-    ├── lex.yy.c                        # Test files (alternatively `spec` or `tests`)
-    ├── lexical-analyser.l              # Test files (alternatively `spec` or `tests`)
-    ├── parser                          # Test files (alternatively `spec` or `tests`)
-    ├── parser.y                        # Test files (alternatively `spec` or `tests`)
-    ├── tac.txt                         # Test files (alternatively `spec` or `tests`)
-    ├── y.output                        # Test files (alternatively `spec` or `tests`)
-    ├── y.tab.c                         # Test files (alternatively `spec` or `tests`)
-    ├── y.tab.h                         # Test files (alternatively `spec` or `tests`)
-    └── ...
+    ├── Optimization                    # optimize tac
+    │   ├── a.out                       # output file for layer1.cpp
+    │   ├── layer1.cpp                  # mention ehat optimizations are done here...
+    ├── test-cases                      # Test files
+    │   ├── input1.txt                  # write what is tested in this file...
+    │   ├── input2.txt                  # write what is tested in this file...
+    │   └── ...                         # Some other test case files
+    ├── Makefile                        # makefile
+    ├── lex.yy.c                        
+    ├── lexical-analyser.l              # Lexical code
+    ├── parser                          # Parser code
+    ├── parser.y                        
+    ├── tac.txt                         # Final three address code stored here.
+    ├── y.output                       
+    ├── y.tab.c                         
+    ├── y.tab.h                         
+    └── 
 
 
 ## Installation
