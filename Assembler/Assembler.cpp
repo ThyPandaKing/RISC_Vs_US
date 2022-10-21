@@ -16,6 +16,7 @@ OPERATIONS::OPERATIONS()
 		
 		// I - Type
 		{"lw", 0b0000011},
+		{"addi", 0b0010011},
 
 		// S - Type
 		{"sw", 0b0100011},
@@ -38,6 +39,7 @@ OPERATIONS::OPERATIONS()
 
 		// I - Type
 		{"lw", 0b010},
+		{"addi", 0b000},
 
 		// S -Type
 		{"sw", 0b010},
@@ -66,11 +68,13 @@ OPERATIONS::OPERATIONS()
 	type={
 		// R - Type
 		{"add", 'R'},
+		{"sub", 'R'},
 		{"or", 'R'},
 		{"and", 'R'},
 
 		// I - Type
 		{"lw", 'I'},
+		{"addi", 'I'},
 
 		// S -Type
 		{"sw", 'S'},
@@ -90,7 +94,7 @@ REGISTERS::REGISTERS()
 		{"pc", -1},
 	};
 	regex_reg="[x]\\d{1,2}";
-	regex_reg_imm="(\\d)+\\([x]\\d{1,2}\\)";
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([x]\\d{1,2}\\)", ",(\\d)+"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -155,19 +159,35 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 		return vector<int> (1, -1);
 	}
 }
-int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char type)
+int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char type, int imm_type)
 {
 	try
 	{
-		regex regexp(regex_reg_imm);
+		regex regexp(regex_reg_imm[imm_type]);
 		sregex_iterator next(reg.begin(), reg.end(), regexp);
 		sregex_iterator end;
+
+		if(next==end)
+		{
+			if(imm_type==regex_reg_imm.size())
+			{
+				perror("Invalid Syntax");
+				return 1;
+			}
+			return extractImmediate(regs, reg, type, imm_type+1);
+		}
 		
 		smatch match = *next;
 		string imm_reg=match.str();
 		
-		int immediate=stoi(imm_reg.substr(0, imm_reg.find('(')));
-
+		int immediate=0;
+		if(imm_type==0)
+			immediate=stoi(imm_reg.substr(0, imm_reg.find('(')));
+		else if(imm_type==1)
+		{
+			imm_reg.erase(imm_reg.begin());
+			immediate=stoi(imm_reg);
+		}
 		regs.resize(regs.size()+1, immediate);
 		next++;
 		
@@ -175,13 +195,13 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		{
 			perror("Invalid Syntax");
 			reg.resize(regs.size()-1);
-			return 1;
+			return 2;
 		}
 	}
 	catch (const regex_error& e)
 	{
-    	perror("Invalid Syntax");
-		return 2;
+		perror("Invalid Syntax");
+		return 3;
 	}
 	return 0;
 }
@@ -190,12 +210,13 @@ int REGISTERS::extractLabel(vector<int> &regs, string reg)
 	string label="";
 	try
 	{
-		regex regexp(regex_labels);
+		regex regexp(","+regex_labels+"$");
 		sregex_iterator next(reg.begin(), reg.end(), regexp);
 		sregex_iterator end;
 		
 		smatch match = *next;
 		label=match.str();
+		label.erase(label.begin());
 		
 		int val;
 		if((val=getSymbolTableValue(label))==-1)
@@ -226,7 +247,7 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 {
 	vector<int> regs=extractRegisters(reg, type);
 	if(type == 'I' || type=='S')
-		extractImmediate(regs, reg, type);
+		extractImmediate(regs, reg, type, 0);
 	if(type == 'B')
 		extractLabel(regs, reg);
 	return regs;	
@@ -236,6 +257,11 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 	// pc is -1 and x0 to x31 is 0 to 31
 	char reg_code;
 	vector<int> regs=matchReg(reg, type);
+
+	cout<<reg<<endl;
+	for(int i: regs)
+		cout<<i<<"  ";
+	cout<<endl;
 	
 	if(type=='R')
 	{
@@ -388,8 +414,12 @@ Assembler::Assembler()
 			Variables to memory addresses starting from a base address
 		*/
 	};
+	escapeChars={
+		{'n','\n'},
+		{'t', '\t'}
+	};
 	regex_labels="^[a-zA-Z_][a-zA-Z_0-9]*";
-	regex_comment="";
+	regex_comment="^# (.)*";
 }
 int Assembler::terminate(int code)
 {
@@ -399,15 +429,14 @@ int Assembler::terminate(int code)
 }
 string Assembler::extractLabel(string vm_line, bool sectionType=true)
 {
-	int l;
-	if((l=vm_line.find(':'))==string::npos)
+	if(vm_line.find(':')==string::npos)
 	{
 		// .data is type true    .text is type false
 		if(sectionType)
 			perror("Invalid Syntax for Labels");
 		return "";
 	}
-	vm_line=vm_line.substr(0, l);
+	vm_line.pop_back();
 	
 	string label="";
 	try
@@ -415,6 +444,9 @@ string Assembler::extractLabel(string vm_line, bool sectionType=true)
 		regex regexp(regex_labels);
 		sregex_iterator next(vm_line.begin(), vm_line.end(), regexp);
 		sregex_iterator end;
+
+		if(next==end)
+			return "";
 		
 		smatch match = *next;
 		label=match.str();
@@ -433,6 +465,29 @@ string Assembler::extractLabel(string vm_line, bool sectionType=true)
 	}
 	return label;
 }
+string Assembler::extractComment(string vm_line)
+{
+	string comment="";
+	try
+	{
+		regex regexp(regex_comment);
+		sregex_iterator next(vm_line.begin(), vm_line.end(), regexp);
+		sregex_iterator end;
+		
+		if(next==end)
+			return "";
+
+		smatch match = *next;
+		comment=match.str();
+		next++;
+	}
+	catch (const regex_error& e)
+	{
+    	perror("Invalid Syntax for Labels");
+		return "";
+	}
+	return comment;
+}
 int Assembler::extractTypeAndValue(string label, string vm_line)
 {
 	string type, value;
@@ -446,15 +501,33 @@ int Assembler::extractTypeAndValue(string label, string vm_line)
 	if(type==".asciz" || type==".string")
 	{
 		int l=value.length();
-		if(value[0]!='\"' || value.find("\\n\"")!=l-3)
+		if(value[0]!='\"' || value[l-1]!='\"')
 		{
 			perror("Invalid Syntax for Strings");
 			return 2;
 		}
-		// Just need the length of the string
-		// value=value.substr(1, l-4)+"\n";
 		
-		l-=3;
+		value=value.substr(1, l-2);
+		// Need to extract escape characters from the string
+		int i=value.find("\\");
+		while(i!=string::npos)
+		{
+			char c=escapeChars[value[i+1]];
+			if(c!='\0')
+			{
+				value=value.substr(0, i)+c+value.substr(i+2);
+				i=value.find("\\", i+1);
+			}
+			else
+			{
+				perror("Invalid Syntax for Strings");
+				return 3;
+			}
+		}
+
+		// Including terminating '\0' character
+		value.shrink_to_fit();
+		l=value.length()+1;
 		ST_Entry S(1, runningAddress);
 
 		// Each character is 1 byte
@@ -600,7 +673,11 @@ int Assembler::secondPass(string vmout, string asmout)
 
 	while(getline(fin, ins_tac))
 	{
-		// TODO : Labels
+		if(extractLabel(ins_tac, false)!="")
+			continue;
+
+		if(extractComment(ins_tac)!="")
+			continue;
 
 		// Some ins have info hardcoded in uid (independent of registers, immediate etc)
 		// If more such ins should be added (We can add in a set and check)
@@ -646,7 +723,7 @@ int Assembler::secondPass(string vmout, string asmout)
 		}
 		if(type=='\0')
 		{
-			perror("Invalid Operation");
+			cout<<op<<endl;
 			return terminate(4);
 		}
 		
