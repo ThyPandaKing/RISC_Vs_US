@@ -12,10 +12,22 @@ Table of contents
 
     .
     ├── ...
-    ├── test                    # Test files (alternatively `spec` or `tests`)
-    │   ├── benchmarks          # Load and stress tests
-    │   ├── integration         # End-to-end, integration tests (alternatively `e2e`)
+    ├── Optimization                    # Test files (alternatively `spec` or `tests`)
+    │   ├── a.out                       # Load and stress tests
+    │   ├── layer1.cpp                  # End-to-end, integration tests (alternatively `e2e`)
+    ├── test-cases                      # Test files (alternatively `spec` or `tests`)
+    │   ├── a.out                       # Load and stress tests
+    │   ├── layer1.cpp                  # End-to-end, integration tests (alternatively `e2e`)
     │   └── unit                # Unit tests
+    ├── Makefile                        # Test files (alternatively `spec` or `tests`)
+    ├── lex.yy.c                        # Test files (alternatively `spec` or `tests`)
+    ├── lexical-analyser.l              # Test files (alternatively `spec` or `tests`)
+    ├── parser                          # Test files (alternatively `spec` or `tests`)
+    ├── parser.y                        # Test files (alternatively `spec` or `tests`)
+    ├── tac.txt                         # Test files (alternatively `spec` or `tests`)
+    ├── y.output                        # Test files (alternatively `spec` or `tests`)
+    ├── y.tab.c                         # Test files (alternatively `spec` or `tests`)
+    ├── y.tab.h                         # Test files (alternatively `spec` or `tests`)
     └── ...
 
 
