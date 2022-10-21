@@ -1,0 +1,34 @@
+max:
+- arg INT a
+- arg INT b
+@t0 = a + b INT
+return @t0 INT
+end:
+
+main:
+@t1 = 10 INT
+- INT a
+a = @t1 INT
+@t2 = 10 INT
+@t3 = a == @t2 INT
+if @t3 GOTO #L1 else GOTO #L2
+#L1:
+@t4 = 5 INT
+- INT b
+b = @t4 INT
+GOTO #L0
+#L2:
+#L0:
+@t5 = 11 INT
+@t6 = a == @t5 INT
+if @t6 GOTO #L4 else GOTO #L5
+#L4:
+- INT c
+@t7 = 1 INT
+b = @t7 INT
+GOTO #L3
+#L5:
+#L3:
+@t8 = 0 INT
+return @t8 INT
+end:
