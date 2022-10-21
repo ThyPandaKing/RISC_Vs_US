@@ -13,8 +13,10 @@
     #include <iostream>
     #include <string>
     #include <unordered_map>
+    #include<map>
     #include <stack>
     #include<algorithm>
+    #include<fstream>
 
     using namespace std;
 
@@ -40,6 +42,7 @@
 
     vector<string> tac;
     unordered_map<string, struct var_info> symbol_table;
+    map<string, string> temp_map;
 
     int variable_count = 0;
     int label_counter = 0;
@@ -371,8 +374,15 @@ primary_expr    :   ID {
                     }
                     | const {
                         strcpy($$.type, $1.type);
-                        sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        if(temp_map[string($1.lexeme)] == ""){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                            temp_map[string($1.lexeme)] = string($$.lexeme);
+                            variable_count++;
+                        }
+                        else{
+                            tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        }
                     }
                     | OC expr CC {
                         strcpy($$.type, $2.type);
@@ -635,6 +645,11 @@ int main(int argc, char *argv[]) {
     // for(auto item : func_table["main"].symbol_table){
     //     cout << item.first << " ---> " << item.second.scope <<endl;
     // }
+
+    // for(auto i: temp_map){
+    //     cout << i.first << " --- " << i.second << endl;
+    // }
+
 }
 
 bool check_declaration(string variable){
