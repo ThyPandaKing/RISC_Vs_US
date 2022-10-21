@@ -1,4 +1,19 @@
 # Compiler Design
+
+Table of contents
+-----------------
+
+* [Introduction](#introduction)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Known issues and limitations](#known-issues-and-limitations)
+* [Getting help](#getting-help)
+* [Contributing](#contributing)
+* [License](#license)
+* [Authors and history](#authors-and-history)
+* [Acknowledgments](#acknowledgments)
+
+
 ## Installation instructions
 1. Clone the repository from (https://github.com/cs19b001iittp/RISC_Vs_US.git) [Link will be updated for final presentation, as of now we will be cloning from compiler-dev branch].
 2. To run the code to linux terminal under /{USER_PATH}/RISC_Vs_US/Compiler and type ```make```.
