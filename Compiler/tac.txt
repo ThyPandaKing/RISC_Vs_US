@@ -1,0 +1,10 @@
+main:
+- CHAR b
+@t0 = 1 INT
+@t1 = b + @t0 INT
+- FLOAT a
+a = @t1 FLOAT
+@t2 = 0 INT
+return @t2 INT
+end:
+
