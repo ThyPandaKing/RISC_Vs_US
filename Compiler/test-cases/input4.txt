@@ -1,6 +1,6 @@
 // if-elif-else
 int main(){
-    int a = 1;
+    int a = 2;
     if(a == 1) {
         a = a + 1;
     }

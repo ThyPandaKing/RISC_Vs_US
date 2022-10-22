@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.5.1.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +31,9 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 #ifndef YY_YY_Y_TAB_H_INCLUDED
 # define YY_YY_Y_TAB_H_INCLUDED
 /* Debug traces.  */
@@ -48,119 +52,112 @@ extern int yydebug;
     INT = 258,
     CHAR = 259,
     FLOAT = 260,
-    STRING = 261,
-    VOID = 262,
-    RETURN = 263,
-    INT_NUM = 264,
-    FLOAT_NUM = 265,
-    ID = 266,
-    LEFTSHIFT = 267,
-    RIGHTSHIFT = 268,
-    LE = 269,
-    GE = 270,
-    EQ = 271,
-    NE = 272,
-    GT = 273,
-    LT = 274,
-    AND = 275,
-    OR = 276,
-    NOT = 277,
-    ADD = 278,
-    SUBTRACT = 279,
-    DIVIDE = 280,
-    MULTIPLY = 281,
-    MODULO = 282,
-    BITAND = 283,
-    BITOR = 284,
-    NEGATION = 285,
-    XOR = 286,
-    STR = 287,
-    CHARACTER = 288,
-    CC = 289,
-    OC = 290,
-    CS = 291,
-    OS = 292,
-    CF = 293,
-    OF = 294,
-    COMMA = 295,
-    COLON = 296,
-    SCOL = 297,
-    OUTPUT = 298,
-    INPUT = 299,
-    SWITCH = 300,
-    CASE = 301,
-    BREAK = 302,
-    DEFAULT = 303,
-    IF = 304,
-    ELIF = 305,
-    ELSE = 306,
-    WHILE = 307,
-    FOR = 308,
-    CONTINUE = 309,
-    ASSIGN = 310
+    RETURN = 261,
+    INT_NUM = 262,
+    ID = 263,
+    LEFTSHIFT = 264,
+    RIGHTSHIFT = 265,
+    LE = 266,
+    GE = 267,
+    EQ = 268,
+    NE = 269,
+    GT = 270,
+    LT = 271,
+    AND = 272,
+    OR = 273,
+    NOT = 274,
+    ADD = 275,
+    SUBTRACT = 276,
+    DIVIDE = 277,
+    MULTIPLY = 278,
+    MODULO = 279,
+    BITAND = 280,
+    BITOR = 281,
+    NEGATION = 282,
+    XOR = 283,
+    STR = 284,
+    CHARACTER = 285,
+    CC = 286,
+    OC = 287,
+    CS = 288,
+    OS = 289,
+    CF = 290,
+    OF = 291,
+    COMMA = 292,
+    COLON = 293,
+    SCOL = 294,
+    PRINT = 295,
+    SCAN = 296,
+    SWITCH = 297,
+    CASE = 298,
+    BREAK = 299,
+    DEFAULT = 300,
+    IF = 301,
+    ELIF = 302,
+    ELSE = 303,
+    WHILE = 304,
+    FOR = 305,
+    CONTINUE = 306,
+    ASSIGN = 307
   };
 #endif
 /* Tokens.  */
 #define INT 258
 #define CHAR 259
 #define FLOAT 260
-#define STRING 261
-#define VOID 262
-#define RETURN 263
-#define INT_NUM 264
-#define FLOAT_NUM 265
-#define ID 266
-#define LEFTSHIFT 267
-#define RIGHTSHIFT 268
-#define LE 269
-#define GE 270
-#define EQ 271
-#define NE 272
-#define GT 273
-#define LT 274
-#define AND 275
-#define OR 276
-#define NOT 277
-#define ADD 278
-#define SUBTRACT 279
-#define DIVIDE 280
-#define MULTIPLY 281
-#define MODULO 282
-#define BITAND 283
-#define BITOR 284
-#define NEGATION 285
-#define XOR 286
-#define STR 287
-#define CHARACTER 288
-#define CC 289
-#define OC 290
-#define CS 291
-#define OS 292
-#define CF 293
-#define OF 294
-#define COMMA 295
-#define COLON 296
-#define SCOL 297
-#define OUTPUT 298
-#define INPUT 299
-#define SWITCH 300
-#define CASE 301
-#define BREAK 302
-#define DEFAULT 303
-#define IF 304
-#define ELIF 305
-#define ELSE 306
-#define WHILE 307
-#define FOR 308
-#define CONTINUE 309
-#define ASSIGN 310
+#define RETURN 261
+#define INT_NUM 262
+#define ID 263
+#define LEFTSHIFT 264
+#define RIGHTSHIFT 265
+#define LE 266
+#define GE 267
+#define EQ 268
+#define NE 269
+#define GT 270
+#define LT 271
+#define AND 272
+#define OR 273
+#define NOT 274
+#define ADD 275
+#define SUBTRACT 276
+#define DIVIDE 277
+#define MULTIPLY 278
+#define MODULO 279
+#define BITAND 280
+#define BITOR 281
+#define NEGATION 282
+#define XOR 283
+#define STR 284
+#define CHARACTER 285
+#define CC 286
+#define OC 287
+#define CS 288
+#define OS 289
+#define CF 290
+#define OF 291
+#define COMMA 292
+#define COLON 293
+#define SCOL 294
+#define PRINT 295
+#define SCAN 296
+#define SWITCH 297
+#define CASE 298
+#define BREAK 299
+#define DEFAULT 300
+#define IF 301
+#define ELIF 302
+#define ELSE 303
+#define WHILE 304
+#define FOR 305
+#define CONTINUE 306
+#define ASSIGN 307
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
 union YYSTYPE
 {
-#line 88 "parser.y" /* yacc.c:1909  */
+#line 67 "parser.y"
 
     struct node { 
         char lexeme[100];
@@ -177,9 +174,9 @@ union YYSTYPE
         int nParams;
     } node;
 
-#line 181 "y.tab.h" /* yacc.c:1909  */
-};
+#line 178 "y.tab.h"
 
+};
 typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

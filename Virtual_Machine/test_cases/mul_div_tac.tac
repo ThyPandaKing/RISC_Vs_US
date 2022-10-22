@@ -3,16 +3,13 @@
 main:
 
 - INT a
-a = 8 INT
+a = 24 INT
 - INT b
-b = 3 INT
+b = 5 INT
 - INT c
 
 c = a / b INT
-
-@t0 = a * c INT
-@t1 = a + b INT
-c = @t1 - @t0 INT
+print c INT
 
 return 0 INT
 
