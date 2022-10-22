@@ -60,7 +60,8 @@ void print(){
 
 int main(){
     fstream newfile;
-    newfile.open("../test-cases/optimize1.txt",ios::in);
+    // newfile.open("../test-cases/optimize1.txt",ios::in);
+    newfile.open("test-cases/optimize1.txt",ios::in);
     if (newfile.is_open()){
         string tp;
         while(getline(newfile, tp)){
