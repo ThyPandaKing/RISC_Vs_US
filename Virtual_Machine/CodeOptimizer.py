@@ -1,4 +1,5 @@
-import imp
+# -*- coding: future_fstrings -*-
+from operator import mod
 import re
 from CodeGenerator import CodeGenerator
 import os
@@ -28,64 +29,220 @@ class CodeOptimizer:
         self.temp_index = 0
         self.register_allocation = CodeGenerator()
 
-    def is_condition_statement(self, instruction) -> bool:
+    def is_condition_statement(self, instruction):
         """
         returns true if the given instruction
         is a condition statement
         """
         split = instruction.split(' ')
-        if(len(split) != 6):
+        if (len(split) != 6):
             return False
-        if(len(set(split).intersection(self.relational_operators)) == 1 and
+        if (len(set(split).intersection(self.relational_operators)) == 1 and
                 split[1] == '='):
             return True
         return False
 
-    def is_logical_statement(self, instruction) -> bool:
+    def is_logical_statement(self, instruction):
         """
         returns true if the given instruction
         is a condition statement
         """
         split = instruction.split(' ')
-        if(len(split) != 6):
+        if (len(split) != 6):
             return False
-        if(len(set(split).intersection(self.logical_operators)) == 1 and
+        if (len(set(split).intersection(self.logical_operators)) == 1 and
                 split[1] == '='):
             return True
         return False
 
-    def get_new_temp(self) -> str:
+    def get_new_temp(self):
         temp = '@_t'+str(self.temp_index)
         self.temp_index += 1
         return temp
 
-    def get_new_label(self) -> str:
+    def get_new_label(self):
         label = '___L'+str(self.label_index)
         self.label_index += 1
         return label
 
-    def get_node(self, graph, index) -> Node:
+    def get_node(self, graph, index):
         for node in graph:
             if node.index == index:
                 return node
         return None
 
-    def DFS(self, visited=None, graph=[], node=None) -> None:
+    def DFS(self, visited=None, graph=[], node=None):
         if node not in visited:
             visited.add(node)
             for neighbour_index in node.next:
                 neighbour = self.get_node(graph, neighbour_index)
                 self.DFS(visited, graph, neighbour)
 
-    def generate_target_code(self, tac_code) -> None:
+    def generate_target_code(self, tac_code):
         """
         basic blocks will be built here
         by reading the tac code
         """
 
-        modified_tac = ''
+        simplified_tac = ''
         for line in tac_code.splitlines():
-            if(self.is_condition_statement(line)):
+            if ("*" in line):
+                splitted_line = line.split(' ')
+                if (splitted_line[-1] == 'INT' or splitted_line[-1] == 'BOOL'):
+                    t0 = self.get_new_temp()
+                    t1 = self.get_new_temp()
+                    t2 = self.get_new_temp()
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+                    """
+                    a=b*c
+
+                    a=0
+                    t0=0
+                    t2=1
+                    L0:
+                    t1=t0<c
+                    if t1 goto L1 else goto L2
+                    L1:
+                    a=a+b
+                    t0=t0+t2
+                    goto L0
+                    L2:
+                    """
+                    simplified_tac += f"{splitted_line[0]} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t2} = 1 {splitted_line[-1]}\n"
+                    simplified_tac += f"{l0}:\n"
+                    simplified_tac += f"{t1} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    simplified_tac += f"if {t1} < 0 GOTO {l1} else GOTO {l2}\n"
+                    simplified_tac += f"{l1}:\n"
+                    simplified_tac += f"{splitted_line[0]} = {splitted_line[0]} + {splitted_line[2]} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {t0} + {t2} {splitted_line[-1]}\n"
+                    simplified_tac += f"GOTO {l0}\n"
+                    simplified_tac += f"{l2}:\n"
+                    if (splitted_line[-1] == 'BOOL'):
+                        l3 = self.get_new_label()
+                        l4 = self.get_new_label()
+                        simplified_tac += f"if {splitted_line[0]} != 0 GOTO {l3} else GOTO {l4}\n"
+                        simplified_tac += f"{l3}:\n"
+                        simplified_tac += f"{splitted_line[0]} = 1 BOOL\n"
+                        simplified_tac += f"{l4}:\n"
+
+            elif ("/" in line):
+                splitted_line = line.split(' ')
+                if (splitted_line[-1] == 'INT' or splitted_line[-1] == 'BOOL'):
+                    """
+                    a=b/c
+
+                    a=0
+                    t0=b
+                    t2=1
+                    L0:
+                    t1=t0>=c
+                    if t1 goto L1 else goto L2
+                    L1:
+                    a=a+t2
+                    t0=t0-c
+                    goto L0
+                    L2:
+                    """
+                    t0 = self.get_new_temp()
+                    t1 = self.get_new_temp()
+                    t2 = self.get_new_temp()
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+
+                    simplified_tac += f"{splitted_line[0]} = 0 {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {splitted_line[2]} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t2} = 1 {splitted_line[-1]}\n"
+                    simplified_tac += f"{l0}:\n"
+                    simplified_tac += f"{t1} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    # simplified_tac += f"print {t1} INT\n"
+                    simplified_tac += f"if {t1} >= 0 GOTO {l1} else GOTO {l2}\n"
+                    simplified_tac += f"{l1}:\n"
+                    simplified_tac += f"{splitted_line[0]} = {splitted_line[0]} + {t2} {splitted_line[-1]}\n"
+                    simplified_tac += f"{t0} = {t0} - {splitted_line[4]} {splitted_line[-1]}\n"
+                    # simplified_tac += f"print {splitted_line[0]} INT\n"
+                    simplified_tac += f"GOTO {l0}\n"
+                    simplified_tac += f"{l2}:\n"
+                    if (splitted_line[-1] == 'BOOL'):
+                        l3 = self.get_new_label()
+                        l4 = self.get_new_label()
+                        simplified_tac += f"if {splitted_line[0]} != 0 GOTO {l3} else GOTO {l4}\n"
+                        simplified_tac += f"{l3}:\n"
+                        simplified_tac += f"{splitted_line[0]} = 1 BOOL\n"
+                        simplified_tac += f"{l4}:\n"
+            else:
+                simplified_tac += line + '\n'
+
+        # print(simplified_tac)
+
+        modified_tac = ''
+        for line in simplified_tac.splitlines():
+            # directly converting to risc v code
+
+            if (self.is_logical_statement(line)):
+                line = line.split(' ')
+                if (line[3] == '||'):
+                    # t0 = t1 || t2
+                    """
+                        if t1 != 0 GOTO ___L0 else GOTO ___L3
+                        ___L3:
+                        if t2 != 0 GOTO ___L0 else GOTO ___L1
+                        ___L0:
+                            t0 = 1
+                            GOTO ___L2
+                        ___L1:
+                            t0 = 0
+                        ___L2:
+                    """
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+                    l3 = self.get_new_label()
+
+                    replacement_str += f"if {line[2]} != 0 GOTO {l0}\n else GOTO {l3}\n"
+                    replacement_str += f"{l3}:\n"
+                    replacement_str += f"if {line[4]} != 0 GOTO {l0}\n else GOTO {l1}\n"
+                    replacement_str += f"{l0}:\n"
+                    replacement_str += f"{line[0]} = 1\n"
+                    replacement_str += f"GOTO {l2}\n"
+                    replacement_str += f"{l1}:\n"
+                    replacement_str += f"{line[0]} = 0\n"
+                    replacement_str += f"{l2}:\n"
+                    modified_tac += replacement_str
+
+                elif (line[3] == '&&'):
+                    # t0 = t1 && t2
+                    """
+                        if t1 == 0 GOTO ___L1 else GOTO ___L3
+                        ___L3:
+                        if t2 == 0 GOTO ___L1 else GOTO ___L0
+                        ___L0:
+                            t0 = 1
+                            GOTO ___L2
+                        ___L1:
+                            t0 = 0
+                        ___L2:
+                    """
+                    l0 = self.get_new_label()
+                    l1 = self.get_new_label()
+                    l2 = self.get_new_label()
+                    l3 = self.get_new_label()
+                    replacement_str += f"if {line[2]} == 0 GOTO {l1} else GOTO {l3}\n"
+                    replacement_str += f"{l3}:\n"
+                    replacement_str += f"if {line[4]} == 0 GOTO {l1} else GOTO {l0}\n"
+                    replacement_str += f"{l0}:\n"
+                    replacement_str += f"{line[0]} = 1\n"
+                    replacement_str += f"GOTO {l2}\n"
+                    replacement_str += f"{l1}:\n"
+                    replacement_str += f"{line[0]} = 0\n"
+                    replacement_str += f"{l2}:\n"
+                    modified_tac += replacement_str
+
+            elif (self.is_condition_statement(line)):
                 relop = line.split()[3]
                 temp = line.split()[0]
                 t0 = self.get_new_temp()
@@ -95,7 +252,11 @@ class CodeOptimizer:
                 l0 = self.get_new_label()
                 l1 = self.get_new_label()
                 l2 = self.get_new_label()
+                # replacement_str += f"print {left_operand} INT\n"
+                # replacement_str += f"print {right_operand} INT\n"
+                # replacement_str += f"print {t0} INT\n"
                 replacement_str += f"if {t0} {relop} 0 GOTO {l0} else GOTO {l1}\n"
+                # replacement_str += f"if {t0} <= 0 GOTO {l0} else GOTO {l1}\n"
                 replacement_str += f"{l0}:\n"
                 replacement_str += f"{temp} = 1 INT\n"
                 replacement_str += f"GOTO {l2}\n"
@@ -103,6 +264,7 @@ class CodeOptimizer:
                 replacement_str += f"{temp} = 0 INT\n"
                 replacement_str += f"{l2}:\n"
                 modified_tac += replacement_str
+
             else:
                 modified_tac += line+'\n'
 
@@ -110,7 +272,7 @@ class CodeOptimizer:
         declared_temps = []
         final_tac = ''
         for line in modified_tac.splitlines():
-            if(re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps
+            if (re.search(r'^@.+', line) is not None and line.split(' ')[0] not in declared_temps
                     and re.search(r'^@call+', line) is None):
                 final_tac += f"- {line.split(' ')[-1]} {line.split(' ')[0]}\n"
                 declared_temps.append(line.split(' ')[0])
@@ -119,13 +281,12 @@ class CodeOptimizer:
         # replacing '#' with '__' for labels
         final_tac = final_tac.replace('#', '__')
 
-        # print(final_tac)
-
         final_tac = self.pre_optimizations(final_tac)
+        # print(final_tac)
 
         block_lines = ''
         for line in final_tac.splitlines():
-            if(line.lower().startswith('.global')):
+            if (line.lower().startswith('.global')):
                 block_lines += line
             elif line.strip() == '' or line.strip() == 'end:':
                 pass
@@ -135,14 +296,14 @@ class CodeOptimizer:
                 self.blocks.append(block_lines)
                 block_lines = ''
             elif line.endswith(':'):
-                if(block_lines.strip() != ''):
+                if (block_lines.strip() != ''):
                     self.blocks.append(block_lines)
                 block_lines = line
             else:
                 block_lines += line
             block_lines += '\n'
 
-        if(block_lines.strip() != ''):
+        if (block_lines.strip() != ''):
             self.blocks.append(block_lines)
 
         # printing the generated blocks
@@ -150,7 +311,7 @@ class CodeOptimizer:
 
         self.optimize()
 
-    def pre_optimizations(self, intermediate_code) -> str:
+    def pre_optimizations(self, intermediate_code):
         """
         function that performs basic
         optimizations before generating blocks 
@@ -158,12 +319,12 @@ class CodeOptimizer:
 
         goto_labels = set()
         for lines in intermediate_code.splitlines():
-            line_arr=lines.split(' ')
+            line_arr = lines.split(' ')
             if 'GOTO' in line_arr[0]:
                 goto_labels.add(line_arr[-1])
             elif 'GOTO' in lines:
                 for i in range(len(line_arr)):
-                    if(line_arr[i]=='GOTO'):
+                    if (line_arr[i] == 'GOTO'):
                         goto_labels.add(line_arr[i+1])
 
         # removes all labels that have no goto statements pointing to them
@@ -260,7 +421,7 @@ class CodeOptimizer:
 
         return optimized_code4
 
-    def eliminate_dead_code(self, blocks) -> list:
+    def eliminate_dead_code(self, blocks):
         """
         function that eliminates dead code
         """
@@ -317,11 +478,15 @@ class CodeOptimizer:
                 for search_node in CFG:
                     if search_node.leading_label is not None and search_node.leading_label == label:
                         node.next.add(search_node.index)
+                label = words[-4]
+                for search_node in CFG:
+                    if search_node.leading_label is not None and search_node.leading_label == label:
+                        node.next.add(search_node.index)
             # Identify the return statements and connect them to the points where they are called
             if len(words) >= 1 and words[0] == 'return':
                 index = return_map[return_pointer]
                 # Returns the location of the current return statement in the list of all code lines
-                # we go upwards and search for the first functin label -> This is the function that this return statement belongs to
+                # we go upwards and search for the first functin label
                 # Hence we need to find all calls to this functin and make a connection going from this return statement to the next line after the specific function call
                 while index >= 0:
                     words = all_lines[index].split(' ')
@@ -354,7 +519,7 @@ class CodeOptimizer:
 
             # print("Current node index", node.index)
             # print('Current node code\n', node.code_block)
-            # print('in case of a call -> Function next stores: ', node.function_next)
+            # print('in case of a call : ', node.function_next)
             # print('Next blocks', node.next)
             # print("================================================")
 
@@ -367,7 +532,6 @@ class CodeOptimizer:
             if node.leading_label == 'main':
                 start_block = node
                 break
-        # print('start_block', start_block, type(start_block))
         visited = set()
         # Call DFS and obtin the visited blocks
         self.DFS(visited=visited, graph=CFG, node=start_block)
@@ -384,19 +548,17 @@ class CodeOptimizer:
 
         return blocks
 
-
-    def optimize(self) -> None:
+    def optimize(self):
         """
         all optimizations occur here
         """
 
-        self.eliminate_dead_code(self.blocks)
+        self.blocks = self.eliminate_dead_code(self.blocks)
 
         final_asm = self.register_allocation.main(self.blocks)
 
         final_asm = self.post_optimizations(final_asm)
 
-        # print(final_asm)
         script_dir = os.path.dirname(__file__)
         rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
         abs_file_path = os.path.join(script_dir, rel_path)
@@ -409,23 +571,25 @@ class CodeOptimizer:
         function that performs optimizations
         on asm code generated
         """
-
-        final_asm=''
+        final_asm = ''
 
         # sw x5, -4(x8)
         # # ---- end of block ----
         # sw x5, -4(x8)
-        lines=asm_code.splitlines()
-        i=0
-        while(i<len(lines)-1):
-            j=i+1
-            while(j<len(lines) and lines[j].startswith('#')):
-                j+=1
+        lines = asm_code.splitlines()
+        i = 0
+        while (i < len(lines)-1):
+            j = i+1
+            while (j < len(lines) and lines[j].startswith('#')):
+                j += 1
             # print(lines[i],lines[j])
-            if(lines[i]!=lines[j]):
-                final_asm+=lines[i]+'\n'
-            i+=1
-        final_asm+=lines[-1]
-        
+            if (j >= len(lines)):
+                j = len(lines)-1
+            if (lines[i] != lines[j]):
+                final_asm += lines[i]+'\n'
+            i += 1
+        final_asm += lines[-1]
+
+        # print(lines[-1])
+
         return final_asm
-            

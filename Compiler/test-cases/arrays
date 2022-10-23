@@ -1,0 +1,5 @@
+int main(){
+    char b;
+    float a = b + 1;
+    return 0;
+}

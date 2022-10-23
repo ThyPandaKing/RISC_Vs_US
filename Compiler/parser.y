@@ -6,14 +6,31 @@
     #include <string.h>
 
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
-                                        sprintf($$.lexeme, "@t%d", variable_count);\
-                                        variable_count++;\
-                                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
+        sprintf($$.lexeme, "@t%d", variable_count);\
+        variable_count++;\
+        string lt=string($1.type);\
+        string rt=string($3.type);\
+        if((lt == "CHAR" && rt == "INT") || (rt == "CHAR" && lt == "INT")){\
+            strcpy($$.type, "INT");\
+        }\
+        else if((lt == "FLOAT" && rt == "INT") || (rt == "FLOAT" && lt == "INT")){\
+            strcpy($$.type, "FLOAT");\
+        }\
+        else if((lt == "FLOAT" && rt == "FLOAT") || (lt == "INT" && rt == "INT") || (lt == "CHAR" && rt == "CHAR")){\
+            strcpy($$.type, $1.type);\
+        }\
+        else{\
+            sem_errors.push_back("Cannot convert between CHAR and FLOAT in line : " + to_string(countn+1));\
+        }\
+        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
     
     #include <iostream>
     #include <string>
     #include <unordered_map>
+    #include<map>
     #include <stack>
+    #include<algorithm>
+    #include<fstream>
 
     using namespace std;
 
@@ -23,45 +40,56 @@
     int yytext();
 
     bool check_declaration(string variable);
+    bool check_scope(string variable);
+    bool multiple_declaration(string variable);
+    bool is_reserved_word(string id);
+    bool function_check(string variable, int flag);
+    bool check_type(string l, string r);
+    bool type_check(string type1, string type2);
 
     struct var_info {
         string data_type;
+        int scope;
+        int size;   // for arrays
+        int isArray;
         int line_number; 
     };
+
     vector<string> tac;
-    unordered_map<string, struct var_info> symbol_table;
+    map<string, string> temp_map;
+
     int variable_count = 0;
     int label_counter = 0;
+
     vector<string> sem_errors;
+
     int temp_index;
     int temp_label;
 
     stack<int> loop_continue, loop_break;
+    stack<pair<string, vector<string>>> func_call_id;
+    stack<int> scope_history;
+    int scope_counter = 0;
+
+    // for array declaration with initialization
+    string curr_array;
+    int arr_index=0;
 
     extern int countn;
 
-    typedef struct node{
-        char* id;
-        char* data_type;
-        int size;
-        char* type;     // category : keyword K; variable V; Constant C; Functions V
-        int line_number;
-    } func_symbol_table; // 100 entries allowed as of now
+    struct func_info{
+        string return_type;
+        int num_params;
+        vector<string> param_types;
+        unordered_map<string, struct var_info> symbol_table;
+    };
 
-    int func_ind = 0;
-    int func_arg = 0;
-    int func_arg_ind = 0;
-    int param_ind = 0;
-    char curr_func_name[50];
-    int curr_func_ind = 0;
+    unordered_map<string, struct func_info> func_table;
+    string curr_func_name;
+    vector<string> curr_func_param_type;
 
-    struct func_table{
-        char name[50];
-        char type[50];
-        int num_of_param;
-        int count;
-        func_symbol_table st[1000];
-    }func_table[50];
+    vector<string> reserved = {"int", "float", "char", "string", "void", "if", "elif", "else", "for", "while", "break", "continue", "main", "return", "switch", "case", "input", "output"};
+
 %}
 
 %union{
@@ -81,10 +109,9 @@
     } node;
 }
 
+%token <node> INT CHAR FLOAT STRING VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
 
-%token <node> INT CHAR FLOAT VOID RETURN INT_NUM FLOAT_NUM ID LEFTSHIFT RIGHTSHIFT LE GE EQ NE GT LT AND OR NOT ADD SUBTRACT DIVIDE MULTIPLY MODULO BITAND BITOR NEGATION XOR STR CHARACTER CC OC CS OS CF OF COMMA COLON SCOL OUTPUT INPUT SWITCH CASE BREAK DEFAULT IF ELIF ELSE WHILE FOR CONTINUE
-
-%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call
+%type <node> Program func func_list func_prefix param_list param stmt_list stmt declaration return_stmt data_type func_data_type expr primary_expr unary_expr unary_op const assign if_stmt elif_stmt else_stmt switch_stmt case_stmt case_stmt_list while_loop_stmt for_loop_stmt postfix_expr func_call arg_list arg
 
 %right ASSIGN
 %left OR
@@ -107,40 +134,49 @@ func_list       :   func_list func {}
                     |
                     ;
 
-func            :   {
-                        func_table[func_ind].count = 0;
-                    }
-                    func_prefix OF stmt_list CF {
-                        func_ind++; 
+func            :   func_prefix OF
+                    {
+                        scope_history.push(++scope_counter);
+                    } stmt_list CF 
+                    {
+                        scope_history.pop();
                         tac.push_back("end:\n");
                     }
  
-func_prefix     :   func_data_type ID {tac.push_back(string($2.lexeme) + ":"); sprintf(curr_func_name, "%s", $2.lexeme);} OC param_list CC {
-
-                        strcpy($$.lexeme, $2.lexeme);
-                        
-                        sprintf(func_table[func_ind].name, "%s" ,$2.lexeme);
-                        sprintf(func_table[func_ind].type, "%s", $1.type);
-                        func_table[func_ind].num_of_param = $5.nParams;
-
-
-                        // checking for duplicate function names
-                        for(int i=0; i<func_ind; i++){
-                            if(strcmp(func_table[i].name, func_table[func_ind].name) == 0){
-                                printf("Error: Duplicate function name %s", func_table[func_ind].name);
-                            }
+func_prefix     :   func_data_type ID 
+                    {   
+                        if(func_table.find(string($2.lexeme)) != func_table.end()){
+                            sem_errors.push_back("Error: Duplicate function name - " + string($2.lexeme));
                         }
+                        tac.push_back(string($2.lexeme) + ":"); 
+                        curr_func_name = string($2.lexeme);
+                    } 
+                    OC param_list CC {
+                        func_table[curr_func_name].return_type = string($1.type);
+                        func_table[curr_func_name].num_params = $5.nParams;
                     }
 
-func_data_type  :   data_type 
-                    | VOID
+func_data_type  :   data_type {
+                        strcpy($$.type, $1.type);
+                    }
+                    | VOID {
+                        sprintf($$.type, "void");
+                    }
                     ;
  
-param_list      :   param_list COMMA param {
-                        $$.nParams = $1.nParams + 1;
+param_list      :   param {
+                        func_table[curr_func_name].param_types.push_back(string($1.type));
+                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
+                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));                       
+                    }
+                    COMMA param_list {
+                        $$.nParams = $4.nParams + 1;
                     }
                     | param {
-                        $$.nParams = $1.nParams;
+                        $$.nParams = 1;
+                        func_table[curr_func_name].param_types.push_back(string($1.type));
+                        func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
+                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));
                     }
                     | {
                         $$.nParams = 0;
@@ -149,11 +185,8 @@ param_list      :   param_list COMMA param {
  
 param           :   data_type ID {
                         $$.nParams = 1;
-                        strcpy($$.lexeme, $2.lexeme);
-                    }
-                    | data_type ID OS CS COLON INT ID {
-                        $$.nParams = 1;                        
-                    }
+                        strcpy($$.type, $1.type);
+                        strcpy($$.lexeme, $2.lexeme);                    }
                     ;
  
 stmt_list       :   stmt stmt_list 
@@ -180,30 +213,78 @@ stmt   		    :   declaration
                     | switch_stmt
                     | INPUT OC ID CC SCOL  {
                         check_declaration($3.lexeme);
-                        tac.push_back("input " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
+                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+                        check_scope(string($3.lexeme));
                     }
                     | OUTPUT OC expr CC SCOL {
                         tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
                     }
+                    | OUTPUT OC STR CC SCOL {
+                        tac.push_back("output " + string($3.lexeme) + " STR");
+                    }
+
                     ;
  
-declaration     :   data_type ID SCOL {
-                        strcpy($2.type, $1.type);
+declaration     :   data_type ID SCOL { 
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
-                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
+                    }
+                    | STRING ID ASSIGN STR SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
+                        tac.push_back("- STR " + string($2.lexeme));
+                        tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
                     }
                     | data_type ID ASSIGN expr SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
+                        check_type(string($1.type), string($4.type));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
-                        symbol_table[string($2.lexeme)] = { string($1.type), countn+1 };
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
+                    }
+                    | data_type ID OS INT_NUM CS SCOL {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
+                        tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, stoi(string($4.lexeme)), 1, countn+1 };
+                    }
+                    | data_type ID OS INT_NUM CS ASSIGN {
+                        is_reserved_word(string($2.lexeme));
+                        multiple_declaration(string($2.lexeme));
+                        tac.push_back("- " + string($1.type) + " " + string($2.lexeme) + " [ " + string($4.lexeme) + " ] ");
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, stoi(string($4.lexeme)), 1, countn+1 };
+                        curr_array = string($2.lexeme);
+                    } OF arr_values CF SCOL // array size must be a positive integer 
+                    ;
+
+arr_values      :   const {
+                        check_type(func_table[curr_func_name].symbol_table[curr_array].data_type, string($1.type));
+                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + func_table[curr_func_name].symbol_table[curr_array].data_type);
+                        if(arr_index > func_table[curr_func_name].symbol_table[curr_array].size){
+                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(func_table[curr_func_name].symbol_table[curr_array].size) + "]’");
+                        }
+                    } 
+                    COMMA arr_values
+                    | const {
+                        check_type(func_table[curr_func_name].symbol_table[curr_array].data_type, string($1.type));
+                        tac.push_back(curr_array + " [ " + to_string(arr_index++) + " ] = " + string($1.lexeme) + " " + func_table[curr_func_name].symbol_table[curr_array].data_type);
+                        if(arr_index > func_table[curr_func_name].symbol_table[curr_array].size){
+                            sem_errors.push_back("Line no: " + to_string(func_table[curr_func_name].symbol_table[curr_array].line_number) + "error: too many initializers for ‘array [" + to_string(func_table[curr_func_name].symbol_table[curr_array].size) + "]’");
+                        }
+                        arr_index=0;
                     }
                     ;
                    
 return_stmt     :   RETURN expr {
-                        tac.push_back("return " + string($2.lexeme) + " " + string($2.type));
+                        check_type(func_table[curr_func_name].return_type, string($2.type));
+                        tac.push_back("return " + string($2.lexeme) + " " + func_table[curr_func_name].return_type);
                     }
                     ;
- 
+
 data_type       :   INT {
                         strcpy($$.type, "INT");
                     }
@@ -290,10 +371,16 @@ postfix_expr    :   func_call {
                         strcpy($$.type, $1.type);
                         sprintf($$.lexeme, "%s", $1.lexeme);
                     }
-                    // | arr {
-                    //     sprintf($$.type, $1.type);
-                    //     sprintf($$.lexeme, "%s", $1.lexeme);
-                    // }
+                    |
+                    ID OS expr CS {
+                        if(check_declaration(string($1.lexeme)) && func_table[curr_func_name].symbol_table[string($1.lexeme)].isArray == 0) { 
+                            sem_errors.push_back("Variable is not an array"); 
+                        }
+                        check_scope(string($1.lexeme));
+                        strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
+                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " " + string($$.type));
+                    }
                     ;
  
 unary_expr      :   unary_op primary_expr {
@@ -305,18 +392,21 @@ unary_expr      :   unary_op primary_expr {
  
 primary_expr    :   ID {
                         check_declaration(string($1.lexeme));
-                        strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
+                        check_scope(string($1.lexeme));
+                        strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
                         strcpy($$.lexeme, $1.lexeme);
-                        // if(check_declaration(string($1.lexeme))){
-                        //     strcpy($$.type, symbol_table[string($1.lexeme)].data_type.c_str());
-                        //     sprintf($$.lexeme, "@t%d", variable_count++);
-                        //     tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
-                        // }
                     }
                     | const {
                         strcpy($$.type, $1.type);
-                        sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        sprintf($$.lexeme, "@t%d", variable_count);
+                        if(temp_map[string($1.lexeme)] == ""){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                            temp_map[string($1.lexeme)] = string($$.lexeme);
+                            variable_count++;
+                        }
+                        else{
+                            tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        }
                     }
                     | OC expr CC {
                         strcpy($$.type, $2.type);
@@ -345,8 +435,19 @@ const           :   INT_NUM {
                     ;
                    
 assign          :   ID ASSIGN expr {
+                        check_type(func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type, string($3.type));
                         check_declaration(string($1.lexeme));
-                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + symbol_table[string($1.lexeme)].data_type);
+                        check_scope(string($1.lexeme));
+                        tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+                    }
+                    |
+                    ID OS expr CS ASSIGN expr {
+                        check_type(func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type, string($6.type));
+                        if(check_declaration(string($1.lexeme)) && func_table[curr_func_name].symbol_table[string($1.lexeme)].isArray == 0) { 
+                            sem_errors.push_back("Line no " + to_string(countn+1) + " : Variable is not an array"); 
+                        }
+                        check_scope(string($1.lexeme));
+                        tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
 
 if_stmt         :   IF  {
@@ -358,7 +459,11 @@ if_stmt         :   IF  {
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
                     } 
-                    OF stmt_list CF {  
+                    OF
+                    {
+                      scope_history.push(++scope_counter);  
+                    } stmt_list CF {  
+                        scope_history.pop(); 
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -379,7 +484,12 @@ elif_stmt       :   ELIF {
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
                     } 
-                    OF stmt_list CF {
+                    OF
+                    {
+                        scope_history.push(++scope_counter);
+                    } 
+                    stmt_list CF {
+                        scope_history.pop();
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -387,7 +497,7 @@ elif_stmt       :   ELIF {
                     |
                     ;
 
-else_stmt       :   ELSE OF stmt_list CF
+else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{scope_history.pop();}
                     |
                     ;       
 
@@ -455,8 +565,11 @@ while_loop_stmt :   WHILE {
                         tac.push_back("\n" + string($4.if_body) + ":");
                         
                     } 
-                    OF stmt_list CF    
+                    OF{
+                        scope_history.push(++scope_counter);
+                    } stmt_list CF    
                     {
+                        scope_history.pop();
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($4.else_body) + ":");
                         loop_continue.pop();
@@ -483,55 +596,62 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($6.if_body) + ":");
                     }
-                    OF stmt_list CF {
+                    OF
+                    {
+                        scope_history.push(++scope_counter);
+                    }
+                    stmt_list CF {
+                        scope_history.pop();
                         tac.push_back("GOTO " + string($6.loop_body));
                         tac.push_back("\n" + string($6.else_body) + ":");
                         loop_continue.pop();
                         loop_break.pop();
                     }
 
-func_call       :   ID OC arg_list CC  {
-                        sprintf($$.lexeme, $1.lexeme);        
+func_call       :   ID {
+                        func_call_id.push({string($1.lexeme), func_table[string($1.lexeme)].param_types});
+                        } 
+                        OC arg_list CC  {
+                        strcpy($$.type, func_table[string($1.lexeme)].return_type.c_str());
+                        func_call_id.pop();
                         sprintf($$.lexeme, "@t%d", variable_count);
                         variable_count++;
 
                         // checking if function is declared
-                        bool flag = false;
-                        int ind = -1;
-                        for(int i=0; i<func_ind; i++){
-                            if((strcmp(func_table[i].name, $1.lexeme) == 0) || (strcmp(curr_func_name, $1.lexeme)==0)){
-                                ind = i;
-                                curr_func_ind = i;
-                                flag = true;
-                                break;
-                            }
-                        }
-                    
-                        if(!flag && (strcmp(curr_func_name, $1.lexeme)!=0)){
-                            printf("ERROR in line %d : Function %s is not declared\n", countn+1, $1.lexeme);
-                        }
-                        tac.push_back(string($$.lexeme) + " = @call " + string($1.lexeme) + " " + to_string(func_table[ind].num_of_param));
-                    
-                        param_ind = 0;
-                        func_arg_ind = 0;
-                        func_arg = 0;
+                        
+
+                        tac.push_back(string($$.lexeme) + " = @call " + string($1.lexeme) + " " + func_table[string($1.lexeme)].return_type + " " + to_string(func_table[string($1.lexeme)].num_params));
                     }
                     ;
 
-arg_list        :   arg COMMA arg_list
-                    | arg {}
-                    | {}
+arg_list        :   arg COMMA arg_list {
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
+                        // cout << "there" << type << endl;
+                        func_call_id.top().second.pop_back();
+                        // cout << type << endl;
+                        if(type_check(string($1.type), type)) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
+                    }
+                    | arg {
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
+                        int sz = func_call_id.top().second.size();
+                        string type = func_call_id.top().second[sz-1];
+                        // cout << "there" << type << endl;
+                        func_call_id.top().second.pop_back();
+                        if(type_check(string($1.type), type)) {
+                            sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
+                        }
+                    }
+                    | 
                     ;
 
 arg             :   expr {
-                        // check argument types
-                        tac.push_back("@param " + to_string(param_ind++) + " " + string($1.lexeme) + " " + string($1.type));
-
-                        // if(strcmp($1.type, func_table[curr_func_ind].st[func_arg_ind++].data_type) != 0){
-                        //     printf("Error in function call %s: variable type is not matched", func_table[curr_func_ind].name);
-                        //     exit(0);
-                        // }
-                        func_arg++;
+                        tac.push_back("param " + string($1.lexeme) + " " + string($1.type));
                     }
                     ;
 
@@ -544,22 +664,90 @@ int main(int argc, char *argv[]) {
         cout << x << endl;
     for(auto item: sem_errors)
         cout << item << endl;
-    /* for(auto item: symbol_table)
+    /* for(auto item: func_table[curr_func_name].symbol_table)
         cout << item.first << "-->" << item.second.data_type << endl; */
+    // cout << endl << "Symbol table" << endl;
+    // for(auto item : func_table["main"].symbol_table){
+    //     cout << item.first << " ---> " << item.second.scope <<endl;
+    // }
+
+    // for(auto i: temp_map){
+    //     cout << i.first << " --- " << i.second << endl;
+    // }
+
 }
 
 bool check_declaration(string variable){
-    if(symbol_table.find(variable) == symbol_table.end()){
+    if(func_table[curr_func_name].symbol_table.find(variable) == func_table[curr_func_name].symbol_table.end()){
         sem_errors.push_back("Variable not declared in line " + to_string(countn+1) + " before usage.");
         return false;
     }
     return true;
 }
 
+bool check_scope(string variable){
+    int var_scope = func_table[curr_func_name].symbol_table[variable].scope;
+    // int curr_scope = scope_counter;
+    stack<int> temp_stack(scope_history);
+    while(!temp_stack.empty()){
+        if(temp_stack.top() == var_scope){
+            return false;
+        }
+        temp_stack.pop();
+    }
+    sem_errors.push_back("Scope of variable '" + variable +"' not marching in line " + to_string(countn+1) + ".");
+    return true;
+}
+
+bool multiple_declaration(string variable){
+    if(!(func_table[curr_func_name].symbol_table.find(variable) == func_table[curr_func_name].symbol_table.end())){
+        sem_errors.push_back("redeclaration of '" + variable + "' in line " + to_string(countn+1));
+        return false;
+    }
+    return true;
+}
+
+bool check_type(string l, string r){
+    if(r == "FLOAT" && l == "CHAR"){
+        sem_errors.push_back("Cannot convert type FLOAT to CHAR in line " + to_string(countn+1));
+        return false;
+    }
+    if(l == "FLOAT" && r == "CHAR"){
+        sem_errors.push_back("Cannot convert typr CHAR to FLOAT in line " + to_string(countn+1));
+        return false;
+    }
+    return true;
+}
+
+bool is_reserved_word(string id){
+    for(auto &item: id){
+        item = tolower(item);
+    }
+    auto iterator = find(reserved.begin(), reserved.end(), id);
+    if(iterator != reserved.end()){
+        sem_errors.push_back("usage of reserved keyword '" + id + "' in line " + to_string(countn+1));
+        return true;
+    }
+    return false;
+}
+
+bool type_check(string type1, string type2) {
+    if((type1 == "FLOAT" and type2 == "CHAR") or (type1 == "CHAR" and type2 == "FLOAT")) {
+        return true;
+    }
+    return false;
+}
+
 void yyerror(const char* msg) {
+    sem_errors.push_back("syntax error in line " + to_string(countn+1));
+    for(auto item: sem_errors)
+        cout << item << endl;
     fprintf(stderr, "%s\n", msg);
     exit(1);
 }
 
 
-// Prepend # to label names
+// check if void functions has return type
+// deal with scope for function arguments
+// deal with scope for arrays
+// scope in switch statement

@@ -1,8 +1,15 @@
 int main(){
+<<<<<<< HEAD
     int a=10;
     int b=a/5;
     string c="hello";
 
+=======
+    int a = 0;
+    if(a==0){
+        a = 1;
+    }
+>>>>>>> ac4c992a47485cb7ab925f9b18a804bad6ffa2bf
     return 0;
 }
 
