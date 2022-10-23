@@ -713,7 +713,7 @@ arg             :   expr {
 int main(int argc, char *argv[]) {
     /* yydebug = 1; */
     yyparse();
-    for(auto x: vmcode)
+    for(auto x: tac)
         cout << x << endl;
     for(auto item: sem_errors)
         cout << item << endl;
