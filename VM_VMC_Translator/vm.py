@@ -1,4 +1,5 @@
 from enums import *
+from preprocess import *
 
 
 class VM:
@@ -17,8 +18,10 @@ class VM:
         self.RAM[3] = 644
         self.tmp = self.RAM[3]      # temp segment is from -644 to -1279
 
-        self.text_segment = ".global Main\n"
+        self.text_segment = ".global main\n"
         self.text_segment += f"addi x2, x8, -1284\n"
+        self.prev_operator = None
+        self.prev_datatype = None
 
     def function(self, line):
         """
@@ -27,6 +30,16 @@ class VM:
         self.text_segment += f"{func}:\n"
 
         self.text_segment += "\n"
+
+    def label(self, line):
+        """
+        """
+        self.text_segment += f"{line[-1]}:\n"
+
+    def goto(self, line):
+        """
+        """
+        self.text_segment += f"beq x0, x0, {line[-1]}\n"
 
     def push(self, line):
         """
@@ -136,8 +149,104 @@ class VM:
             self.text_segment += f"add x5, x5, x6\n"
             self.text_segment += f"sw x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+        elif(datatype == Datatypes.CHAR.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x6, 0(x2)\n"
+            self.text_segment += f"add x5, x5, x6\n"
+            self.text_segment += f"sb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+        elif(datatype == Datatypes.BOOL.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x6, 0(x2)\n"
+            self.text_segment += f"add x5, x5, x6\n"
+            self.text_segment += f"sb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+        elif(datatype == Datatypes.FLOAT.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw f3, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw f4, 0(x2)\n"
+            self.text_segment += f"fadd.s f3, f3, f4\n"
+            self.text_segment += f"fsw f3, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+
+    def Eq(self, line):
+        """
+        Eq INT
+        """
+        datatype = line[-1]
+        self.prev_operator = Operators.Eq
+
+        if(datatype == Datatypes.INT.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # RHS
+            self.text_segment += f"sub x5, x5, x6\n"
+            self.text_segment += f"sw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.prev_datatype = Datatypes.INT
+        elif(datatype == Datatypes.CHAR.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x6, 0(x2)\n"      # RHS
+            self.text_segment += f"sub x5, x5, x6\n"
+            self.text_segment += f"sb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.prev_datatype = Datatypes.CHAR
+        elif(datatype == Datatypes.BOOL.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x6, 0(x2)\n"      # RHS
+            self.text_segment += f"sub x5, x5, x6\n"
+            self.text_segment += f"sb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.prev_datatype = Datatypes.BOOL
+        elif(datatype == Datatypes.FLOAT.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw x5, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw x6, 0(x2)\n"      # RHS
+            self.text_segment += f"fsub.s x5, x5, x6\n"
+            self.text_segment += f"fsw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.prev_datatype = Datatypes.FLOAT
+
+    def if_goto(self, line):
+        """
+        if-goto L4
+        """
+        datatype = self.prev_datatype
+        label = line[-1]
+
+        if(datatype == Datatypes.INT):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"{self.prev_operator.value[0]} x5, x0, {label}\n"
+        elif(datatype == Datatypes.CHAR or datatype == Datatypes.BOOL):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"{self.prev_operator.value[0]} x5, x0, {label}\n"
+        elif(datatype == Datatypes.FLOAT):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw f3, 0(x2)\n"
+            if(len(self.prev_operator) == 3):
+                self.text_segment += f"fsub.s f3, f0, f3\n"
+            self.text_segment += f"{self.prev_operator.value[1]} f3, f0, {label}\n"
+
+        self.prev_datatype = None
+        self.prev_operator = None
 
     def generate_target_code(self, vm_code):
+
+        preprocess = Preprocess()
+        vm_code = preprocess.preprocess(vm_code)
 
         for line in vm_code.splitlines():
             line = line.split(' ')
@@ -147,7 +256,7 @@ class VM:
             elif(line[0] == Instructions.Sub.value):
                 return Instructions.Sub
             elif(line[0] == Instructions.Eq.value):
-                return Instructions.Eq
+                self.Eq(line)
             elif(line[0] == Instructions.Lt.value):
                 return Instructions.Lt
             elif(line[0] == Instructions.Gt.value):
@@ -167,12 +276,14 @@ class VM:
             elif(line[0] == Instructions.ret.value):
                 return Instructions.ret
             elif(line[0] == Instructions.if_goto.value):
-                return Instructions.if_goto
+                self.if_goto(line)
             elif(line[0] == Instructions.goto.value):
-                return Instructions.goto
+                self.goto(line)
             elif(line[0] == Instructions.label.value):
-                return Instructions.label
+                self.label(line)
             elif(line[0] == Instructions.print_stmt.value):
-                return Instructions.print
+                return Instructions.print_stmt
+            elif(line[0] == Instructions.call.value):
+                return Instructions.call
 
         return self.text_segment

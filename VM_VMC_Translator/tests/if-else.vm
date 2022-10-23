@@ -1,0 +1,13 @@
+function main
+
+push constant 4 INT
+push constant 4 INT
+pop local 0 INT
+push local 0 INT
+Eq INT
+if-goto L
+push constant 11 INT
+goto L0
+label L
+push constant 13 INT
+label L0
