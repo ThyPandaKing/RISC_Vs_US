@@ -148,11 +148,7 @@ void conversion(){
                 vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
             }
             else if(tac[i].size() == 7){
-                vm.push_back("push constant 1 INT");
                 pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
-                vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                vm.push_back("Eq");
-                vm.push_back("if-goto " + tac[i][3]);
                 vm.push_back("push constant 0 INT");
                 vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                 vm.push_back("Eq");
