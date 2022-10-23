@@ -22,7 +22,10 @@ GOTO #L0
 @t6 = 33 INT
 c = @t6 INT
 #L0:
-@t7 = 0 INT
-return @t7 INT
+@t7 = 38 INT
+@t8 = x + @t7 INT
+c = @t8 INT
+@t9 = 0 INT
+return @t9 INT
 end:
 

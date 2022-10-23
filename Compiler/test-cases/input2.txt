@@ -11,6 +11,7 @@ int main(){
     else{
         c = 33;
     }
+    c = x + 38;
     return 0;
 }
 
