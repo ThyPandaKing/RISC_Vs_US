@@ -1,27 +1,60 @@
-main:
-<<<<<<< HEAD
-- CHAR b
-@t0 = 1 INT
-@t1 = b + @t0 INT
-- FLOAT a
-a = @t1 FLOAT
-@t2 = 0 INT
-return @t2 INT
-=======
-@t0 = 0 INT
-- INT a
-a = @t0 INT
-@t0 = 0 INT
-@t1 = a == @t1 INT
-if @t1 GOTO #L1 else GOTO #L2
-#L1:
-@t2 = 1 INT
-a = @t2 INT
-GOTO #L0
-#L2:
-#L0:
-@t0 = 0 INT
-return @t3 INT
->>>>>>> ac4c992a47485cb7ab925f9b18a804bad6ffa2bf
-end:
+push constant 9
+pop @t0
+push @t0
+pop x
+push constant 1
+pop @t1
+push @t1
+push x
+add
+pop @t2
+push @t2
+pop x
+push constant 7
+pop @t3
+push x
+push @t3
+lt
+pop @t4
+push @t4
+push constant 0
+eq
+if-goto #L2
+push constant 7
+pop @t5
+push x
+push @t5
+or
+pop @t5
+push @t5
+pop x
+goto #L0
 
+label #L2
+push constant 0
+pop @t6
+push x
+push @t6
+gt
+pop @t7
+push @t7
+push constant 0
+eq
+if-goto #L4
+push x
+not
+push @t8
+pop x
+goto #L0
+
+label #L4
+push x
+neg
+push @t9
+pop x
+
+label #L0
+push constant 0
+pop @t10
+push @t10
+return
