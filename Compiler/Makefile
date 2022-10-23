@@ -15,6 +15,9 @@ y.tab.c: parser.y
 
 lex.yy.c: lexical_analyser.l
 	lex lexical_analyser.l
+
+optimal:  
+	./Optimization/a.out > tac_optimized.txt
 	
 clean:
 	rm -f parser y.tab.c lex.yy.c y.tab.h y.output 
