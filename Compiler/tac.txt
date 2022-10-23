@@ -2,15 +2,12 @@ main:
 @t0 = 0 INT
 - INT a
 a = @t0 INT
-@t0 = 0 INT
-@t1 = a == @t1 INT
-if @t1 GOTO #L1 else GOTO #L2
-#L1:
-@t2 = 1 INT
-a = @t2 INT
-GOTO #L0
-#L2:
-#L0:
+@t1 = 1 INT
+- INT b
+b = @t1 INT
+@t2 = a + b INT
+- INT c
+c = @t2 INT
 @t0 = 0 INT
 return @t3 INT
 end:
