@@ -18,13 +18,11 @@ class Preprocess:
         for line in generator:
             if(line.split(' ')[0] == Instructions.Neq.value):
                 mod_vm_code += f"Eq {line.split(' ')[-1]}\n"
-                next(generator)
+                line = next(generator)
                 label = self.get_new_label()
                 mod_vm_code += f"if-goto {label}\n"
                 prev_label = line.split(' ')[-1]
-                next(generator)
                 mod_vm_code += f"goto {prev_label}\n"
-                next(generator)
                 mod_vm_code += f"label {label}\n"
             else:
                 mod_vm_code += line + '\n'

@@ -1,10 +1,10 @@
 function main
 
-push constant 4 INT
-push constant 4 INT
-pop local 0 INT
-push local 0 INT
-Eq INT
+push constant 4.8 FLOAT
+push constant -5.5 FLOAT
+pop local 0 FLOAT
+push local 0 FLOAT
+Gt FLOAT
 if-goto L
 push constant 11 INT
 goto L0

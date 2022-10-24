@@ -22,7 +22,7 @@ class Instructions(enum.Enum):
     Add = 'Add'
     Sub = 'Sub'
     LShift = 'LShift'
-    RightShift = 'RShift'
+    RShift = 'RShift'
     BitAnd = 'BitAnd'
     BitOr = 'BitOr'
     BitXor = 'BitXor'
@@ -44,14 +44,20 @@ class Datatypes(enum.Enum):
 
 
 class Operators(enum.Enum):
+    Add = ['add', 'fadd.s']
+    Sub = ['sub', 'fsub.s']
+    LShift = ['sll']
+    RShift = ['srl']
+    BitAnd = ['and']
+    BitOr = ['or']
+    BitXor = ['xor']
+
     Plus = '+'
     Minus = '-'
     Mul = '*'
     Div = '/'
     Mod = '%'
-    BitAnd = '&'
-    BitOr = '|'
-    BitXor = '^'
+
     LeftShift = '<<'
     RightShift = '>>'
     LogicalAnd = '&&'

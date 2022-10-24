@@ -1,3 +1,5 @@
+from dis import Instruction
+from webbrowser import Opera
 from enums import *
 from preprocess import *
 
@@ -50,7 +52,10 @@ class VM:
         """
         segment = line[1]
         datatype = line[-1]
-        index = int(line[2])
+        if(datatype == Datatypes.INT.value):
+            index = int(line[2])
+        elif(datatype == Datatypes.FLOAT.value):
+            index = float(line[2])
 
         if(segment != Segment.constant.value):
             pointer = None
@@ -81,7 +86,7 @@ class VM:
             self.text_segment += "\n"
 
         elif(segment == Segment.constant.value):
-            constant = int(line[2])
+            constant = index
             if(datatype == Datatypes.INT.value):
                 self.text_segment += f"li x5, {constant}\n"
                 self.text_segment += f"sw x5, 0(x2)\n"
@@ -135,18 +140,35 @@ class VM:
             self.text_segment += f"flw x5, 0(x2)\n"
             self.text_segment += f"fsw x5, {-(pointer+index+4)}(x8)\n"
 
-    def Add(self, line):
+    def Operator(self, line):
         """
-        Add FLOAT
+        Add/Sub/LShift/RShift/BitAnd/BitOr/BitXor INT
+        Add/Sub FLOAT
         """
         datatype = line[-1]
+        operator = line[0]
+        instruction = ''
+        if(operator == Instructions.Add.value):
+            instruction = Operators.Add.value
+        elif(operator == Instructions.Sub.value):
+            instruction = Operators.Sub.value
+        elif(operator == Instructions.LShift.value):
+            instruction = Operators.LShift.value
+        elif(operator == Instructions.RShift.value):
+            instruction = Operators.RShift.value
+        elif(operator == Instructions.BitAnd.value):
+            instruction = Operators.BitAnd.value
+        elif(operator == Instructions.BitOr.value):
+            instruction = Operators.BitOr.value
+        elif(operator == Instructions.BitXor.value):
+            instruction = Operators.BitXor.value
 
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
-            self.text_segment += f"add x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
             self.text_segment += f"sw x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif(datatype == Datatypes.CHAR.value):
@@ -154,7 +176,7 @@ class VM:
             self.text_segment += f"lb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"add x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
             self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif(datatype == Datatypes.BOOL.value):
@@ -162,24 +184,40 @@ class VM:
             self.text_segment += f"lb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"add x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
             self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif(datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"flw f3, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"flw f4, 0(x2)\n"
-            self.text_segment += f"fadd.s f3, f3, f4\n"
-            self.text_segment += f"fsw f3, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            if(operator == Instructions.Add.value or operator == Instructions.Sub.value):
+                self.text_segment += f"addi x2, x2, 4\n"
+                self.text_segment += f"flw f3, 0(x2)\n"
+                self.text_segment += f"addi x2, x2, 4\n"
+                self.text_segment += f"flw f4, 0(x2)\n"
+                self.text_segment += f"{instruction[1]} f3, f3, f4\n"
+                self.text_segment += f"fsw f3, 0(x2)\n"
+                self.text_segment += f"addi x2, x2, -4\n"
+            # float does not have any other operations
 
-    def Eq(self, line):
+
+    def Condition(self, line):
         """
         Eq INT
+        Lt INT
         """
         datatype = line[-1]
-        self.prev_operator = Operators.Eq
+        condition = line[0]
+        if(condition == Instructions.Eq.value):
+            condition = Operators.Eq
+        elif(condition == Instructions.Lt.value):
+            condition = Operators.Lt
+        elif(condition == Instructions.Gt.value):
+            condition = Operators.Gt
+        elif(condition == Instructions.Le.value):
+            condition = Operators.Le
+        elif(condition == Instructions.Ge.value):
+            condition = Operators.Ge
+
+        self.prev_operator = condition
 
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
@@ -236,7 +274,7 @@ class VM:
         elif(datatype == Datatypes.FLOAT):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"
-            if(len(self.prev_operator) == 3):
+            if(len(self.prev_operator.value) == 3):
                 self.text_segment += f"fsub.s f3, f0, f3\n"
             self.text_segment += f"{self.prev_operator.value[1]} f3, f0, {label}\n"
 
@@ -251,22 +289,13 @@ class VM:
         for line in vm_code.splitlines():
             line = line.split(' ')
 
-            if(line[0] == Instructions.Add.value):
-                self.Add(line)
-            elif(line[0] == Instructions.Sub.value):
-                return Instructions.Sub
-            elif(line[0] == Instructions.Eq.value):
-                self.Eq(line)
-            elif(line[0] == Instructions.Lt.value):
-                return Instructions.Lt
-            elif(line[0] == Instructions.Gt.value):
-                return Instructions.Gt
-            elif(line[0] == Instructions.Ge.value):
-                return Instructions.Ge
-            elif(line[0] == Instructions.Le.value):
-                return Instructions.Le
-            elif(line[0] == Instructions.Neq.value):
-                return Instructions.Neq
+            if(line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or 
+                line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or 
+                line[0] == Instructions.RShift.value):
+                self.Operator(line)
+            elif(line[0] == Instructions.Eq.value or line[0] == Instructions.Lt.value or line[0] == Instructions.Gt.value or
+                line[0] == Instructions.Le.value or line[0] == Instructions.Ge.value):
+                self.Condition(line)
             elif(line[0] == Instructions.push.value):
                 self.push(line)
             elif(line[0] == Instructions.pop.value):
