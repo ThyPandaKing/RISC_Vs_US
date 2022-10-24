@@ -1,0 +1,5 @@
+function main
+
+push constant a CHAR
+pop local 0 CHAR
+push local 0 CHAR

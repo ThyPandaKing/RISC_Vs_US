@@ -1,8 +1,9 @@
 from dis import Instruction
+from turtle import pos
 from webbrowser import Opera
 from enums import *
 from preprocess import *
-
+from postprocess import *
 
 class VM:
     def __init__(self):
@@ -24,6 +25,8 @@ class VM:
         self.text_segment += f"addi x2, x8, -1284\n"
         self.prev_operator = None
         self.prev_datatype = None
+        self.prev_push_segment = None
+
 
     def function(self, line):
         """
@@ -51,8 +54,10 @@ class VM:
         push constant true BOOL
         """
         segment = line[1]
+        self.prev_push_segment = segment
         datatype = line[-1]
-        if(datatype == Datatypes.INT.value):
+        index = 0   
+        if(datatype == Datatypes.INT.value or datatype == Datatypes.CHAR.value or datatype == Datatypes.BOOL.value):
             index = int(line[2])
         elif(datatype == Datatypes.FLOAT.value):
             index = float(line[2])
@@ -96,7 +101,7 @@ class VM:
                 self.text_segment += f"sb x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.BOOL.value):
-                self.text_segment += f"lb x5, {1 if constant=='true' else 0}\n"
+                self.text_segment += f"li x5, {1 if line[2]=='true' else 0}\n"
                 self.text_segment += f"sb x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.FLOAT.value):
@@ -281,6 +286,35 @@ class VM:
         self.prev_datatype = None
         self.prev_operator = None
 
+    def print_stmt(self, line):
+        """
+        push local 0 INT
+        print INT
+        """
+        datatype = line[-1]
+        if(datatype == Datatypes.INT.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"add a0, x5, x0\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"li a7, 1\n"
+            self.text_segment += f"ecall\n"
+        elif(datatype == Datatypes.CHAR.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"add a0, x5, x0\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"li a7, 11\n"
+            self.text_segment += f"ecall\n"
+        elif(datatype == Datatypes.BOOL.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"li x5, 0\n"
+            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"add a0, x5, x0\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"li a7, 4\n"
+            self.text_segment += f"ecall\n"
+
     def generate_target_code(self, vm_code):
 
         preprocess = Preprocess()
@@ -311,8 +345,10 @@ class VM:
             elif(line[0] == Instructions.label.value):
                 self.label(line)
             elif(line[0] == Instructions.print_stmt.value):
-                return Instructions.print_stmt
+                self.print_stmt(line)
             elif(line[0] == Instructions.call.value):
                 return Instructions.call
+
+        self.text_segment = postprocess(self.text_segment)
 
         return self.text_segment
