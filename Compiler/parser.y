@@ -22,11 +22,7 @@
         else{\
             sem_errors.push_back("Cannot convert between CHAR and FLOAT in line : " + to_string(countn+1));\
         }\
-        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));\
-        vmcode.push_back("push " + string($1.lexeme));\
-        vmcode.push_back("push " + string($3.lexeme));\
-        vmcode.push_back(operator_map[string($2.lexeme)]);\
-        vmcode.push_back("pop " + string($$.lexeme));}
+        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
     
     #include <iostream>
     #include <string>
@@ -60,9 +56,7 @@
     };
 
     vector<string> tac;
-    vector<string> vmcode;
     map<string, string> temp_map;
-    map<string, string> operator_map = {{"+", "add"}, {"-", "sub"}, {"==", "eq"}, {">", "gt"}, {"<", "lt"}, {"&", "and"}, {"|", "or"}, {"~", "not"}};
 
     int variable_count = 0;
     int label_counter = 0;
@@ -192,8 +186,7 @@ param_list      :   param {
 param           :   data_type ID {
                         $$.nParams = 1;
                         strcpy($$.type, $1.type);
-                        strcpy($$.lexeme, $2.lexeme);                    
-                    }
+                        strcpy($$.lexeme, $2.lexeme);                    }
                     ;
  
 stmt_list       :   stmt stmt_list 
@@ -210,13 +203,11 @@ stmt   		    :   declaration
                     | BREAK SCOL {
                         if(!loop_break.empty()){
                             tac.push_back("GOTO #L" + to_string(loop_break.top()));
-                            vmcode.push_back("goto #L" + to_string(loop_break.top()));
                         }
                     }
                     | CONTINUE SCOL {
                         if(!loop_continue.empty()){
                             tac.push_back("GOTO #L" + to_string(loop_continue.top()));
-                            vmcode.push_back("goto #L" + to_string(loop_continue.top()));
                         }
                     }     
                     | switch_stmt
@@ -253,8 +244,6 @@ declaration     :   data_type ID SCOL {
                         check_type(string($1.type), string($4.type));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
-                        vmcode.push_back("push " + string($4.lexeme));
-                        vmcode.push_back("pop " + string($2.lexeme));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
                     }
                     | data_type ID OS INT_NUM CS SCOL {
@@ -293,8 +282,6 @@ arr_values      :   const {
 return_stmt     :   RETURN expr {
                         check_type(func_table[curr_func_name].return_type, string($2.type));
                         tac.push_back("return " + string($2.lexeme) + " " + func_table[curr_func_name].return_type);
-                        vmcode.push_back("push " + string($2.lexeme));
-                        vmcode.push_back("return");
                     }
                     ;
 
@@ -400,11 +387,6 @@ unary_expr      :   unary_op primary_expr {
                         strcpy($$.type, $2.type);
                         sprintf($$.lexeme, "@t%d", variable_count++);
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
-                        vmcode.push_back("push " + string($2.lexeme));
-                        if(string($1.lexeme) == "-")
-                            vmcode.push_back("neg");
-                        else if(string($1.lexeme) == "~")
-                            vmcode.push_back("not");
                     }
                     ;
  
@@ -424,11 +406,7 @@ primary_expr    :   ID {
                         }
                         else{
                             tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
-                            // vmcode.push_back("push constant " + temp_map[string($1.lexeme)]);
-                            // vmcode.push_back("pop " + string($$.lexeme));
                         }
-                        vmcode.push_back("push constant " + string($1.lexeme));
-                        vmcode.push_back("pop " + string($$.lexeme));
                     }
                     | OC expr CC {
                         strcpy($$.type, $2.type);
@@ -461,10 +439,9 @@ assign          :   ID ASSIGN expr {
                         check_declaration(string($1.lexeme));
                         check_scope(string($1.lexeme));
                         tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
-                        vmcode.push_back("push " + string($3.lexeme));
-                        vmcode.push_back("pop " + string($1.lexeme));
                     }
-                    | ID OS expr CS ASSIGN expr {
+                    |
+                    ID OS expr CS ASSIGN expr {
                         check_type(func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type, string($6.type));
                         if(check_declaration(string($1.lexeme)) && func_table[curr_func_name].symbol_table[string($1.lexeme)].isArray == 0) { 
                             sem_errors.push_back("Line no " + to_string(countn+1) + " : Variable is not an array"); 
@@ -478,30 +455,20 @@ if_stmt         :   IF  {
                     } 
                     OC expr CC { 
                         tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        vmcode.push_back("push " + string($4.lexeme));
-                        vmcode.push_back("push constant 0");
-                        vmcode.push_back("eq");
-                        vmcode.push_back("if-goto #L" + to_string(label_counter+1));
-
                         sprintf($4.if_body, "#L%d", label_counter++);
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
-                        // vmcode.push_back("\nlabel " + string($4.if_body));
                     } 
                     OF
                     {
                       scope_history.push(++scope_counter);  
-                    } 
-                    stmt_list CF {  
+                    } stmt_list CF {  
                         scope_history.pop(); 
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
-                        vmcode.push_back("goto " + string($1.parentNext));
-                        vmcode.push_back("\nlabel " + string($4.else_body));
                     } 
                     elif_stmt  else_stmt {   
                         tac.push_back(string($1.parentNext) + ":");
-                        vmcode.push_back("\nlabel " + string($1.parentNext));
                     }
                     ;        
 
@@ -511,16 +478,11 @@ elif_stmt       :   ELIF {
                         sprintf($1.parentNext, "%s", hold);
                     } 
                     OC expr CC {
+                        // sprintf(icg[ic_idx++], "\nif (%s != 0) GOTO L%d else GOTO L%d\n", $4.token, label, label+1);
                         tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        vmcode.push_back("push " + string($4.lexeme));
-                        vmcode.push_back("push constant 0");
-                        vmcode.push_back("eq");
-                        vmcode.push_back("if-goto #L" + to_string(label_counter+1));
-
                         sprintf($4.if_body, "#L%d", label_counter++);
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
-                        // vmcode.push_back("\nlabel " + string($4.if_body));
                     } 
                     OF
                     {
@@ -530,8 +492,6 @@ elif_stmt       :   ELIF {
                         scope_history.pop();
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
-                        vmcode.push_back("goto " + string($1.parentNext));
-                        vmcode.push_back("\nlabel " + string($4.else_body));
                     } 
                     elif_stmt  
                     |
@@ -593,7 +553,6 @@ while_loop_stmt :   WHILE {
                         sprintf($1.loop_body, "#L%d", label_counter); 
                         loop_continue.push(label_counter++);
                         tac.push_back("\n" + string($1.loop_body) + ":");
-                        vmcode.push_back("\nlabel " + string($1.loop_body));
                     } 
                     OC expr CC 
                     {
@@ -604,22 +563,15 @@ while_loop_stmt :   WHILE {
 
                         tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body));
                         tac.push_back("\n" + string($4.if_body) + ":");
-                        vmcode.push_back("push " + string($4.lexeme));
-                        vmcode.push_back("push constant 0");
-                        vmcode.push_back("eq");
-                        vmcode.push_back("if-goto #L" + string($4.else_body));
-                        // vmcode.push_back("\nlabel " + string($4.if_body));
                         
                     } 
-                    OF {
+                    OF{
                         scope_history.push(++scope_counter);
-                    } 
-                    stmt_list CF {
+                    } stmt_list CF    
+                    {
                         scope_history.pop();
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($4.else_body) + ":");
-                        vmcode.push_back("goto " + string($1.loop_body));
-                        vmcode.push_back("\nlabel " + string($4.else_body));
                         loop_continue.pop();
                         loop_break.pop();
                     }
@@ -627,7 +579,6 @@ while_loop_stmt :   WHILE {
 for_loop_stmt   :   FOR OC assign SCOL {
                         sprintf($1.loop_body, "#L%d", label_counter++); 
                         tac.push_back("\n" + string($1.loop_body) + ":");
-                        vmcode.push_back("\nlabel " + string($1.loop_body));
                     } 
                     expr SCOL {  
                         sprintf($6.if_body, "#L%d", label_counter++); 
@@ -640,18 +591,10 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         sprintf($6.loop_body, "#L%d", label_counter); 
                         loop_continue.push(label_counter++);
                         tac.push_back("\n" + string($6.loop_body) + ":");
-
-                        vmcode.push_back("push " + string($6.lexeme));
-                        vmcode.push_back("push constant 0");
-                        vmcode.push_back("eq");
-                        vmcode.push_back("if-goto #L" + string($6.else_body));
-                        // vmcode.push_back("\nlabel " + string($6.loop_body));
                     }
                     assign CC {
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($6.if_body) + ":");
-                        vmcode.push_back("goto " + string($1.loop_body));
-                        vmcode.push_back("\nlabel " + string($6.if_body));
                     }
                     OF
                     {
@@ -661,9 +604,6 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         scope_history.pop();
                         tac.push_back("GOTO " + string($6.loop_body));
                         tac.push_back("\n" + string($6.else_body) + ":");
-                        vmcode.push_back("goto " + string($6.loop_body));
-                        vmcode.push_back("\nlabel " + string($6.else_body));
-
                         loop_continue.pop();
                         loop_break.pop();
                     }
@@ -685,16 +625,23 @@ func_call       :   ID {
                     ;
 
 arg_list        :   arg COMMA arg_list {
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
+                        // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
+                        // cout << type << endl;
                         if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
                     | arg {
+                        // cout << string($1.lexeme) << endl;
+                        // cout << "here" << string($1.type) << endl;
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
+                        // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
                         if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
@@ -713,7 +660,7 @@ arg             :   expr {
 int main(int argc, char *argv[]) {
     /* yydebug = 1; */
     yyparse();
-    for(auto x: vmcode)
+    for(auto x: tac)
         cout << x << endl;
     for(auto item: sem_errors)
         cout << item << endl;
