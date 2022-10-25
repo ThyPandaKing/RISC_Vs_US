@@ -1,60 +1,13 @@
-push constant 9
-pop @t0
-push @t0
-pop x
-push constant 1
-pop @t1
-push @t1
-push x
-add
-pop @t2
-push @t2
-pop x
-push constant 7
-pop @t3
-push x
-push @t3
-lt
-pop @t4
-push @t4
-push constant 0
-eq
-if-goto #L2
-push constant 7
-pop @t5
-push x
-push @t5
-or
-pop @t5
-push @t5
-pop x
-goto #L0
+main:
+- INT a [ 2 ] 
+@t0 = 1 INT
+@t1 = 3 INT
+a [ @t0 ] = @t1 INT
+@t2 = 2 INT
+@t0 = 1 INT
+@t3 = a [ @t3 ] INT
+a [ @t2 ] = @t3 INT
+@t4 = 0 INT
+return @t4 INT
+end:
 
-label #L2
-push constant 0
-pop @t6
-push x
-push @t6
-gt
-pop @t7
-push @t7
-push constant 0
-eq
-if-goto #L4
-push x
-not
-push @t8
-pop x
-goto #L0
-
-label #L4
-push x
-neg
-push @t9
-pop x
-
-label #L0
-push constant 0
-pop @t10
-push @t10
-return
