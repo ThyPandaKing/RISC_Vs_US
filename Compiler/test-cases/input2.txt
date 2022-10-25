@@ -2,9 +2,16 @@ int main(){
     int x=1;
     int c;
 
-    c=x+1;
-    x=c-x/4;
-
+    if(x == 1){
+        c = 11;
+    }
+    elif(x == 2){
+        c = 22;
+    }
+    else{
+        c = 33;
+    }
+    c = x + 38;
     return 0;
 }
 

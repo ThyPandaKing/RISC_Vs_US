@@ -21,8 +21,7 @@
         }\
         else{\
             sem_errors.push_back("Cannot convert between CHAR and FLOAT in line : " + to_string(countn+1));\
-        }\
-        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));}
+        }}
     
     #include <iostream>
     #include <string>
@@ -44,8 +43,8 @@
     bool multiple_declaration(string variable);
     bool is_reserved_word(string id);
     bool function_check(string variable, int flag);
-    bool check_type(string l, string r);
     bool type_check(string type1, string type2);
+    bool check_type(string l, string r);
 
     struct var_info {
         string data_type;
@@ -167,7 +166,7 @@ func_data_type  :   data_type {
 param_list      :   param {
                         func_table[curr_func_name].param_types.push_back(string($1.type));
                         func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
-                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));                       
+                        tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));                       
                     }
                     COMMA param_list {
                         $$.nParams = $4.nParams + 1;
@@ -176,7 +175,7 @@ param_list      :   param {
                         $$.nParams = 1;
                         func_table[curr_func_name].param_types.push_back(string($1.type));
                         func_table[curr_func_name].symbol_table[string($1.lexeme)] = { string($1.type), scope_counter+1, 0, 0, countn+1 };
-                        tac.push_back("- " + string($1.type) + " " + string($1.lexeme));
+                        tac.push_back("- arg " + string($1.type) + " " + string($1.lexeme));
                     }
                     | {
                         $$.nParams = 0;
@@ -300,51 +299,165 @@ data_type       :   INT {
 /* Expressions */
 expr      	    :   expr ADD expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr SUBTRACT expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr MULTIPLY expr {
                         add_tac($$, $1, $2, $3)
+                        string t0="@t" + to_string(++variable_count);
+                        string t1="@t" + to_string(++variable_count);
+                        string t2="@t" + to_string(++variable_count);
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string c = string($3.lexeme);
+                        string dtype = string($$.type);
+                        
+                        tac.push_back(a + " = 0 " + dtype);
+                        tac.push_back(t0 + " = 0 " + dtype);
+                        tac.push_back(t2 + " = 1 " + dtype);
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t1 + " = " + t0 + " < " + c +  "  " + dtype);
+                        tac.push_back("if " + t1 + " GOTO " + "#L" + to_string(label_counter+1) + " else GOTO " + "#L" + to_string(label_counter+2));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(a + " = " + a + " + " + b +  "  " + dtype);
+                        tac.push_back(t0 + " = " + t0 + " + " + t2 +  "  " + dtype);
+                        tac.push_back("GOTO #L" + to_string(label_counter-1));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
                     }
                     | expr DIVIDE expr {
                         add_tac($$, $1, $2, $3)
+                        string t0="@t" + to_string(++variable_count);
+                        string t1="@t" + to_string(++variable_count);
+                        string t2="@t" + to_string(++variable_count);
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string c = string($3.lexeme);
+                        string dtype = string($$.type);
+                        
+                        tac.push_back(a + " = 0 " + dtype);
+                        tac.push_back(t0 + " = " + b + " " + dtype);
+                        tac.push_back(t2 + " = 1 " + dtype);
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t1 + " = " + t0 + " >= " + c +  "  " + dtype);
+                        tac.push_back("if " + t1 + " GOTO " + "#L" + to_string(label_counter+1) + " else GOTO " + "#L" + to_string(label_counter+2));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(a + " = " + a + " + " + t2 +  "  " + dtype);
+                        tac.push_back(t0 + " = " + t0 + " - " + c +  "  " + dtype);
+                        tac.push_back("GOTO #L" + to_string(label_counter-1));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
                     }
                     | expr LE expr {
                         add_tac($$, $1, $2, $3)
+                        string temp = "@t" + to_string(++variable_count);
+                        tac.push_back(temp + " = " + string($1.lexeme) + " > " + string($3.lexeme) + " " + string($$.type));
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr GE expr {
                         add_tac($$, $1, $2, $3)
+                        string temp = "@t" + to_string(++variable_count);
+                        tac.push_back(temp + " = " + string($1.lexeme) + " < " + string($3.lexeme) + " " + string($$.type));
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr LT expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr GT expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr EQ expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr NE expr {
                         add_tac($$, $1, $2, $3)
+                        string temp = "@t" + to_string(++variable_count);
+                        tac.push_back(temp + " = " + string($1.lexeme) + " == " + string($3.lexeme) + " " + string($$.type));
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr AND expr {
                         add_tac($$, $1, $2, $3)
+                        string l0 = "#L" + to_string(++label_counter);
+                        string l1 = "#L" + to_string(++label_counter);
+                        string l2 = "#L" + to_string(++label_counter);
+                        string l3 = "#L" + to_string(++label_counter);
+                        string dtype = string($$.type);
+
+                        tac.push_back("if " + string($1.lexeme) + " GOTO " + l3 + " else GOTO " + l1);
+                        tac.push_back(l3 + ":");
+                        tac.push_back("if " + string($3.lexeme) + " GOTO " + l0 + " else GOTO " + l1);
+                        tac.push_back(l0 + ":");
+                        tac.push_back(string($$.lexeme) + " = 1 " + dtype);
+                        tac.push_back("GOTO " + l2);
+                        tac.push_back(l1 + ":");
+                        tac.push_back(string($$.lexeme) + " = 0 " + dtype);
+                        tac.push_back(l2 + ":");
                     }
                     | expr OR expr {
                         add_tac($$, $1, $2, $3)
+                        string l0 = "#L" + to_string(++label_counter);
+                        string l1 = "#L" + to_string(++label_counter);
+                        string l2 = "#L" + to_string(++label_counter);
+                        string l3 = "#L" + to_string(++label_counter);
+                        string dtype = string($$.type);
+
+                        tac.push_back("if " + string($1.lexeme) + " GOTO " + l0 + " else GOTO " + l3);
+                        tac.push_back(l3 + ":");
+                        tac.push_back("if " + string($3.lexeme) + " GOTO " + l0 + " else GOTO " + l1);
+                        tac.push_back(l0 + ":");
+                        tac.push_back(string($$.lexeme) + " = 1 " + dtype);
+                        tac.push_back("GOTO " + l2);
+                        tac.push_back(l1 + ":");
+                        tac.push_back(string($$.lexeme) + " = 0 " + dtype);
+                        tac.push_back(l2 + ":");
                     }
                     | expr MODULO expr {
                         add_tac($$, $1, $2, $3)
+                        string t0="@t" + to_string(++variable_count);
+                        string t1="@t" + to_string(++variable_count);
+                        string t2="@t" + to_string(++variable_count);
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string c = string($3.lexeme);
+                        string dtype = string($$.type);
+                        
+                        tac.push_back(a + " = 0 " + dtype);
+                        tac.push_back(t0 + " = " + b + " " + dtype);
+                        tac.push_back(t2 + " = 1 " + dtype);
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t1 + " = " + t0 + " >= " + c +  "  " + dtype);
+                        tac.push_back("if " + t1 + " GOTO " + "#L" + to_string(label_counter+1) + " else GOTO " + "#L" + to_string(label_counter+2));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t0 + " = " + t0 + " - " + c +  "  " + dtype);
+                        tac.push_back("GOTO #L" + to_string(label_counter-1));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(a + " = " + t0 +  "  " + dtype);
                     }
                     | expr BITAND expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr BITOR expr {
                         add_tac($$, $1, $2, $3)
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                     }
                     | expr XOR expr {
                         add_tac($$, $1, $2, $3)
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string b_= "@t" + to_string(++variable_count);
+                        string c = string($3.lexeme);
+                        string c_= "@t" + to_string(++variable_count);
+
+                        tac.push_back(b_ + " = ~ " + b + " " + string($1.type));
+                        tac.push_back(c_ + " = ~ " + c + " " + string($3.type));
+                        tac.push_back("@t" + to_string(++variable_count) + " = " + b + " & " + c_ + " " + string($$.type));
+                        tac.push_back("@t" + to_string(++variable_count) + " = " + b_ + " & " + c + " " + string($$.type));
+                        tac.push_back(a + " = " + "@t" + to_string(variable_count-1) + " | " + "@t" + to_string(variable_count) + " " + string($$.type));
                     }
                     | expr LEFTSHIFT expr {
                         add_tac($$, $1, $2, $3)
@@ -379,14 +492,22 @@ postfix_expr    :   func_call {
                         check_scope(string($1.lexeme));
                         strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
                         sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " " + string($$.type));
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + string($$.type));
                     }
                     ;
  
 unary_expr      :   unary_op primary_expr {
                         strcpy($$.type, $2.type);
                         sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        if(string($1.lexeme) == "~" || string($1.lexeme) == "-"){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        }
+                        else if(string($1.lexeme) == "+"){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                        }
+                        else{
+                            tac.push_back(string($$.lexeme) + " = ~ " + string($2.lexeme) + " " + string($$.type));
+                        }
                     }
                     ;
  
@@ -447,7 +568,7 @@ assign          :   ID ASSIGN expr {
                             sem_errors.push_back("Line no " + to_string(countn+1) + " : Variable is not an array"); 
                         }
                         check_scope(string($1.lexeme));
-                        tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+                        tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
 
 if_stmt         :   IF  {
@@ -751,3 +872,6 @@ void yyerror(const char* msg) {
 // deal with scope for function arguments
 // deal with scope for arrays
 // scope in switch statement
+
+// check for f user-defined variables in if-goto statements
+
