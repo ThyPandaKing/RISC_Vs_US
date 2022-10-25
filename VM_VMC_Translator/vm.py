@@ -1,9 +1,7 @@
-from dis import Instruction
-from turtle import pos
-from webbrowser import Opera
 from enums import *
 from preprocess import *
 from postprocess import *
+
 
 class VM:
     def __init__(self):
@@ -27,7 +25,6 @@ class VM:
         self.prev_datatype = None
         self.prev_push_segment = None
 
-
     def function(self, line):
         """
         """
@@ -38,11 +35,13 @@ class VM:
 
     def label(self, line):
         """
+        label L1
         """
         self.text_segment += f"{line[-1]}:\n"
 
     def goto(self, line):
         """
+        goto L0
         """
         self.text_segment += f"beq x0, x0, {line[-1]}\n"
 
@@ -56,9 +55,14 @@ class VM:
         segment = line[1]
         self.prev_push_segment = segment
         datatype = line[-1]
-        index = 0   
-        if(datatype == Datatypes.INT.value or datatype == Datatypes.CHAR.value or datatype == Datatypes.BOOL.value):
+        index = 0
+        if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
             index = int(line[2])
+        elif(datatype == Datatypes.CHAR.value):
+            if(segment == Segment.constant.value):
+                index = ord(line[2][1])
+            else:
+                index = int(line[2])
         elif(datatype == Datatypes.FLOAT.value):
             index = float(line[2])
 
@@ -97,7 +101,7 @@ class VM:
                 self.text_segment += f"sw x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.CHAR.value):
-                self.text_segment += f"li x5, {ord(constant)}\n"
+                self.text_segment += f"li x5, {constant}\n"
                 self.text_segment += f"sb x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.BOOL.value):
@@ -202,7 +206,6 @@ class VM:
                 self.text_segment += f"fsw f3, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             # float does not have any other operations
-
 
     def Condition(self, line):
         """
@@ -323,12 +326,12 @@ class VM:
         for line in vm_code.splitlines():
             line = line.split(' ')
 
-            if(line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or 
-                line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or 
-                line[0] == Instructions.RShift.value):
+            if(line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or
+                    line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or
+                    line[0] == Instructions.RShift.value):
                 self.Operator(line)
             elif(line[0] == Instructions.Eq.value or line[0] == Instructions.Lt.value or line[0] == Instructions.Gt.value or
-                line[0] == Instructions.Le.value or line[0] == Instructions.Ge.value):
+                 line[0] == Instructions.Le.value or line[0] == Instructions.Ge.value):
                 self.Condition(line)
             elif(line[0] == Instructions.push.value):
                 self.push(line)

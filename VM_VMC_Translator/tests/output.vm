@@ -1,5 +1,11 @@
 function main
 
-push constant a CHAR
+push constant '0' CHAR
 pop local 0 CHAR
 push local 0 CHAR
+
+push constant '1' CHAR
+
+Add CHAR
+
+print CHAR
