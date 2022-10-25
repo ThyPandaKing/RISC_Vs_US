@@ -1,0 +1,1268 @@
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h: In instantiation of ‘bool __gnu_cxx::__ops::_Iter_equals_val<_Value>::operator()(_Iterator) [with _Iterator = std::_Rb_tree_iterator<std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > >; _Value = const std::__cxx11::basic_string<char>]’:
+/usr/include/c++/11/bits/stl_algobase.h:2052:42:   required from ‘_InputIterator std::__find_if(_InputIterator, _InputIterator, _Predicate, std::input_iterator_tag) [with _InputIterator = std::_Rb_tree_iterator<std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > >; _Predicate = __gnu_cxx::__ops::_Iter_equals_val<const std::__cxx11::basic_string<char> >]’
+/usr/include/c++/11/bits/stl_algobase.h:2114:23:   required from ‘_Iterator std::__find_if(_Iterator, _Iterator, _Predicate) [with _Iterator = std::_Rb_tree_iterator<std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > >; _Predicate = __gnu_cxx::__ops::_Iter_equals_val<const std::__cxx11::basic_string<char> >]’
+/usr/include/c++/11/bits/stl_algo.h:3884:28:   required from ‘_IIter std::find(_IIter, _IIter, const _Tp&) [with _IIter = std::_Rb_tree_iterator<std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> > >; _Tp = std::__cxx11::basic_string<char>]’
+tac-vm.cpp:65:19:   required from here
+/usr/include/c++/11/bits/predefined_ops.h:270:24: error: no match for ‘operator==’ (operand types are ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ and ‘const std::__cxx11::basic_string<char>’)
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:1121:5: note: candidate: ‘template<class _IteratorL, class _IteratorR, class _Container> bool __gnu_cxx::operator==(const __gnu_cxx::__normal_iterator<_IteratorL, _Container>&, const __gnu_cxx::__normal_iterator<_IteratorR, _Container>&)’
+ 1121 |     operator==(const __normal_iterator<_IteratorL, _Container>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:1121:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const __gnu_cxx::__normal_iterator<_IteratorL, _Container>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:1129:5: note: candidate: ‘template<class _Iterator, class _Container> bool __gnu_cxx::operator==(const __gnu_cxx::__normal_iterator<_Iterator, _Container>&, const __gnu_cxx::__normal_iterator<_Iterator, _Container>&)’
+ 1129 |     operator==(const __normal_iterator<_Iterator, _Container>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:1129:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const __gnu_cxx::__normal_iterator<_Iterator, _Container>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/c++allocator.h:33,
+                 from /usr/include/c++/11/bits/allocator.h:46,
+                 from /usr/include/c++/11/string:41,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/ext/new_allocator.h:183:9: note: candidate: ‘template<class _Up> bool __gnu_cxx::operator==(const __gnu_cxx::new_allocator<char>&, const __gnu_cxx::new_allocator<_Tp>&)’
+  183 |         operator==(const new_allocator&, const new_allocator<_Up>&)
+      |         ^~~~~~~~
+/usr/include/c++/11/ext/new_allocator.h:183:9: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const __gnu_cxx::new_allocator<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:64,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_pair.h:466:5: note: candidate: ‘template<class _T1, class _T2> constexpr bool std::operator==(const std::pair<_T1, _T2>&, const std::pair<_T1, _T2>&)’
+  466 |     operator==(const pair<_T1, _T2>& __x, const pair<_T1, _T2>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_pair.h:466:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::pair<_T1, _T2>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:419:5: note: candidate: ‘template<class _Iterator> constexpr bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_Iterator>&)’
+  419 |     operator==(const reverse_iterator<_Iterator>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:419:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:458:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> constexpr bool std::operator==(const std::reverse_iterator<_Iterator>&, const std::reverse_iterator<_IteratorR>&)’
+  458 |     operator==(const reverse_iterator<_IteratorL>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:458:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::reverse_iterator<_Iterator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:1533:5: note: candidate: ‘template<class _IteratorL, class _IteratorR> constexpr bool std::operator==(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorR>&)’
+ 1533 |     operator==(const move_iterator<_IteratorL>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:1533:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::move_iterator<_IteratorL>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/stl_algobase.h:67,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_iterator.h:1601:5: note: candidate: ‘template<class _Iterator> constexpr bool std::operator==(const std::move_iterator<_IteratorL>&, const std::move_iterator<_IteratorL>&)’
+ 1601 |     operator==(const move_iterator<_Iterator>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_iterator.h:1601:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::move_iterator<_IteratorL>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/iosfwd:40,
+                 from /usr/include/c++/11/ios:38,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/postypes.h:222:5: note: candidate: ‘template<class _StateT> bool std::operator==(const std::fpos<_StateT>&, const std::fpos<_StateT>&)’
+  222 |     operator==(const fpos<_StateT>& __lhs, const fpos<_StateT>& __rhs)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/postypes.h:222:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::fpos<_StateT>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:41,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/allocator.h:218:5: note: candidate: ‘template<class _T1, class _T2> bool std::operator==(const std::allocator<_CharT>&, const std::allocator<_T2>&)’
+  218 |     operator==(const allocator<_T1>&, const allocator<_T2>&)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/allocator.h:218:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::allocator<_CharT>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                 from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/string_view:535:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::basic_string_view<_CharT, _Traits>, std::basic_string_view<_CharT, _Traits>)’
+  535 |     operator==(basic_string_view<_CharT, _Traits> __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/string_view:535:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                 from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/string_view:541:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::basic_string_view<_CharT, _Traits>, std::__type_identity_t<std::basic_string_view<_CharT, _Traits> >)’
+  541 |     operator==(basic_string_view<_CharT, _Traits> __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/string_view:541:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/basic_string.h:48,
+                 from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/string_view:564:5: note: candidate: ‘template<class _CharT, class _Traits> constexpr bool std::operator==(std::__type_identity_t<std::basic_string_view<_CharT, _Traits> >, std::basic_string_view<_CharT, _Traits>)’
+  564 |     operator==(__type_identity_t<basic_string_view<_CharT, _Traits>> __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/string_view:564:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::__cxx11::basic_string<char>’ is not derived from ‘std::basic_string_view<_CharT, _Traits>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/basic_string.h:6226:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+ 6226 |     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/basic_string.h:6226:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/basic_string.h:6234:5: note: candidate: ‘template<class _CharT> typename __gnu_cxx::__enable_if<std::__is_char<_Tp>::__value, bool>::__type std::operator==(const std::__cxx11::basic_string<_CharT>&, const std::__cxx11::basic_string<_CharT>&)’
+ 6234 |     operator==(const basic_string<_CharT>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/basic_string.h:6234:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::basic_string<_CharT>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/basic_string.h:6248:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&, const _CharT*)’
+ 6248 |     operator==(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/basic_string.h:6248:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:55,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/basic_string.h:6289:5: note: candidate: ‘template<class _CharT, class _Traits, class _Alloc> bool std::operator==(const _CharT*, const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>&)’
+ 6289 |     operator==(const _CharT* __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/basic_string.h:6289:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   mismatched types ‘const _CharT*’ and ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/locale_facets.h:48,
+                 from /usr/include/c++/11/bits/basic_ios.h:37,
+                 from /usr/include/c++/11/ios:44,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/streambuf_iterator.h:226:5: note: candidate: ‘template<class _CharT, class _Traits> bool std::operator==(const std::istreambuf_iterator<_CharT, _Traits>&, const std::istreambuf_iterator<_CharT, _Traits>&)’
+  226 |     operator==(const istreambuf_iterator<_CharT, _Traits>& __a,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/streambuf_iterator.h:226:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::istreambuf_iterator<_CharT, _Traits>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/complex:464:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::complex<_Tp>&, const std::complex<_Tp>&)’
+  464 |     operator==(const complex<_Tp>& __x, const complex<_Tp>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/complex:464:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::complex<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/complex:469:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::complex<_Tp>&, const _Tp&)’
+  469 |     operator==(const complex<_Tp>& __x, const _Tp& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/complex:469:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::complex<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/complex:475:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const _Tp&, const std::complex<_Tp>&)’
+  475 |     operator==(const _Tp& __x, const complex<_Tp>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/complex:475:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::complex<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/tuple:39,
+                 from /usr/include/c++/11/functional:54,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/array:276:5: note: candidate: ‘template<class _Tp, long unsigned int _Nm> bool std::operator==(const std::array<_Tp, _Nm>&, const std::array<_Tp, _Nm>&)’
+  276 |     operator==(const array<_Tp, _Nm>& __one, const array<_Tp, _Nm>& __two)
+      |     ^~~~~~~~
+/usr/include/c++/11/array:276:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::array<_Tp, _Nm>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/functional:54,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/tuple:1528:5: note: candidate: ‘template<class ... _TElements, class ... _UElements> constexpr bool std::operator==(const std::tuple<_Tps ...>&, const std::tuple<_UTypes ...>&)’
+ 1528 |     operator==(const tuple<_TElements...>& __t,
+      |     ^~~~~~~~
+/usr/include/c++/11/tuple:1528:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::tuple<_Tps ...>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/functional:59,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/std_function.h:718:5: note: candidate: ‘template<class _Res, class ... _Args> bool std::operator==(const std::function<_Res(_ArgTypes ...)>&, std::nullptr_t)’
+  718 |     operator==(const function<_Res(_Args...)>& __f, nullptr_t) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/std_function.h:718:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::function<_Res(_ArgTypes ...)>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/functional:59,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/std_function.h:725:5: note: candidate: ‘template<class _Res, class ... _Args> bool std::operator==(std::nullptr_t, const std::function<_Res(_ArgTypes ...)>&)’
+  725 |     operator==(nullptr_t, const function<_Res(_Args...)>& __f) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/std_function.h:725:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::function<_Res(_ArgTypes ...)>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/unordered_map:47,
+                 from /usr/include/c++/11/functional:61,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unordered_map.h:2134:5: note: candidate: ‘template<class _Key1, class _Tp1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&)’
+ 2134 |     operator==(const unordered_map<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unordered_map.h:2134:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unordered_map<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/unordered_map:47,
+                 from /usr/include/c++/11/functional:61,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unordered_map.h:2148:5: note: candidate: ‘template<class _Key1, class _Tp1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>&)’
+ 2148 |     operator==(const unordered_multimap<_Key, _Tp, _Hash, _Pred, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unordered_map.h:2148:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unordered_multimap<_Key1, _Tp1, _Hash1, _Pred1, _Alloc1>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/vector:67,
+                 from /usr/include/c++/11/functional:62,
+                 from /usr/include/c++/11/pstl/glue_algorithm_defs.h:13,
+                 from /usr/include/c++/11/algorithm:74,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:65,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_vector.h:1892:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::vector<_Tp, _Alloc>&, const std::vector<_Tp, _Alloc>&)’
+ 1892 |     operator==(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_vector.h:1892:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::vector<_Tp, _Alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/deque:67,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:68,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_deque.h:2246:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::deque<_Tp, _Alloc>&, const std::deque<_Tp, _Alloc>&)’
+ 2246 |     operator==(const deque<_Tp, _Alloc>& __x, const deque<_Tp, _Alloc>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_deque.h:2246:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::deque<_Tp, _Alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/locale_conv.h:41,
+                 from /usr/include/c++/11/locale:43,
+                 from /usr/include/c++/11/iomanip:43,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:72,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unique_ptr.h:753:5: note: candidate: ‘template<class _Tp, class _Dp, class _Up, class _Ep> bool std::operator==(const std::unique_ptr<_Tp, _Dp>&, const std::unique_ptr<_Up, _Ep>&)’
+  753 |     operator==(const unique_ptr<_Tp, _Dp>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unique_ptr.h:753:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/locale_conv.h:41,
+                 from /usr/include/c++/11/locale:43,
+                 from /usr/include/c++/11/iomanip:43,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:72,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unique_ptr.h:760:5: note: candidate: ‘template<class _Tp, class _Dp> bool std::operator==(const std::unique_ptr<_Tp, _Dp>&, std::nullptr_t)’
+  760 |     operator==(const unique_ptr<_Tp, _Dp>& __x, nullptr_t) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unique_ptr.h:760:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/locale_conv.h:41,
+                 from /usr/include/c++/11/locale:43,
+                 from /usr/include/c++/11/iomanip:43,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:72,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unique_ptr.h:767:5: note: candidate: ‘template<class _Tp, class _Dp> bool std::operator==(std::nullptr_t, const std::unique_ptr<_Tp, _Dp>&)’
+  767 |     operator==(nullptr_t, const unique_ptr<_Tp, _Dp>& __x) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unique_ptr.h:767:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::unique_ptr<_Tp, _Dp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/list:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:79,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_list.h:1995:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::__cxx11::list<_Tp, _Alloc>&, const std::__cxx11::list<_Tp, _Alloc>&)’
+ 1995 |     operator==(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_list.h:1995:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::list<_Tp, _Alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/map:61,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:81,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_map.h:1463:5: note: candidate: ‘template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator==(const std::map<_Key, _Tp, _Compare, _Allocator>&, const std::map<_Key, _Tp, _Compare, _Allocator>&)’
+ 1463 |     operator==(const map<_Key, _Tp, _Compare, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_map.h:1463:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::map<_Key, _Tp, _Compare, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/map:62,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:81,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_multimap.h:1128:5: note: candidate: ‘template<class _Key, class _Tp, class _Compare, class _Alloc> bool std::operator==(const std::multimap<_Key, _Tp, _Compare, _Allocator>&, const std::multimap<_Key, _Tp, _Compare, _Allocator>&)’
+ 1128 |     operator==(const multimap<_Key, _Tp, _Compare, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_multimap.h:1128:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::multimap<_Key, _Tp, _Compare, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                 from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr_base.h:1410:5: note: candidate: ‘template<class _Tp1, class _Tp2, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(const std::__shared_ptr<_Tp1, _Lp>&, const std::__shared_ptr<_Tp2, _Lp>&)’
+ 1410 |     operator==(const __shared_ptr<_Tp1, _Lp>& __a,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr_base.h:1410:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__shared_ptr<_Tp1, _Lp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                 from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr_base.h:1416:5: note: candidate: ‘template<class _Tp, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(const std::__shared_ptr<_Tp, _Lp>&, std::nullptr_t)’
+ 1416 |     operator==(const __shared_ptr<_Tp, _Lp>& __a, nullptr_t) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr_base.h:1416:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__shared_ptr<_Tp, _Lp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/shared_ptr.h:53,
+                 from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr_base.h:1436:5: note: candidate: ‘template<class _Tp, __gnu_cxx::_Lock_policy _Lp> bool std::operator==(std::nullptr_t, const std::__shared_ptr<_Tp, _Lp>&)’
+ 1436 |     operator==(nullptr_t, const __shared_ptr<_Tp, _Lp>& __a) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr_base.h:1436:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::__shared_ptr<_Tp, _Lp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr.h:437:5: note: candidate: ‘template<class _Tp, class _Up> bool std::operator==(const std::shared_ptr<_Tp>&, const std::shared_ptr<_Tp>&)’
+  437 |     operator==(const shared_ptr<_Tp>& __a, const shared_ptr<_Up>& __b) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr.h:437:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::shared_ptr<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr.h:443:5: note: candidate: ‘template<class _Tp> bool std::operator==(const std::shared_ptr<_Tp>&, std::nullptr_t)’
+  443 |     operator==(const shared_ptr<_Tp>& __a, nullptr_t) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr.h:443:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::shared_ptr<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/memory:77,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:82,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/shared_ptr.h:464:5: note: candidate: ‘template<class _Tp> bool std::operator==(std::nullptr_t, const std::shared_ptr<_Tp>&)’
+  464 |     operator==(nullptr_t, const shared_ptr<_Tp>& __a) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/shared_ptr.h:464:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::shared_ptr<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/queue:64,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:86,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_queue.h:344:5: note: candidate: ‘template<class _Tp, class _Seq> bool std::operator==(const std::queue<_Tp, _Seq>&, const std::queue<_Tp, _Seq>&)’
+  344 |     operator==(const queue<_Tp, _Seq>& __x, const queue<_Tp, _Seq>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_queue.h:344:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::queue<_Tp, _Seq>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/set:61,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:87,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_set.h:985:5: note: candidate: ‘template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::set<_Key, _Compare, _Allocator>&, const std::set<_Key, _Compare, _Allocator>&)’
+  985 |     operator==(const set<_Key, _Compare, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_set.h:985:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::set<_Key, _Compare, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/set:62,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:87,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_multiset.h:971:5: note: candidate: ‘template<class _Key, class _Compare, class _Alloc> bool std::operator==(const std::multiset<_Key, _Compare, _Allocator>&, const std::multiset<_Key, _Compare, _Allocator>&)’
+  971 |     operator==(const multiset<_Key, _Compare, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_multiset.h:971:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::multiset<_Key, _Compare, _Allocator>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/stack:61,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:89,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/stl_stack.h:319:5: note: candidate: ‘template<class _Tp, class _Seq> bool std::operator==(const std::stack<_Tp, _Seq>&, const std::stack<_Tp, _Seq>&)’
+  319 |     operator==(const stack<_Tp, _Seq>& __x, const stack<_Tp, _Seq>& __y)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/stl_stack.h:319:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::stack<_Tp, _Seq>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/valarray:603,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/valarray_after.h:417:5: note: candidate: ‘template<class _Dom1, class _Dom2> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_Expr, std::_Expr, _Dom1, _Dom2>, typename std::__fun<std::__equal_to, typename _Dom1::value_type>::result_type> std::operator==(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::_Expr<_Dom2, typename _Dom2::value_type>&)’
+  417 |     _DEFINE_EXPR_BINARY_OPERATOR(==, struct std::__equal_to)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/bits/valarray_after.h:417:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/valarray:603,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/valarray_after.h:417:5: note: candidate: ‘template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_Expr, std::_Constant, _Dom, typename _Dom::value_type>, typename std::__fun<std::__equal_to, typename _Dom1::value_type>::result_type> std::operator==(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const typename _Dom::value_type&)’
+  417 |     _DEFINE_EXPR_BINARY_OPERATOR(==, struct std::__equal_to)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/bits/valarray_after.h:417:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/valarray:603,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/valarray_after.h:417:5: note: candidate: ‘template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_Constant, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__equal_to, typename _Dom1::value_type>::result_type> std::operator==(const typename _Dom::value_type&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)’
+  417 |     _DEFINE_EXPR_BINARY_OPERATOR(==, struct std::__equal_to)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/bits/valarray_after.h:417:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/valarray:603,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/valarray_after.h:417:5: note: candidate: ‘template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_Expr, std::_ValArray, _Dom, typename _Dom::value_type>, typename std::__fun<std::__equal_to, typename _Dom1::value_type>::result_type> std::operator==(const std::_Expr<_Dom1, typename _Dom1::value_type>&, const std::valarray<typename _Dom::value_type>&)’
+  417 |     _DEFINE_EXPR_BINARY_OPERATOR(==, struct std::__equal_to)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/bits/valarray_after.h:417:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/valarray:603,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/valarray_after.h:417:5: note: candidate: ‘template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_ValArray, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__equal_to, typename _Dom1::value_type>::result_type> std::operator==(const std::valarray<typename _Dom::value_type>&, const std::_Expr<_Dom1, typename _Dom1::value_type>&)’
+  417 |     _DEFINE_EXPR_BINARY_OPERATOR(==, struct std::__equal_to)
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/bits/valarray_after.h:417:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::_Expr<_Dom1, typename _Dom1::value_type>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/valarray:1197:1: note: candidate: ‘template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_ValArray, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__equal_to, _Tp>::result_type> std::operator==(const std::valarray<_Tp>&, const std::valarray<_Tp>&)’
+ 1197 | _DEFINE_BINARY_OPERATOR(==, __equal_to)
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/valarray:1197:1: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::valarray<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/valarray:1197:1: note: candidate: ‘template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_ValArray, std::_Constant, _Tp, _Tp>, typename std::__fun<std::__equal_to, _Tp>::result_type> std::operator==(const std::valarray<_Tp>&, const typename std::valarray<_Tp>::value_type&)’
+ 1197 | _DEFINE_BINARY_OPERATOR(==, __equal_to)
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/valarray:1197:1: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::valarray<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:95,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/valarray:1197:1: note: candidate: ‘template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__equal_to, std::_Constant, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__equal_to, _Tp>::result_type> std::operator==(const typename std::valarray<_Tp>::value_type&, const std::valarray<_Tp>&)’
+ 1197 | _DEFINE_BINARY_OPERATOR(==, __equal_to)
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/valarray:1197:1: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::valarray<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/forward_list:40,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:104,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/forward_list.tcc:388:5: note: candidate: ‘template<class _Tp, class _Alloc> bool std::operator==(const std::forward_list<_Tp, _Alloc>&, const std::forward_list<_Tp, _Alloc>&)’
+  388 |     operator==(const forward_list<_Tp, _Alloc>& __lx,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/forward_list.tcc:388:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::forward_list<_Tp, _Alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/random:51,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:108,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/random.tcc:1899:5: note: candidate: ‘template<class _RealType1> bool std::operator==(const std::normal_distribution<_RealType>&, const std::normal_distribution<_RealType>&)’
+ 1899 |     operator==(const std::normal_distribution<_RealType>& __d1,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/random.tcc:1899:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::normal_distribution<_RealType>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:111,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/scoped_allocator:499:5: note: candidate: ‘template<class _OutA1, class _OutA2, class ... _InA> bool std::operator==(const std::scoped_allocator_adaptor<_OutA1, _InA ...>&, const std::scoped_allocator_adaptor<_InnerHead, _InnerTail ...>&)’
+  499 |     operator==(const scoped_allocator_adaptor<_OutA1, _InA...>& __a,
+      |     ^~~~~~~~
+/usr/include/c++/11/scoped_allocator:499:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::scoped_allocator_adaptor<_OutA1, _InA ...>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/unordered_set:47,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:118,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unordered_set.h:1804:5: note: candidate: ‘template<class _Value1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>&)’
+ 1804 |     operator==(const unordered_set<_Value, _Hash, _Pred, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unordered_set.h:1804:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unordered_set<_Value1, _Hash1, _Pred1, _Alloc1>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/unordered_set:47,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:118,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/unordered_set.h:1818:5: note: candidate: ‘template<class _Value1, class _Hash1, class _Pred1, class _Alloc1> bool std::operator==(const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>&, const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>&)’
+ 1818 |     operator==(const unordered_multiset<_Value, _Hash, _Pred, _Alloc>& __x,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/unordered_set.h:1818:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::unordered_multiset<_Value1, _Hash1, _Pred1, _Alloc1>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:130,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/optional:1045:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Tp, _Up> std::operator==(const std::optional<_Tp>&, const std::optional<_Up>&)’
+ 1045 |     operator==(const optional<_Tp>& __lhs, const optional<_Up>& __rhs)
+      |     ^~~~~~~~
+/usr/include/c++/11/optional:1045:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::optional<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:130,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/optional:1105:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(const std::optional<_Tp>&, std::nullopt_t)’
+ 1105 |     operator==(const optional<_Tp>& __lhs, nullopt_t) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/optional:1105:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::optional<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:130,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/optional:1116:5: note: candidate: ‘template<class _Tp> constexpr bool std::operator==(std::nullopt_t, const std::optional<_Tp>&)’
+ 1116 |     operator==(nullopt_t, const optional<_Tp>& __rhs) noexcept
+      |     ^~~~~~~~
+/usr/include/c++/11/optional:1116:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::optional<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:130,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/optional:1173:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Tp, _Up> std::operator==(const std::optional<_Tp>&, const _Up&)’
+ 1173 |     operator==(const optional<_Tp>& __lhs, const _Up& __rhs)
+      |     ^~~~~~~~
+/usr/include/c++/11/optional:1173:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::optional<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:130,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/optional:1179:5: note: candidate: ‘template<class _Tp, class _Up> constexpr std::__optional_eq_t<_Up, _Tp> std::operator==(const _Up&, const std::optional<_Tp>&)’
+ 1179 |     operator==(const _Up& __lhs, const optional<_Tp>& __rhs)
+      |     ^~~~~~~~
+/usr/include/c++/11/optional:1179:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::optional<_Tp>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:133,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/variant:1223:3: note: candidate: ‘template<class ... _Types> constexpr bool std::operator==(const std::variant<_Types ...>&, const std::variant<_Types ...>&)’
+ 1223 |   _VARIANT_RELATION_FUNCTION_TEMPLATE(==, equal)
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/11/variant:1223:3: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::variant<_Types ...>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1037:5: note: candidate: ‘template<class _BiIter> bool std::__cxx11::operator==(const std::__cxx11::sub_match<_BiIter>&, const std::__cxx11::sub_match<_BiIter>&)’
+ 1037 |     operator==(const sub_match<_BiIter>& __lhs, const sub_match<_BiIter>& __rhs)
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1037:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1133:5: note: candidate: ‘template<class _Bi_iter, class _Ch_traits, class _Ch_alloc> bool std::__cxx11::operator==(std::__cxx11::__sub_match_string<_Bi_iter, _Ch_traits, _Ch_alloc>&, const std::__cxx11::sub_match<_BiIter>&)’
+ 1133 |     operator==(const __sub_match_string<_Bi_iter, _Ch_traits, _Ch_alloc>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1133:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘std::__cxx11::__sub_match_string<_Bi_iter, _Ch_traits, _Ch_alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1208:5: note: candidate: ‘template<class _Bi_iter, class _Ch_traits, class _Ch_alloc> bool std::__cxx11::operator==(const std::__cxx11::sub_match<_BiIter>&, std::__cxx11::__sub_match_string<_Bi_iter, _Ch_traits, _Ch_alloc>&)’
+ 1208 |     operator==(const sub_match<_Bi_iter>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1208:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1300:5: note: candidate: ‘template<class _Bi_iter> bool std::__cxx11::operator==(const typename std::iterator_traits<_Iter>::value_type*, const std::__cxx11::sub_match<_BiIter>&)’
+ 1300 |     operator==(typename iterator_traits<_Bi_iter>::value_type const* __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1300:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1375:5: note: candidate: ‘template<class _Bi_iter> bool std::__cxx11::operator==(const std::__cxx11::sub_match<_BiIter>&, const typename std::iterator_traits<_Iter>::value_type*)’
+ 1375 |     operator==(const sub_match<_Bi_iter>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1375:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1468:5: note: candidate: ‘template<class _Bi_iter> bool std::__cxx11::operator==(const typename std::iterator_traits<_Iter>::value_type&, const std::__cxx11::sub_match<_BiIter>&)’
+ 1468 |     operator==(typename iterator_traits<_Bi_iter>::value_type const& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1468:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘const std::__cxx11::basic_string<char>’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:1547:5: note: candidate: ‘template<class _Bi_iter> bool std::__cxx11::operator==(const std::__cxx11::sub_match<_BiIter>&, const typename std::iterator_traits<_Iter>::value_type&)’
+ 1547 |     operator==(const sub_match<_Bi_iter>& __lhs,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:1547:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::sub_match<_BiIter>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/regex:63,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:110,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/regex.h:2103:5: note: candidate: ‘template<class _Bi_iter, class _Alloc> bool std::__cxx11::operator==(const std::__cxx11::match_results<_BiIter, _Alloc>&, const std::__cxx11::match_results<_BiIter, _Alloc>&)’
+ 2103 |     operator==(const match_results<_Bi_iter, _Alloc>& __m1,
+      |     ^~~~~~~~
+/usr/include/c++/11/bits/regex.h:2103:5: note:   template argument deduction/substitution failed:
+In file included from /usr/include/c++/11/bits/stl_algobase.h:71,
+                 from /usr/include/c++/11/bits/specfun.h:45,
+                 from /usr/include/c++/11/cmath:1935,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:41,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/predefined_ops.h:270:24: note:   ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ is not derived from ‘const std::__cxx11::match_results<_BiIter, _Alloc>’
+  270 |         { return *__it == _M_value; }
+      |                  ~~~~~~^~~~~~~~~~~
+In file included from /usr/include/c++/11/string:41,
+                 from /usr/include/c++/11/bits/locale_classes.h:40,
+                 from /usr/include/c++/11/bits/ios_base.h:41,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/allocator.h:204:7: note: candidate: ‘bool std::operator==(const std::allocator<char>&, const std::allocator<char>&)’
+  204 |       operator==(const allocator&, const allocator&) _GLIBCXX_NOTHROW
+      |       ^~~~~~~~
+/usr/include/c++/11/bits/allocator.h:204:18: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘const std::allocator<char>&’
+  204 |       operator==(const allocator&, const allocator&) _GLIBCXX_NOTHROW
+      |                  ^~~~~~~~~~~~~~~~
+In file included from /usr/include/c++/11/bits/ios_base.h:46,
+                 from /usr/include/c++/11/ios:42,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/c++/11/ccomplex:39,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:54,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/system_error:362:3: note: candidate: ‘bool std::operator==(const std::error_code&, const std::error_code&)’
+  362 |   operator==(const error_code& __lhs, const error_code& __rhs) noexcept
+      |   ^~~~~~~~
+/usr/include/c++/11/system_error:362:32: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘const std::error_code&’
+  362 |   operator==(const error_code& __lhs, const error_code& __rhs) noexcept
+      |              ~~~~~~~~~~~~~~~~~~^~~~~
+/usr/include/c++/11/system_error:368:3: note: candidate: ‘bool std::operator==(const std::error_code&, const std::error_condition&)’
+  368 |   operator==(const error_code& __lhs, const error_condition& __rhs) noexcept
+      |   ^~~~~~~~
+/usr/include/c++/11/system_error:368:32: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘const std::error_code&’
+  368 |   operator==(const error_code& __lhs, const error_condition& __rhs) noexcept
+      |              ~~~~~~~~~~~~~~~~~~^~~~~
+/usr/include/c++/11/system_error:376:3: note: candidate: ‘bool std::operator==(const std::error_condition&, const std::error_condition&)’
+  376 |   operator==(const error_condition& __lhs,
+      |   ^~~~~~~~
+/usr/include/c++/11/system_error:376:37: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘const std::error_condition&’
+  376 |   operator==(const error_condition& __lhs,
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+/usr/include/c++/11/system_error:408:3: note: candidate: ‘bool std::operator==(const std::error_condition&, const std::error_code&)’
+  408 |   operator==(const error_condition& __lhs, const error_code& __rhs) noexcept
+      |   ^~~~~~~~
+/usr/include/c++/11/system_error:408:37: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘const std::error_condition&’
+  408 |   operator==(const error_condition& __lhs, const error_code& __rhs) noexcept
+      |              ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+In file included from /usr/include/c++/11/future:48,
+                 from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:105,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/bits/std_thread.h:281:3: note: candidate: ‘bool std::operator==(std::thread::id, std::thread::id)’
+  281 |   operator==(thread::id __x, thread::id __y) noexcept
+      |   ^~~~~~~~
+/usr/include/c++/11/bits/std_thread.h:281:25: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘std::thread::id’
+  281 |   operator==(thread::id __x, thread::id __y) noexcept
+      |              ~~~~~~~~~~~^~~
+In file included from /usr/include/x86_64-linux-gnu/c++/11/bits/stdc++.h:133,
+                 from tac-vm.cpp:1:
+/usr/include/c++/11/variant:1230:18: note: candidate: ‘constexpr bool std::operator==(std::monostate, std::monostate)’
+ 1230 |   constexpr bool operator==(monostate, monostate) noexcept { return true; }
+      |                  ^~~~~~~~
+/usr/include/c++/11/variant:1230:29: note:   no known conversion for argument 1 from ‘std::pair<const std::__cxx11::basic_string<char>, std::__cxx11::basic_string<char> >’ to ‘std::monostate’
+ 1230 |   constexpr bool operator==(monostate, monostate) noexcept { return true; }
+      |                             ^~~~~~~~~
