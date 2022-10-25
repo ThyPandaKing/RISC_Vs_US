@@ -354,13 +354,13 @@ expr      	    :   expr ADD expr {
                         add_tac($$, $1, $2, $3)
                         string temp = "@t" + to_string(++variable_count);
                         tac.push_back(temp + " = " + string($1.lexeme) + " > " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ! " + temp + " " + string($$.type)); 
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr GE expr {
                         add_tac($$, $1, $2, $3)
                         string temp = "@t" + to_string(++variable_count);
                         tac.push_back(temp + " = " + string($1.lexeme) + " < " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ! " + temp + " " + string($$.type)); 
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr LT expr {
                         add_tac($$, $1, $2, $3)
@@ -378,7 +378,7 @@ expr      	    :   expr ADD expr {
                         add_tac($$, $1, $2, $3)
                         string temp = "@t" + to_string(++variable_count);
                         tac.push_back(temp + " = " + string($1.lexeme) + " == " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ! " + temp + " " + string($$.type)); 
+                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
                     }
                     | expr AND expr {
                         add_tac($$, $1, $2, $3)
@@ -454,11 +454,11 @@ expr      	    :   expr ADD expr {
                         string c = string($3.lexeme);
                         string c_= "@t" + to_string(++variable_count);
 
-                        tac.push_back(b_ + " = ! " + b + " " + string($1.type));
-                        tac.push_back(c_ + " = ! " + c + " " + string($3.type));
+                        tac.push_back(b_ + " = ~ " + b + " " + string($1.type));
+                        tac.push_back(c_ + " = ~ " + c + " " + string($3.type));
                         tac.push_back("@t" + to_string(++variable_count) + " = " + b + " & " + c_ + " " + string($$.type));
                         tac.push_back("@t" + to_string(++variable_count) + " = " + b_ + " & " + c + " " + string($$.type));
-                        tac.push_back(a + " = " + "@t" + to_string(variable_count-1) + " | " + "@t" + to_string(variable_count));
+                        tac.push_back(a + " = " + "@t" + to_string(variable_count-1) + " | " + "@t" + to_string(variable_count) + " " + string($$.type));
                     }
                     | expr LEFTSHIFT expr {
                         add_tac($$, $1, $2, $3)
@@ -493,14 +493,22 @@ postfix_expr    :   func_call {
                         check_scope(string($1.lexeme));
                         strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
                         sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " " + string($$.type));
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + string($$.type));
                     }
                     ;
  
 unary_expr      :   unary_op primary_expr {
                         strcpy($$.type, $2.type);
                         sprintf($$.lexeme, "@t%d", variable_count++);
-                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        if(string($1.lexeme) == "~" || string($1.lexeme) == "-"){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
+                        }
+                        else if(string($1.lexeme) == "+"){
+                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                        }
+                        else{
+                            tac.push_back(string($$.lexeme) + " = ~ " + string($2.lexeme) + " " + string($$.type));
+                        }
                     }
                     ;
  
@@ -561,7 +569,7 @@ assign          :   ID ASSIGN expr {
                             sem_errors.push_back("Line no " + to_string(countn+1) + " : Variable is not an array"); 
                         }
                         check_scope(string($1.lexeme));
-                        tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + " = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+                        tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
                     }
 
 if_stmt         :   IF  {
