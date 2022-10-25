@@ -1,5 +1,7 @@
 # VM Translator
 
+Converts TAC to RISC V assembly.
+
 ## Instructions
 
 - Run **main.py** using Python 3 as shown:
