@@ -33,17 +33,17 @@ lw x6, 0(x6)
 addi x6, x6, -4
 sw x5, 0(x6)
 
-li x5, 7
+li x5, 5
 sw x5, 0(x2)
 addi x2, x2, -4
 
 
 addi x2, x2, 4
 lw x5, 0(x2)
-li x6, -8204
+li x6, -8196
 add x6, x6, x8
 lw x6, 0(x6)
-addi x6, x6, -4
+addi x6, x6, -8
 sw x5, 0(x6)
 
 li x5, -8196
@@ -55,7 +55,16 @@ sw x5, 0(x2)
 addi x2, x2, -4
 
 
-li x5, -8204
+li x5, -8196
+add x5, x5, x8
+lw x5, 0(x5)
+addi x5, x5, -8
+lw x5, 0(x5)
+sw x5, 0(x2)
+addi x2, x2, -4
+
+
+li x5, -8196
 add x5, x5, x8
 lw x5, 0(x5)
 addi x5, x5, -4
@@ -63,14 +72,6 @@ lw x5, 0(x5)
 sw x5, 0(x2)
 addi x2, x2, -4
 
-
-addi x2, x2, 4
-lw x5, 0(x2)
-addi x2, x2, 4
-lw x6, 0(x2)
-add x5, x5, x6
-sw x5, 0(x2)
-addi x2, x2, -4
 
 addi x2, x2, 4
 lw x5, 0(x2)

@@ -26,11 +26,13 @@ class Preprocess:
                 mod_vm_code += f"goto {prev_label}\n"
                 mod_vm_code += f"label {label}\n"
             elif(';' in line):
-                mod_vm_code += re.sub(r';.*', '\n', line)
+                mod_vm_code += re.sub(r';.*', '\n', line).strip()
+                mod_vm_code += '\n'
             elif('#' in line):
                 mod_vm_code += re.sub(r'#', '__', line)
                 mod_vm_code += '\n'
             else:
                 mod_vm_code += line + '\n'
 
+        print(mod_vm_code)
         return mod_vm_code
