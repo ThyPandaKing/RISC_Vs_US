@@ -5,3 +5,4 @@ env
 node_modules
 User
 .DS_Store
+*.pyc

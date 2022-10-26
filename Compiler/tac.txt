@@ -1,31 +1,13 @@
 main:
+- INT a [ 2 ] 
 @t0 = 1 INT
-- INT x
-x = @t0 INT
-- INT c
+@t1 = 3 INT
+a [ @t0 ] = @t1 INT
+@t2 = 2 INT
 @t0 = 1 INT
-@t1 = x == @t1 INT
-if @t1 GOTO #L1 else GOTO #L2
-#L1:
-@t2 = 11 INT
-c = @t2 INT
-GOTO #L0
-#L2:
-@t3 = 2 INT
-@t4 = x == @t3 INT
-if @t4 GOTO #L3 else GOTO #L4
-#L3:
-@t5 = 22 INT
-c = @t5 INT
-GOTO #L0
-#L4:
-@t6 = 33 INT
-c = @t6 INT
-#L0:
-@t7 = 38 INT
-@t8 = x + @t7 INT
-c = @t8 INT
-@t9 = 0 INT
-return @t9 INT
+@t3 = a [ @t3 ] INT
+a [ @t2 ] = @t3 INT
+@t4 = 0 INT
+return @t4 INT
 end:
 

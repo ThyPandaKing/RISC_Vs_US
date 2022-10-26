@@ -7,19 +7,20 @@ map<string, pair<int, string>> constant;
 map<string, pair<int, string>> local;
 int local_idx = 0;
 map<string, pair<int, string>> argument;
+int arg_idx = 0;
 map<string, pair<int, string>> temp;
 int temp_idx = 0;
 map<string, string> op_map;
 
 void initialize(){
     // adding binary operations
-    op_map["+"] = "Add";
-    op_map["-"] = "Sub";
-    op_map["=="] = "Eq";
-    op_map[">"] = "Gt";
-    op_map["<"] = "Lt";
-    op_map["&"] = "And";
-    op_map["|"] = "Or";
+    op_map["+"] = "add";
+    op_map["-"] = "sub";
+    op_map["=="] = "eq";
+    op_map[">"] = "gt";
+    op_map["<"] = "lt";
+    op_map["&"] = "and";
+    op_map["|"] = "or";
 }
 
 vector<string> tokenize(string in){
@@ -29,6 +30,10 @@ vector<string> tokenize(string in){
         if(in[i] == ' '){
             res.push_back(temp);
             temp = "";
+            while(i<in.size() && in[i] == ' '){
+                i++;
+            }
+            i--;
         }
         else
             temp += in[i];
@@ -83,13 +88,20 @@ pair<pair<int, string>, string> get_type(string var, string type){
         temp_var.second = "constant";
     }
     else{
-        if(local.find(var) == local.end()){
-            local[var].first = local_idx++;
-            local[var].second = type;
+        if(argument.find(var) != argument.end()){
+            temp_var.first.first = argument[var].first;
+            temp_var.first.second = argument[var].second;
+            temp_var.second = "argument";
         }
-        temp_var.first.first = local[var].first;
-        temp_var.first.second = local[var].second;
-        temp_var.second = "local";
+        else{
+            if(local.find(var) == local.end()){
+                local[var].first = local_idx++;
+                local[var].second = type;
+            }
+            temp_var.first.first = local[var].first;
+            temp_var.first.second = local[var].second;
+            temp_var.second = "local";
+        }
     }
     return temp_var;
 }
@@ -111,7 +123,7 @@ void conversion(){
                 vm.push_back(ins);
                 // deal with arguments
             }
-            else if(tac[i][0] != "end:"){
+            else if(tac[i][0] == "end:"){
                 local_idx = 0;
                 temp_idx = 0;
                 local.clear();
@@ -137,22 +149,81 @@ void conversion(){
                 }
                 else if(tac[i][0] == "-"){
                     // for local variable declaration
-                    local[tac[i][2]].first = local_idx++;
-                    local[tac[i][2]].second = tac[i][1];
+                    if(tac[i].size() == 3){
+                        local[tac[i][2]].first = local_idx++;
+                        local[tac[i][2]].second = tac[i][1];
+                    }
+                    else{
+                        // array declarations
+                        local[tac[i][2]].first = local_idx;
+                        local_idx += stoi(tac[i][4]);
+                        local[tac[i][2]].second = tac[i][1];
+                    }
+                }
+                else if(tac[i][0] == "param"){
+                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
+                    vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                 }
             }
             else if(tac[i].size() == 4){
-                pair<pair<int, string>, string> type_a = get_type(tac[i][0], tac[i][3]);
-                pair<pair<int, string>, string> type_b = get_type(tac[i][2], "null");
-                vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
-                vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                if(tac[i][1] == "arg"){
+                    // function parameters
+                    argument[tac[i][2]].first = arg_idx++;
+                    argument[tac[i][2]].second = tac[i][2];
+                }
+                else{
+                    // simple assign : t0 = t1 INT
+                    pair<pair<int, string>, string> type_a = get_type(tac[i][0], tac[i][3]);
+                    pair<pair<int, string>, string> type_b = get_type(tac[i][2], "null");
+                    vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
+                    vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                }
+            }
+            else if(tac[i].size() == 5){
+                // unary operations : t0 = - t1 INT
+                auto a = get_type(tac[i][0], tac[i][4]);
+                auto b = get_type(tac[i][3], tac[i][4]);
+
+                vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + a.first.second);
+                if(tac[i][2] == "-")
+                    vm.push_back("neg");
+                else
+                    vm.push_back("not");
+                vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + a.first.second);
             }
             else if(tac[i].size() == 7){
-                pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
-                vm.push_back("push constant 0 INT");
-                vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                vm.push_back("Eq");
-                vm.push_back("if-goto " + tac[i][6]);
+                if(tac[i][1] == "["){
+                    // arr [ 8 ] = @t0 INT
+                    auto a = get_type(tac[i][5], tac[i][6]);
+                    auto b = get_type(tac[i][2], "INT");
+                    vm.push_back("push " + a.second + " " + to_string(a.first.first) + " " + a.first.second);
+
+                    vm.push_back("push constant " + to_string(local[tac[i][0]].first) + " INT");
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("pop pointer 0");
+                    vm.push_back("pop that 0");
+                    // vm.push_back("pop local " + to_string(local[tac[i][0]].first + stoi(tac[i][2])) + " " + tac[i][6]);
+                }
+                else if(tac[i][3] == "["){
+                    // @t5 = arr [ c ] INT
+                    auto a = get_type(tac[i][0], tac[i][6]);
+                    auto b = get_type(tac[i][4], "INT");
+
+                    vm.push_back("push constant " + to_string(local[tac[i][2]].first) + " " + tac[i][6]);
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("pop pointer 0");
+                    vm.push_back("push that 0");
+                    vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + tac[i][6]);
+                }
+                else{
+                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
+                    vm.push_back("push constant 0 INT");
+                    vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    vm.push_back("Eq");
+                    vm.push_back("if-goto " + tac[i][6]);
+                }
             }
         }
     }
@@ -183,6 +254,9 @@ int main(){
 
 }
 
-// Do for unary operations
-// Do for *, /
-// Do for arguments, arrays
+// for now arrays are considered to be local
+// arguments loading at the time of function call is pending
+
+// Do for unary operations   :DONE
+// Do for *, /   :DONE
+// Do for arguments, arrays   :DONE
