@@ -7,6 +7,6 @@ pop local 0 CHAR
 
 push temp 0 CHAR
 push local 0 CHAR
-add CHAR
+add CHAR                ; adds two characters
 
 print CHAR

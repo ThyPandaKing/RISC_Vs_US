@@ -7,7 +7,7 @@ pop local 1 INT
 
 push local 0 INT
 push local 1 INT
-bitand INT
+bitand INT              ; bitwise and
 pop local 2 INT
 
 push local 2 INT
@@ -18,6 +18,6 @@ print CHAR
 
 push constant 1 INT
 push local 0 INT
-lshift INT
+lshift INT                 ; left shift 
 
 print INT

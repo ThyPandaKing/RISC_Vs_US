@@ -9,6 +9,9 @@ label LOOP
 push constant 0 INT
 push local 1 INT
 eq INT
+
+; if (y == 0) goto END
+
 if-goto END
 push local 0 INT
 push local 1 INT
