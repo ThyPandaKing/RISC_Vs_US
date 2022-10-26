@@ -1,13 +1,38 @@
 main:
-- INT a [ 2 ] 
-@t0 = 1 INT
-@t1 = 3 INT
-a [ @t0 ] = @t1 INT
-@t2 = 2 INT
-@t0 = 1 INT
-@t3 = a [ @t3 ] INT
-a [ @t2 ] = @t3 INT
-@t4 = 0 INT
-return @t4 INT
+- arg INT a
+- arg INT b
+@t0 = a + b INT
+return @t0 INT
 end:
 
+sub:
+- arg INT g
+- arg INT h
+@t1 = g - h INT
+return @t1 INT
+end:
+
+main:
+@t2 = 5 INT
+@t3 = @t2 + c INT
+- INT d
+d = @t3 INT
+- INT d
+@t4 = 2 INT
+- INT e
+e = @t4 INT
+@t5 = 1 INT
+- INT f
+f = @t5 INT
+param e INT
+param f INT
+@t6 = @call sub INT 2
+- INT i
+i = @t6 INT
+@t7 = 0 INT
+return @t7 INT
+end:
+
+Error: Duplicate function name - main
+Variable not declared in line 10 before usage.
+redeclaration of 'd' in line 11

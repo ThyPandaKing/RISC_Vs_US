@@ -1,5 +1,5 @@
 int main(){
-    int x=1;
+    int x=2;
     int c;
 
     if(x == 1){
@@ -11,7 +11,10 @@ int main(){
     else{
         c = 33;
     }
-    c = x + 38;
+    c = c + 38;
+
+    output(c);
+
     return 0;
 }
 

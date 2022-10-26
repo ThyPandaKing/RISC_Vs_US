@@ -1,0 +1,39 @@
+function main
+push local 0 null
+push local 1 null
+add INT
+pop temp 0 INT
+push temp 0 INT
+return INT
+function sub
+push local 0 null
+push local 1 null
+sub INT
+pop temp 0 INT
+push temp 0 INT
+return INT
+function main
+push constant 5 INT
+pop temp 0 INT
+push temp 0 INT
+push local 0 null
+add INT
+pop temp 1 INT
+push temp 1 INT
+pop local 1 INT
+push constant 2 INT
+pop temp 2 INT
+push temp 2 INT
+pop local 3 INT
+push constant 1 INT
+pop temp 3 INT
+push temp 3 INT
+pop local 4 INT
+push local 3 INT
+push local 4 INT
+push temp 4 null
+pop local 5 INT
+push constant 0 INT
+pop temp 5 INT
+push temp 5 INT
+return INT
