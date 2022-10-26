@@ -12,20 +12,20 @@ class Instructions(enum.Enum):
     print_stmt = 'print'
     call = 'call'
 
-    Eq = 'Eq'
-    Lt = 'Lt'
-    Gt = 'Gt'
-    Ge = 'Ge'
-    Le = 'Le'
-    Neq = 'Neq'
+    Eq = 'eq'
+    Lt = 'lt'
+    Gt = 'gt'
+    Ge = 'ge'
+    Le = 'le'
+    Neq = 'neq'
 
-    Add = 'Add'
-    Sub = 'Sub'
-    LShift = 'LShift'
-    RShift = 'RShift'
-    BitAnd = 'BitAnd'
-    BitOr = 'BitOr'
-    BitXor = 'BitXor'
+    Add = 'add'
+    Sub = 'sub'
+    LShift = 'lshift'
+    RShift = 'rshift'
+    BitAnd = 'bitand'
+    BitOr = 'bitor'
+    BitXor = 'bitxor'
 
 
 class Segment(enum.Enum):

@@ -1,13 +1,67 @@
 function main
 
-push constant 4.8 FLOAT
-push constant -5.5 FLOAT
-pop local 0 FLOAT
-push local 0 FLOAT
-Gt FLOAT
-if-goto L
+push constant 2 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 0 INT
+push constant 1 INT
+pop temp 1 INT
+push local 0 INT
+push temp 1 INT
+eq INT
+pop temp 2 INT
+push constant 0 INT
+push temp 2 INT
+eq INT
+
+if-goto #L1
+goto #L2
+label #L1
 push constant 11 INT
-goto L0
-label L
-push constant 13 INT
-label L0
+pop temp 3 INT
+push temp 3 INT
+print INT
+pop local 1 INT
+goto #L0
+
+label #L2
+push constant 2 INT
+pop temp 0 INT
+push local 0 INT
+push temp 4 INT
+eq INT
+pop temp 4 INT
+push constant 0 INT
+push temp 4 INT
+eq INT
+
+if-goto #L3
+goto #L4
+label #L3
+push constant 22 INT
+pop temp 5 INT
+push temp 5 INT
+print INT
+pop local 1 INT
+goto #L0
+
+label #L4
+push constant 33 INT
+pop temp 6 INT
+push temp 6 INT
+print INT
+pop local 1 INT
+label #L0
+push constant 38 INT
+pop temp 7 INT
+push local 1 INT
+push temp 7 INT
+add INT
+print INT
+
+pop temp 8 INT
+push temp 8 INT
+pop local 1 INT
+push constant 0 INT
+pop temp 9 INT
+push temp 9 INT

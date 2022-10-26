@@ -1,4 +1,4 @@
-function Main
+function main
 
 push constant 6 INT
 pop local 0 INT
@@ -8,4 +8,4 @@ pop temp 0 INT
 push local 0 INT
 push temp 0 INT
 
-Add INT
+add INT

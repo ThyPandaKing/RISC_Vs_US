@@ -1,0 +1,23 @@
+function main
+
+push constant 6 INT
+pop local 0 INT
+push constant 5 INT
+pop local 1 INT
+
+push local 0 INT
+push local 1 INT
+bitand INT
+pop local 2 INT
+
+push local 2 INT
+print INT
+
+push constant ',' CHAR
+print CHAR
+
+push constant 1 INT
+push local 0 INT
+lshift INT
+
+print INT

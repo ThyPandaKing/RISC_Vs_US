@@ -1,15 +1,12 @@
-.global Main
-Main:
+.global main
 addi x2, x8, -1284
+Main:
 
-li x5, 6
-sw x5, 0(x2)
-addi x2, x2, -4
 
 addi x2, x2, 4
 lw x5, 0(x2)
 sw x5, -4(x8)
-li x5, 7
+addi x5, x0, 7
 sw x5, 0(x2)
 addi x2, x2, -4
 

@@ -20,7 +20,7 @@ class VM:
         self.tmp = self.RAM[3]      # temp segment is from -644 to -1279
 
         self.text_segment = ".global main\n"
-        self.text_segment += f"addi x2, x8, -1284\n"
+        
         self.prev_operator = None
         self.prev_datatype = None
         self.prev_push_segment = None
@@ -32,6 +32,7 @@ class VM:
         self.text_segment += f"{func}:\n"
 
         self.text_segment += "\n"
+        self.text_segment += f"addi x2, x8, -1284\n"
 
     def label(self, line):
         """
@@ -76,19 +77,19 @@ class VM:
                 pointer = self.arg
 
             if(datatype == Datatypes.INT.value):
-                self.text_segment += f"lw x5, {-(pointer+index+4)}(x8)\n"
+                self.text_segment += f"lw x5, {-(pointer+index*4+4)}(x8)\n"
                 self.text_segment += f"sw x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.CHAR.value):
-                self.text_segment += f"lb x5, {-(pointer+index+4)}(x8)\n"
+                self.text_segment += f"lb x5, {-(pointer+index*4+4)}(x8)\n"
                 self.text_segment += f"sb x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.BOOL.value):
-                self.text_segment += f"lb x5, {-(pointer+index+4)}(x8)\n"
+                self.text_segment += f"lb x5, {-(pointer+index*4+4)}(x8)\n"
                 self.text_segment += f"sb x5, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             elif(datatype == Datatypes.FLOAT.value):
-                self.text_segment += f"flw f3, {-(pointer+index+4)}(x8)\n"
+                self.text_segment += f"flw f3, {-(pointer+index*4+4)}(x8)\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
 
@@ -135,19 +136,19 @@ class VM:
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
-            self.text_segment += f"sw x5, {-(pointer+index+4)}(x8)\n"
+            self.text_segment += f"sw x5, {-(pointer+index*4+4)}(x8)\n"
         elif(datatype == Datatypes.CHAR.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"sb x5, {-(pointer+index+4)}(x8)\n"
+            self.text_segment += f"sb x5, {-(pointer+index*4+4)}(x8)\n"
         elif(datatype == Datatypes.BOOL.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"sb x5, {-(pointer+index+4)}(x8)\n"
+            self.text_segment += f"sb x5, {-(pointer+index*4+4)}(x8)\n"
         elif(datatype == Datatypes.FLOAT.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw x5, 0(x2)\n"
-            self.text_segment += f"fsw x5, {-(pointer+index+4)}(x8)\n"
+            self.text_segment += f"fsw x5, {-(pointer+index*4+4)}(x8)\n"
 
     def Operator(self, line):
         """
@@ -322,6 +323,8 @@ class VM:
 
         preprocess = Preprocess()
         vm_code = preprocess.preprocess(vm_code)
+
+        print(vm_code)
 
         for line in vm_code.splitlines():
             line = line.split(' ')
