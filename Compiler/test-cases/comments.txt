@@ -1,0 +1,7 @@
+// Single line comment test
+int main(){
+    /*
+    Multi Line comment test
+    */
+    return 0;
+}
