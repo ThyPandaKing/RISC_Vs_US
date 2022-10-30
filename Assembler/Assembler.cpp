@@ -1,5 +1,6 @@
 // https://itnext.io/risc-v-instruction-set-cheatsheet-70961b4bbe8
 // https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+// https://en.wikichip.org/wiki/risc-v/registers
 #include "Assembler.h"
 
 Map* Map::instance=0;
@@ -120,16 +121,19 @@ fmv.w.x
 fsw
 flw
 fadd.s
-add more registers
 add support for hex values
 */
 REGISTERS::REGISTERS()
 {
 	regcode={
-		{"pc", -1},
+		{"a", 10},
+		{"t", 5},
+		{"T", 25},
+		{"s", 8},
+		{"S", 16},
 	};
-	regex_reg="[x]\\d{1,2}";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([x]\\d{1,2}\\)", ",(\\d)+"};
+	regex_reg="[xast](\\d)+";
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\d)+"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -168,19 +172,26 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 			smatch match = *next;
 			reg=match.str();
 			
-			if(regcode.find(reg) != regcode.end())
+			reg_code=stoi(reg.substr(1, 2));
+			if((reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
 			{
-				perror("Invalid Register Type");
+				perror("Invalid Register Number");
 				regs.resize(i);
 				return regs;
 			}
-
-			reg_code=stoi(reg.substr(1, 2));
-			if(!(reg_code>=0 && reg_code<32))
+			switch(reg[0])
 			{
-				perror("Invalid Register Number");
-				reg.resize(i);
-				return regs;
+				case 'a':reg_code+=regcode["a"];break;
+				case 's':if(reg_code<2)
+							reg_code+=regcode["s"];
+						else
+							reg_code+=regcode["S"];
+						break;
+				case 't':if(reg_code<3)
+							reg_code+=regcode["t"];
+						else
+							reg_code+=regcode["T"];
+						break;
 			}
 			regs[i++]=reg_code;
 			next++;
@@ -229,7 +240,7 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		if(next != end)
 		{
 			perror("Invalid Syntax");
-			reg.resize(regs.size()-1);
+			regs.resize(regs.size()-1);
 			return 2;
 		}
 	}
@@ -266,7 +277,7 @@ int REGISTERS::extractLabel(vector<int> &regs, string reg)
 		if(next != end)
 		{
 			perror("Invalid Syntax");
-			reg.resize(regs.size()-1);
+			regs.resize(regs.size()-1);
 			return 1;
 		}
 	}
@@ -289,11 +300,11 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 }
 int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 {
-	// pc is -1 and x0 to x31 is 0 to 31
+	cout<<reg<<endl;
+	
 	char reg_code;
 	vector<int> regs=matchReg(reg, type);
 
-	cout<<reg<<endl;
 	for(int i: regs)
 		cout<<i<<"  ";
 	cout<<endl;
