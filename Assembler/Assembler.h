@@ -39,7 +39,7 @@ class OPERATIONS
 class REGISTERS
 {
 	private:
-		unordered_map<string, unsigned char> regcode;
+		unordered_map<string, int> regcode;
 		unordered_map<string, ST_Entry> symbol_table;
 		string regex_reg;
 		vector<string> regex_reg_imm;
