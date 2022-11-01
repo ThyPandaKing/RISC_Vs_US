@@ -1,38 +1,32 @@
 main:
-- arg INT a
-- arg INT b
-@t0 = a + b INT
-return @t0 INT
+@t0 = 2 INT
+- INT x
+x = @t0 INT
+- INT c
+@t1 = 1 INT
+@t2 = x == @t1 INT
+if @t2 GOTO #L1 else GOTO #L2
+#L1:
+@t3 = 11 INT
+c = @t3 INT
+GOTO #L0
+#L2:
+@t0 = 2 INT
+@t4 = x == @t4 INT
+if @t4 GOTO #L3 else GOTO #L4
+#L3:
+@t5 = 22 INT
+c = @t5 INT
+GOTO #L0
+#L4:
+@t6 = 33 INT
+c = @t6 INT
+#L0:
+@t7 = 38 INT
+@t8 = c + @t7 INT
+c = @t8 INT
+output c INT
+@t9 = 0 INT
+return @t9 INT
 end:
 
-sub:
-- arg INT g
-- arg INT h
-@t1 = g - h INT
-return @t1 INT
-end:
-
-main:
-@t2 = 5 INT
-@t3 = @t2 + c INT
-- INT d
-d = @t3 INT
-- INT d
-@t4 = 2 INT
-- INT e
-e = @t4 INT
-@t5 = 1 INT
-- INT f
-f = @t5 INT
-param e INT
-param f INT
-@t6 = @call sub INT 2
-- INT i
-i = @t6 INT
-@t7 = 0 INT
-return @t7 INT
-end:
-
-Error: Duplicate function name - main
-Variable not declared in line 10 before usage.
-redeclaration of 'd' in line 11
