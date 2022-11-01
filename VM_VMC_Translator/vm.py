@@ -127,7 +127,7 @@ class VM:
                 self.text_segment += f"add x5, x5, x8\n"
                 self.text_segment += f"lw x5, 0(x5)\n"
 
-                self.text_segment += f"addi x5, x5, {-(index*4+4)}\n"
+                self.text_segment += f"addi x5, x5, {-(int(index)*4+4)}\n"
                 self.text_segment += f"flw f3, 0(x5)\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
@@ -197,14 +197,14 @@ class VM:
             self.text_segment += f"sb x5, 0(x6)\n"
         elif(datatype == Datatypes.FLOAT.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"flw x5, 0(x2)\n"
+            self.text_segment += f"flw f3, 0(x2)\n"
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
             self.text_segment += f"li x6, {-pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
             self.text_segment += f"lw x6, 0(x6)\n"
 
             self.text_segment += f"addi x6, x6, {-(index*4+4)}\n"
-            self.text_segment += f"fsw x5, 0(x6)\n"
+            self.text_segment += f"fsw f3, 0(x6)\n"
 
         self.text_segment += '\n'
 
@@ -376,11 +376,17 @@ class VM:
             self.text_segment += f"ecall\n"
         elif(datatype == Datatypes.BOOL.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"li x5, 0\n"
+            # self.text_segment += f"li x5, 0\n"
             self.text_segment += f"lb x5, 0(x2)\n"
             self.text_segment += f"add a0, x5, x0\n"
             self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"li a7, 4\n"
+            self.text_segment += f"ecall\n"
+        elif(datatype == Datatypes.FLOAT.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"flw fa0, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"li a7, 2\n"
             self.text_segment += f"ecall\n"
 
         self.text_segment += '\n'

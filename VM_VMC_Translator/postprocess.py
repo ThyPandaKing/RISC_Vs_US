@@ -1,6 +1,13 @@
-from ast import mod
-from atexit import register
 import struct
+
+
+def get_ieee_rep(value):
+    h = ''.join('{:02x}'.format(x)[::-1]
+                for x in struct.pack('f', float(value)))[::-1]
+    upper = h[:5]
+    mid = h[5]
+    lower = h[6:]
+    return ('0x'+upper, '0x'+mid, '0x'+lower)
 
 
 def convert_rep(value):
@@ -37,7 +44,14 @@ def postprocess(asm_code):
             mod_asm_code += f"addi {reg}, {reg}, {val}\n"
             mod_asm_code += f"addi {reg}, {reg}, {val}\n"
             mod_asm_code += f"addi {reg}, {reg}, {extra}\n"
-            # elif(line.split(' ')[0] == 'fli'):
+        elif(line.split(' ')[0] == 'fli'):
+            # fli f3, -247.6
+            reg = line.split(' ')[1][:-1]
+            upper, mid, lower = get_ieee_rep(line.split(' ')[-1])
+            mod_asm_code += f"lui x7, {upper}\n"
+            mod_asm_code += f"addi x7, x7, {mid}\n"
+            mod_asm_code += f"addi x7, x7, {lower}\n"
+            mod_asm_code += f"fmv.w.x {reg}, x7\n"
         else:
             mod_asm_code += line + '\n'
 
