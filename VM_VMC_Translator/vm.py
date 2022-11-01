@@ -419,6 +419,6 @@ class VM:
             elif(line[0] == Instructions.call.value):
                 return Instructions.call
 
-        # self.text_segment = postprocess(self.text_segment)
+        self.text_segment = postprocess(self.text_segment)
 
         return self.text_segment
