@@ -30,6 +30,8 @@ class Preprocess:
             elif('#' in line):
                 mod_vm_code += re.sub(r'#', '__', line)
                 mod_vm_code += '\n'
+            elif('return' in line):
+                mod_vm_code += ''
             else:
                 mod_vm_code += line + '\n'
 
