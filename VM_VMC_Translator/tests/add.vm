@@ -10,3 +10,4 @@ push temp 0 INT
 
 ; adds integers
 add INT
+print INT
