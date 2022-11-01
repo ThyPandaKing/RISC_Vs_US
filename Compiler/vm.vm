@@ -1,39 +1,71 @@
 function main
-push local 0 null
-push local 1 null
-add INT
-pop temp 0 INT
-push temp 0 INT
-return INT
-function sub
-push local 0 null
-push local 1 null
-sub INT
-pop temp 0 INT
-push temp 0 INT
-return INT
-function main
 push constant 5 INT
 pop temp 0 INT
 push temp 0 INT
-push local 0 null
-add INT
+pop local 0 INT
+push constant 2 INT
 pop temp 1 INT
 push temp 1 INT
 pop local 1 INT
-push constant 2 INT
+push local 0 INT
+push local 1 INT
+add INT
 pop temp 2 INT
+push constant 2 INT
+pop temp 1 INT
 push temp 2 INT
-pop local 3 INT
-push constant 1 INT
+push temp 1 INT
+gt INT
 pop temp 3 INT
-push temp 3 INT
-pop local 4 INT
-push local 3 INT
-push local 4 INT
-push temp 4 null
-pop local 5 INT
 push constant 0 INT
+push temp 3 INT
+eq INT
+if-goto #L1
+goto #L2
+label #L1
+push local 3 null
+pop local 2 STR
+goto #L0
+label #L2
+push local 0 INT
+push local 1 INT
+add INT
+pop temp 4 INT
+push constant 2 INT
+pop temp 1 INT
+push temp 4 INT
+push temp 1 INT
+lt INT
 pop temp 5 INT
+push constant 0 INT
 push temp 5 INT
-return INT
+eq INT
+if-goto #L3
+goto #L4
+label #L3
+push local 4 null
+pop local 2 STR
+goto #L0
+label #L4
+push local 5 null
+pop local 2 STR
+label #L0
+push constant 1 INT
+pop temp 6 INT
+push local 0 INT
+push temp 6 INT
+eq INT
+pop temp 7 INT
+push constant 0 INT
+push temp 7 INT
+eq INT
+if-goto #L6
+goto #L7
+label #L6
+push local 3 null
+pop local 2 STR
+goto #L5
+label #L7
+push local 5 null
+pop local 2 STR
+label #L5

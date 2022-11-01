@@ -519,14 +519,16 @@ primary_expr    :   ID {
                     }
                     | const {
                         strcpy($$.type, $1.type);
-                        sprintf($$.lexeme, "@t%d", variable_count);
                         if(temp_map[string($1.lexeme)] == ""){
+                            sprintf($$.lexeme, "@t%d", variable_count);
                             tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
                             temp_map[string($1.lexeme)] = string($$.lexeme);
                             variable_count++;
                         }
                         else{
                             tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                            strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
+                            // variable_count++;
                         }
                     }
                     | OC expr CC {

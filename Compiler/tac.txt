@@ -1,38 +1,36 @@
 main:
-- arg INT a
-- arg INT b
-@t0 = a + b INT
-return @t0 INT
+@t0 = 5 INT
+- INT a
+a = @t0 INT
+@t1 = 2 INT
+- INT b
+b = @t1 INT
+@t2 = a + b INT
+@t1 = 2 INT
+@t3 = @t2 > @t1 INT
+if @t3 GOTO #L1 else GOTO #L2
+#L1:
+output "Reached if..." STR
+GOTO #L0
+#L2:
+@t4 = a + b INT
+@t1 = 2 INT
+@t5 = @t4 < @t1 INT
+if @t5 GOTO #L3 else GOTO #L4
+#L3:
+output "Reached elif..." STR
+GOTO #L0
+#L4:
+output "Reached else..." STR
+#L0:
+@t6 = 1 INT
+@t7 = a == @t6 INT
+if @t7 GOTO #L6 else GOTO #L7
+#L6:
+output "Reached if..." STR
+GOTO #L5
+#L7:
+output "Reached else..." STR
+#L5:
 end:
 
-sub:
-- arg INT g
-- arg INT h
-@t1 = g - h INT
-return @t1 INT
-end:
-
-main:
-@t2 = 5 INT
-@t3 = @t2 + c INT
-- INT d
-d = @t3 INT
-- INT d
-@t4 = 2 INT
-- INT e
-e = @t4 INT
-@t5 = 1 INT
-- INT f
-f = @t5 INT
-param e INT
-param f INT
-@t6 = @call sub INT 2
-- INT i
-i = @t6 INT
-@t7 = 0 INT
-return @t7 INT
-end:
-
-Error: Duplicate function name - main
-Variable not declared in line 10 before usage.
-redeclaration of 'd' in line 11
