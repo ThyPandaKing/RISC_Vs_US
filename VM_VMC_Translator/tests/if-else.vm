@@ -1,6 +1,6 @@
-function main
+function main 10 10 INT
 
-push constant 2 INT
+push constant 3 INT
 pop temp 0 INT
 push temp 0 INT
 pop local 0 INT

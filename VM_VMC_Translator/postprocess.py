@@ -55,4 +55,6 @@ def postprocess(asm_code):
         else:
             mod_asm_code += line + '\n'
 
+    mod_asm_code += f"__END__:\n"
+
     return mod_asm_code
