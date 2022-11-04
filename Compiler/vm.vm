@@ -1,71 +1,88 @@
 function main
-push constant 5 INT
+push constant 2 INT
 pop temp 0 INT
 push temp 0 INT
 pop local 0 INT
-push constant 2 INT
+push constant 1 INT
 pop temp 1 INT
-push temp 1 INT
-pop local 1 INT
 push local 0 INT
-push local 1 INT
-add INT
-pop temp 2 INT
-push constant 2 INT
-pop temp 1 INT
-push temp 2 INT
 push temp 1 INT
-gt INT
-pop temp 3 INT
+eq INT
+if-goto #E0
+goto #E1
+label #E0
+push constant 1 INT
+pop temp 2 INT
+goto #E2
+label #E1
+push constant 1 INT
+pop temp 2 INT
+label #E2
 push constant 0 INT
-push temp 3 INT
+push temp 2 INT
 eq INT
 if-goto #L1
 goto #L2
 label #L1
-push local 3 null
-pop local 2 STR
+push constant 11 INT
+pop temp 3 INT
+push temp 3 INT
+pop local 1 INT
 goto #L0
 label #L2
-push local 0 INT
-push local 1 INT
-add INT
-pop temp 4 INT
 push constant 2 INT
-pop temp 1 INT
+pop temp 0 INT
+push local 0 INT
 push temp 4 INT
-push temp 1 INT
-lt INT
-pop temp 5 INT
+eq INT
+if-goto #E3
+goto #E4
+label #E3
+push constant 1 INT
+pop temp 4 INT
+goto #E5
+label #E4
+push constant 1 INT
+pop temp 4 INT
+label #E5
 push constant 0 INT
-push temp 5 INT
+push temp 4 INT
 eq INT
 if-goto #L3
 goto #L4
 label #L3
-push local 4 null
-pop local 2 STR
+push constant 22 INT
+pop temp 5 INT
+push constant 0 INT
+push temp 5 INT
+pop local 1 INT
 goto #L0
 label #L4
-push local 5 null
-pop local 2 STR
-label #L0
-push constant 1 INT
+push constant 33 INT
 pop temp 6 INT
-push local 0 INT
 push temp 6 INT
-eq INT
+pop local 1 INT
+label #L0
+push constant 38 INT
 pop temp 7 INT
-push constant 0 INT
+push local 1 INT
 push temp 7 INT
-eq INT
-if-goto #L6
-goto #L7
-label #L6
-push local 3 null
-pop local 2 STR
-goto #L5
-label #L7
-push local 5 null
-pop local 2 STR
-label #L5
+add INT
+if-goto #E6
+goto #E7
+label #E6
+push constant 1 INT
+pop temp 8 INT
+goto #E8
+label #E7
+push constant 1 INT
+pop temp 8 INT
+label #E8
+push temp 8 INT
+pop local 1 INT
+push local 1 INT
+print INT
+push constant 0 INT
+pop temp 9 INT
+push temp 9 INT
+return INT

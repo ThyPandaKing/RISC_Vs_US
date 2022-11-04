@@ -1,0 +1,13 @@
+function main
+
+push constant 6 INT
+pop local 0 INT
+push constant 7 INT
+pop temp 0 INT
+
+push local 0 INT
+push temp 0 INT
+
+; adds integers
+add INT
+print INT

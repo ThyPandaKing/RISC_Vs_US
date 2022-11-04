@@ -6,15 +6,18 @@ int main(){
         c = 11;
     }
     elif(x == 2){
-        c = 22;
+        c = 33;
     }
     else{
-        c = 33;
+        c = 22;
     }
     c = c + 38;
 
     output(c);
+<<<<<<< HEAD
+=======
 
+>>>>>>> 3eaabb17487f316ec64e62cd47bcc78637717c5c
     return 0;
 }
 

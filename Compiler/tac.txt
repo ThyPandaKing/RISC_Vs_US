@@ -1,36 +1,32 @@
 main:
-@t0 = 5 INT
-- INT a
-a = @t0 INT
-@t1 = 2 INT
-- INT b
-b = @t1 INT
-@t2 = a + b INT
-@t1 = 2 INT
-@t3 = @t2 > @t1 INT
-if @t3 GOTO #L1 else GOTO #L2
+@t0 = 2 INT
+- INT x
+x = @t0 INT
+- INT c
+@t1 = 1 INT
+@t2 = x == @t1 INT
+if @t2 GOTO #L1 else GOTO #L2
 #L1:
-output "Reached if..." STR
+@t3 = 11 INT
+c = @t3 INT
 GOTO #L0
 #L2:
-@t4 = a + b INT
-@t1 = 2 INT
-@t5 = @t4 < @t1 INT
-if @t5 GOTO #L3 else GOTO #L4
+@t0 = 2 INT
+@t4 = x == @t4 INT
+if @t4 GOTO #L3 else GOTO #L4
 #L3:
-output "Reached elif..." STR
+@t5 = 22 INT
+c = @t5 INT
 GOTO #L0
 #L4:
-output "Reached else..." STR
+@t6 = 33 INT
+c = @t6 INT
 #L0:
-@t6 = 1 INT
-@t7 = a == @t6 INT
-if @t7 GOTO #L6 else GOTO #L7
-#L6:
-output "Reached if..." STR
-GOTO #L5
-#L7:
-output "Reached else..." STR
-#L5:
+@t7 = 38 INT
+@t8 = c + @t7 INT
+c = @t8 INT
+output c INT
+@t9 = 0 INT
+return @t9 INT
 end:
 

@@ -1,0 +1,19 @@
+function main
+
+push constant 6 INT
+pop local 0 INT
+push constant 5 INT
+pop local 1 INT
+
+push local 0 INT
+push local 1 INT
+
+push local 0 INT
+print INT
+
+
+
+
+
+;5
+;6
