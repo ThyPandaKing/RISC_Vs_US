@@ -556,11 +556,13 @@ class VM:
         if(datatype == Datatypes.INT):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
-            self.text_segment += f"{self.prev_operator.value[0]} x5, x0, {label}\n"
+            self.text_segment += f"li x6, 1\n"
+            self.text_segment += f"beq x5, x6, {label}\n"
         elif(datatype == Datatypes.CHAR or datatype == Datatypes.BOOL):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"{self.prev_operator.value[0]} x5, x0, {label}\n"
+            self.text_segment += f"li x6, 1\n"
+            self.text_segment += f"beq x5, x6, {label}\n"
         # Has to be re-done (the implementation has been changed for eq, lt, ... )
         elif(datatype == Datatypes.FLOAT):
             self.text_segment += f"addi x2, x2, 4\n"
