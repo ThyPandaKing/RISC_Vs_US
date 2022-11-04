@@ -141,7 +141,8 @@ void conversion(){
                 vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
                 vm.push_back("push " + type_c.second + " " + to_string(type_c.first.first) + " " + type_c.first.second);
                 vm.push_back(op_map[tac[i][3]] + " " + tac[i][5]);
-                // vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                if(op_map[tac[i][3]] != "eq")
+                    vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                 // string label1 = "#E" + to_string(label_counter++);
                 // string label2 = "#E" + to_string(label_counter++);
                 // string label3 = "#E" + to_string(label_counter++);
