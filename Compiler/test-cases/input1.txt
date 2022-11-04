@@ -1,7 +1,8 @@
 int main(){
     int a=10;
-    int b=a/5;
-    string c="hello";
+    int b= 5;
+    int c = a + b;
+    output(c);
     return 0;
 }
 

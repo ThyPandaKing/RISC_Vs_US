@@ -14,6 +14,10 @@ int main(){
     c = c + 38;
 
     output(c);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 3eaabb17487f316ec64e62cd47bcc78637717c5c
     return 0;
 }
 
