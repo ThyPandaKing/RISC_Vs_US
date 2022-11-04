@@ -1,5 +1,6 @@
 // https://itnext.io/risc-v-instruction-set-cheatsheet-70961b4bbe8
 // https://riscv.org/wp-content/uploads/2017/05/riscv-spec-v2.2.pdf
+// https://en.wikichip.org/wiki/risc-v/registers
 #include "Assembler.h"
 
 Map* Map::instance=0;
@@ -13,13 +14,18 @@ OPERATIONS::OPERATIONS()
 		{"sub", 0b0110011},
 		{"or", 0b0110011},
 		{"and", 0b0110011},
+		{"xor", 0b0110011},
+		{"sll", 0b0110011},
+		{"srl", 0b0110011},
 		
 		// I - Type
 		{"lw", 0b0000011},
+		{"lb", 0b0000011},
 		{"addi", 0b0010011},
 
 		// S - Type
 		{"sw", 0b0100011},
+		{"sb", 0b0100011},
 
 		// B - Type
 		{"beq", 0b1100011},
@@ -28,6 +34,9 @@ OPERATIONS::OPERATIONS()
 		{"bge", 0b1100011},
 		{"bltu", 0b1100011},
 		{"bgeu", 0b1100011},
+
+		// U - Type
+		{"lui", 0b0110111},
 	};
 
 	funct3={
@@ -36,13 +45,18 @@ OPERATIONS::OPERATIONS()
 		{"sub", 0b000},
 		{"or", 0b110},
 		{"and", 0b111},
+		{"xor", 0b100},
+		{"sll", 0b001},
+		{"srl", 0b101},
 
 		// I - Type
 		{"lw", 0b010},
+		{"lb", 0b000},
 		{"addi", 0b000},
 
 		// S -Type
 		{"sw", 0b010},
+		{"sb", 0b000},
 
 		// B - Type
 		{"beq", 0b000},
@@ -59,6 +73,9 @@ OPERATIONS::OPERATIONS()
 		{"sub", 0b0100000},
 		{"or", 0b0000000},
 		{"and", 0b0000000},
+		{"xor", 0b0000000},
+		{"sll", 0b0000000},
+		{"srl", 0b0000000},
 	};
 	
 	uid={
@@ -71,13 +88,18 @@ OPERATIONS::OPERATIONS()
 		{"sub", 'R'},
 		{"or", 'R'},
 		{"and", 'R'},
+		{"xor", 'R'},
+		{"sll", 'R'},
+		{"srl", 'R'},
 
 		// I - Type
 		{"lw", 'I'},
+		{"lb", 'I'},
 		{"addi", 'I'},
 
 		// S -Type
 		{"sw", 'S'},
+		{"sb", 'S'},
 
 		// B - Type
 		{"beq", 'B'},
@@ -86,15 +108,32 @@ OPERATIONS::OPERATIONS()
 		{"bge", 'B'},
 		{"bltu", 'B'},
 		{"bgeu", 'B'},
+
+		// U - Type
+		{"lui", 'U'},
+
+		{"ecall", 'N'},
 	};
 }
+// TODO : Instructions
+/*
+fmv.w.x
+fsw
+flw
+fadd.s
+add support for hex values
+*/
 REGISTERS::REGISTERS()
 {
 	regcode={
-		{"pc", -1},
+		{"a", 10},
+		{"t", 5},
+		{"T", 25},
+		{"s", 8},
+		{"S", 16},
 	};
-	regex_reg="[x]\\d{1,2}";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([x]\\d{1,2}\\)", ",(\\d)+"};
+	regex_reg="[xast](\\d)+";
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\d)+"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -133,19 +172,26 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 			smatch match = *next;
 			reg=match.str();
 			
-			if(regcode.find(reg) != regcode.end())
+			reg_code=stoi(reg.substr(1, 2));
+			if((reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
 			{
-				perror("Invalid Register Type");
+				perror("Invalid Register Number");
 				regs.resize(i);
 				return regs;
 			}
-
-			reg_code=stoi(reg.substr(1, 2));
-			if(!(reg_code>=0 && reg_code<32))
+			switch(reg[0])
 			{
-				perror("Invalid Register Number");
-				reg.resize(i);
-				return regs;
+				case 'a':reg_code+=regcode["a"];break;
+				case 's':if(reg_code<2)
+							reg_code+=regcode["s"];
+						else
+							reg_code+=regcode["S"];
+						break;
+				case 't':if(reg_code<3)
+							reg_code+=regcode["t"];
+						else
+							reg_code+=regcode["T"];
+						break;
 			}
 			regs[i++]=reg_code;
 			next++;
@@ -194,7 +240,7 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		if(next != end)
 		{
 			perror("Invalid Syntax");
-			reg.resize(regs.size()-1);
+			regs.resize(regs.size()-1);
 			return 2;
 		}
 	}
@@ -231,7 +277,7 @@ int REGISTERS::extractLabel(vector<int> &regs, string reg)
 		if(next != end)
 		{
 			perror("Invalid Syntax");
-			reg.resize(regs.size()-1);
+			regs.resize(regs.size()-1);
 			return 1;
 		}
 	}
@@ -246,7 +292,7 @@ int REGISTERS::extractLabel(vector<int> &regs, string reg)
 vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 {
 	vector<int> regs=extractRegisters(reg, type);
-	if(type == 'I' || type=='S')
+	if(type == 'I' || type=='S' || type=='U')
 		extractImmediate(regs, reg, type, 0);
 	if(type == 'B')
 		extractLabel(regs, reg);
@@ -254,11 +300,11 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 }
 int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 {
-	// pc is -1 and x0 to x31 is 0 to 31
+	cout<<reg<<endl;
+	
 	char reg_code;
 	vector<int> regs=matchReg(reg, type);
 
-	cout<<reg<<endl;
 	for(int i: regs)
 		cout<<i<<"  ";
 	cout<<endl;
@@ -322,6 +368,7 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 		ins=ins|(regs[1]<<15);
 		// rs2
 		ins=ins|(regs[0]<<20);
+		
 		// imm
 		// imm is split into 2 segments
 		// first 5 bits from LSB - starting at index 7 of ins 
@@ -355,6 +402,26 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 		ins=ins|((regs[2]&1008)>>4<<25);
 		ins=ins|(((regs[2]>>11)&1)<<31);
 	}
+	else if(type=='U')
+	{
+		if(regs.size() != 2)
+		{
+			perror("Invalid Syntax");
+			return 1;
+		}
+		// reg[0] is destination
+		// reg[1] has the immediate value
+		if(regs[0]==0)
+		{
+			perror("Invalid Destination Register");
+			return 2;
+		}
+
+		// rd
+		ins=ins|(regs[0]<<7);
+		// imm
+		ins=ins|(regs[1]<<12);
+	}
 	return 0;
 }
 void REGISTERS::setSymbolTable(unordered_map<string, ST_Entry> &symbol_table)
@@ -370,22 +437,22 @@ int REGISTERS::getSymbolTableValue(string symbol)
 }
 unsigned char OPERATIONS::setIns(int &ins, string op)
 {
+	if(uid.find(op) != uid.end())
+	{
+		ins=ins|uid[op];
+		return type[op];
+	}
 	if(opcode.find(op) == opcode.end())
 	{
 		perror("Invalid Operation");
 		return '\0';
 	}
-	if(uid.find(op) != uid.end())
-		ins=ins|uid[op];
-	else
-	{
-		ins=ins|opcode[op];
-		if(funct3.find(op) != opcode.end())
-			ins=ins|(funct3[op]<<12);
-		if(funct7.find(op) != opcode.end())
-			ins=ins|(funct7[op]<<25);
-		uid[op]=ins;
-	}
+	ins=ins|opcode[op];
+	if(funct3.find(op) != opcode.end())
+		ins=ins|(funct3[op]<<12);
+	if(funct7.find(op) != opcode.end())
+		ins=ins|(funct7[op]<<25);
+	uid[op]=ins;
 	return type[op];
 }
 ST_Entry::ST_Entry(){}
@@ -755,7 +822,7 @@ int Assembler::secondPass(string vmout, string asmout)
 
 int main()
 {
-	string vmout="sample.asm";
+	string vmout="vmout.asm";
 	string asmout="asmout.o";
 
 	cout<<"------STARTED\n";

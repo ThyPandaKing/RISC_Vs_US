@@ -53,6 +53,7 @@ goto #L4
 label #L3
 push constant 22 INT
 pop temp 5 INT
+push constant 0 INT
 push temp 5 INT
 pop local 1 INT
 goto #L0
