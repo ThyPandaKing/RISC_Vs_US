@@ -1,5 +1,5 @@
 function main 10 10 INT
-push constant -3 INT
+push constant 1 INT
 pop temp 0 INT
 push temp 0 INT
 pop local 0 INT
@@ -23,9 +23,9 @@ label #L2
 push constant 2 INT
 pop temp 0 INT
 push local 0 INT
-print INT
+;print INT
 push temp 0 INT
-print INT
+;print INT
 eq INT
 
 if-goto #L3

@@ -1,15 +1,14 @@
 function main 1 1 INT
-push constant 4 INT
+push constant 5 INT
 call fact 1
 print INT
 return
 
 function fact 1 1 INT
 push argument 0 INT
-print INT
 push constant 1 INT
 push argument 0 INT
-gt INT
+neq INT
 if-goto REC
 goto ONE
 

@@ -21,7 +21,7 @@ class VM:
         self.return_type = 'INT'
         self.num_local = 0
         self.num_temp = 0
-        self.function_stack = []
+        self.cur_function = None
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
@@ -667,8 +667,12 @@ class VM:
         self.num_local = int(line[-3])
         self.num_temp = int(line[-2])
         function = line[1]
-
-        self.function_stack.append(function)
+        self.cur_function = function
+        if(function == 'main'):
+            self.text_segment += f"{function}:\n"
+            self.init_mem()
+            self.text_segment += '\n'
+            return
 
         self.text_segment += f"{function}:\n"
         # storing return address
@@ -692,11 +696,15 @@ class VM:
     def return_call(self, line):
         # self.pop((f"pop argument 0 {self.return_type}").split(' '))
 
-        if(self.function_stack[-1] == 'main'):
+        # if(self.function_stack == []):
+        #     self.text_segment += f"beq x0, x0, __END__\n"
+        #     return
+
+        # self.function_stack.pop()
+
+        if(self.cur_function == 'main'):
             self.text_segment += f"beq x0, x0, __END__\n"
             return
-
-        self.function_stack.pop()
 
         self.text_segment += f"addi x2, x2, 4\n"
         self.text_segment += f"lw x5, 0(x2)\n"
