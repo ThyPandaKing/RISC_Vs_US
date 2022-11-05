@@ -83,6 +83,8 @@
         unordered_map<string, struct var_info> symbol_table;
     };
 
+    int has_return_stmt;
+
     unordered_map<string, struct func_info> func_table;
     string curr_func_name;
     vector<string> curr_func_param_type;
@@ -135,11 +137,16 @@ func_list       :   func_list func {}
 
 func            :   func_prefix OF
                     {
+                        has_return_stmt = 0;
                         scope_history.push(++scope_counter);
                     } stmt_list CF 
                     {
+                        if(func_table[curr_func_name].return_type != "void" && has_return_stmt == 0){
+                            sem_errors.push_back("Return stmt not there for function: " + curr_func_name);
+                        }
                         scope_history.pop();
                         tac.push_back("end:\n");
+                        has_return_stmt = 0;
                     }
  
 func_prefix     :   func_data_type ID 
@@ -281,6 +288,7 @@ arr_values      :   const {
 return_stmt     :   RETURN expr {
                         check_type(func_table[curr_func_name].return_type, string($2.type));
                         tac.push_back("return " + string($2.lexeme) + " " + func_table[curr_func_name].return_type);
+                        has_return_stmt = 1;
                     }
                     ;
 
