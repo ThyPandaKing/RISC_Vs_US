@@ -15,6 +15,7 @@ class Preprocess:
 
         generator = (i for i in vm_code.splitlines())
 
+        # Neq
         mod_vm_code = ''
         for line in generator:
             if(line.split(' ')[0] == Instructions.Neq.value):
@@ -34,5 +35,5 @@ class Preprocess:
             else:
                 mod_vm_code += line + '\n'
 
-        print(mod_vm_code)
+        # print(mod_vm_code)
         return mod_vm_code

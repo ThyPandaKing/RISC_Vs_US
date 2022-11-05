@@ -1,5 +1,5 @@
 int main(){
-    int x=2;
+    int x=3;
     int c;
 
     if(x == 1){

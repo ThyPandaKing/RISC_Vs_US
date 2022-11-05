@@ -9,22 +9,22 @@ b:
 .section
 .text
 main:
-addi x5,x0,2
-sw x5,-4(x8)
-sw x5,4(x8)
-sw x5,+4(x8)
-add x6,x0,x5
-addi x7,x0,1
-sw x7,-12(x8)
-sub x28,x6,x7
+addi a1,a2,2
+sw a3,-4(a4)
+sw a5,4(a6)
+sw a7,+4(x8)
+add t6,t0,x5
+addi t5,t1,1
+sw t4,-12(t2)
+sub t3,s0,s1
 # ----#end of block----
-sw x5,-4(x8)
-sw x6,-8(x8)
-sw x7,-12(x8)
-sw x28,-16(x8)
+sw s2,-4(s3)
+sw s4,-8(s5)
+sw s6,-12(s7)
+sw s8,-16(s9)
 # ---- end of spill ----
-beq x28,x0,___L100
-beq x0,x0,___L101
+beq s10,s11,___L100
+beq a0,x0,___L101
 ___L100:
 addi x5,x0,1
 # ---- end of block ----

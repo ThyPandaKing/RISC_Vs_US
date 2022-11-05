@@ -12,14 +12,14 @@ c = @t3 INT
 GOTO #L0
 #L2:
 @t0 = 2 INT
-@t4 = x == @t4 INT
+@t4 = x == @t0 INT
 if @t4 GOTO #L3 else GOTO #L4
 #L3:
-@t5 = 22 INT
+@t5 = 33 INT
 c = @t5 INT
 GOTO #L0
 #L4:
-@t6 = 33 INT
+@t6 = 22 INT
 c = @t6 INT
 #L0:
 @t7 = 38 INT

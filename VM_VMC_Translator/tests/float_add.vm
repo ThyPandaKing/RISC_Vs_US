@@ -1,0 +1,11 @@
+function main
+
+push constant 18.6 FLOAT
+pop local 0 FLOAT
+push constant -3.28 FLOAT
+pop local 1 FLOAT
+
+push local 0 FLOAT
+push local 1 FLOAT
+add FLOAT
+print FLOAT

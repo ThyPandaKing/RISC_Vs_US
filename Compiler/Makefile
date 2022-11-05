@@ -1,11 +1,14 @@
 run: parser
 	@echo "Filename: "; \
 	read FILENAME; \
-	echo "Filename is ", $${FILENAME};\
-	./parser < $${FILENAME} > tac.txt
+	./parser < $${FILENAME} > tac.txt;\
+	./a.out > vm.vm
 
 # dummy: parser
 # 	./parser < test-cases/input1.txt > tac.txt
+
+vm: tac.txt
+	g++ tac-vm.cpp
 
 parser: y.tab.c lex.yy.c y.tab.h
 	g++ -w y.tab.c lex.yy.c -lfl -o parser
