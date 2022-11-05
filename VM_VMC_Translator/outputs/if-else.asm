@@ -56,11 +56,12 @@ addi x2, x2, 1002
 addi x2, x2, 2
 add x2, x2, x8
 
+
 lui x5, 0x00000
 addi x5, x5, 0
 addi x5, x5, 0
 addi x5, x5, 0
-addi x5, x5, 1
+addi x5, x5, 2
 sw x5, 0(x2)
 addi x2, x2, -4
 
@@ -136,17 +137,6 @@ sw x5, 0(x2)
 addi x2, x2, -4
 
 
-addi x2, x2, 4
-lw x5, 0(x2)
-add a0, x5, x0
-addi x2, x2, -4
-lui a7, 0x00000
-addi a7, a7, 0
-addi a7, a7, 0
-addi a7, a7, 0
-addi a7, a7, 1
-ecall
-
 lui x5, 0xffffd
 addi x5, x5, 1361
 addi x5, x5, 1361
@@ -164,6 +154,7 @@ addi x2, x2, 4
 lw x6, 0(x2)
 addi x2, x2, 4
 lw x5, 0(x2)
+blt x5, x6, ___CL0
 beq x5, x6, ___CL0
 addi x7, x0, 0
 beq x0, x0, ___CL1

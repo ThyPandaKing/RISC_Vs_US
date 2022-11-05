@@ -308,9 +308,9 @@ class VM:
 
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"lw x6, 0(x2)\n"      # RHS
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
+            self.text_segment += f"lw x5, 0(x2)\n"      # LHS
 
             self.text_segment += f"{branch} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
@@ -694,13 +694,6 @@ class VM:
         self.text_segment += '\n'
 
     def return_call(self, line):
-        # self.pop((f"pop argument 0 {self.return_type}").split(' '))
-
-        # if(self.function_stack == []):
-        #     self.text_segment += f"beq x0, x0, __END__\n"
-        #     return
-
-        # self.function_stack.pop()
 
         if(self.cur_function == 'main'):
             self.text_segment += f"beq x0, x0, __END__\n"

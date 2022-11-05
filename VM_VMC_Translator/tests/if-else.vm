@@ -1,14 +1,13 @@
 function main 10 10 INT
-push constant 1 INT
+push constant 2 INT
 pop temp 0 INT
 push temp 0 INT
 pop local 0 INT
 push constant 1 INT
 pop temp 1 INT
 push local 0 INT
-print INT
 push temp 1 INT
-eq INT
+le INT
 
 if-goto #L1
 goto #L2

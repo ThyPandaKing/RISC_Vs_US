@@ -167,31 +167,20 @@ sw x5, 0(x2)
 addi x2, x2, -4
 
 
-lui x5, 0xffffd
-addi x5, x5, 1362
-addi x5, x5, 1362
-addi x5, x5, 1362
-addi x5, x5, 2
-add x5, x5, x8
-lw x5, 0(x5)
-addi x5, x5, -4
-lw x5, 0(x5)
-sw x5, 0(x2)
-addi x2, x2, -4
-
-
 addi x2, x2, 4
 lw x6, 0(x2)
 addi x2, x2, 4
 lw x5, 0(x2)
+blt x5, x6, ___CL0
 beq x5, x6, ___CL0
-addi x7, x0, 0
+addi x7, x0, 1
 beq x0, x0, ___CL1
 ___CL0:
-addi x7, x0, 1
+addi x7, x0, 0
 ___CL1:
 sw x7, 0(x2)
 addi x2, x2, -4
+
 addi x2, x2, 4
 lw x5, 0(x2)
 lui x6, 0x00000
@@ -199,10 +188,8 @@ addi x6, x6, 0
 addi x6, x6, 0
 addi x6, x6, 0
 addi x6, x6, 1
-beq x5, x6, ___L0
+beq x5, x6, REC
 
-beq x0, x0, REC
-___L0:
 beq x0, x0, ONE
 REC:
 lui x5, 0x00000

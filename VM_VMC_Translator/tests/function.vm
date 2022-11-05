@@ -7,8 +7,7 @@ return
 function fact 1 1 INT
 push argument 0 INT
 push constant 1 INT
-push argument 0 INT
-neq INT
+gt INT
 if-goto REC
 goto ONE
 
