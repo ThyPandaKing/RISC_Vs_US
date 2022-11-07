@@ -1,0 +1,12 @@
+function main
+
+push constant '0' CHAR
+pop temp 0 CHAR
+push constant '1' CHAR
+pop local 0 CHAR
+
+push temp 0 CHAR
+push local 0 CHAR
+add CHAR                ; adds two characters
+
+print CHAR
