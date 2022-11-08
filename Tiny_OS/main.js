@@ -43,6 +43,30 @@ ipcMain.on ('saveCode', (event, myCode) => {
   });
 });
 
+ipcMain.on('sendCode', (event, destIp) => {
+  console.log(destIp);
+  // TODO: Put passwords and path dynamically
+  let destPath = ':/run/media/mmcblk0p2/binaries/RISC_Vs_US-main';
+  let password = "root";
+  let command = 'cd ../User && sshpass -p "'+ password +'" scp userCode.txt ' + 'root@' + destIp + destPath;
+  exec (
+    command,
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+})
+
 ipcMain.on ('runCode', (event, filePath) => {
   exec (
     'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
