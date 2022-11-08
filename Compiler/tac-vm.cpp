@@ -11,6 +11,7 @@ int arg_idx = 0;
 map<string, pair<int, string>> temp;
 int temp_idx = 0;
 map<string, string> op_map;
+// int label_counter = 0;
 
 
 void initialize(){
@@ -140,7 +141,8 @@ void conversion(){
                 vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
                 vm.push_back("push " + type_c.second + " " + to_string(type_c.first.first) + " " + type_c.first.second);
                 vm.push_back(op_map[tac[i][3]] + " " + tac[i][5]);
-                vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                if(op_map[tac[i][3]] != "eq")
+                    vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
             }
             else if(tac[i].size() == 2 and tac[i][0] == "GOTO"){
                 vm.push_back("goto " + tac[i][1]);
@@ -237,9 +239,9 @@ void conversion(){
                 else{
                     // if t0 goto L1 else goto L2
                     pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
-                    vm.push_back("push constant 0 INT");
-                    vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                    vm.push_back("eq INT");
+                    // vm.push_back("push constant 0 INT");
+                    // vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    // vm.push_back("eq INT");
                     vm.push_back("if-goto " + tac[i][3]);
                     vm.push_back("goto " + tac[i][6]);
                 }
