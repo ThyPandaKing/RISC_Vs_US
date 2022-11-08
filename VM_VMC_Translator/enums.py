@@ -33,6 +33,7 @@ class Segment(enum.Enum):
     argument = 'argument'
     constant = 'constant'
     temp = 'temp'
+    that = 'that'
 
 
 class Datatypes(enum.Enum):
@@ -62,8 +63,8 @@ class Operators(enum.Enum):
     RightShift = '>>'
     LogicalAnd = '&&'
     LogicalOr = '||'
-    Gt = ['bgt','flt.s','special']
+    Gt = ['bgt', 'flt.s', 'special']
     Lt = ['blt', 'flt.s']
-    Ge = ['bge','fle.s','special']
+    Ge = ['bge', 'fle.s', 'special']
     Le = ['ble', 'fle.s']
     Eq = ['beq', 'feq.s']
