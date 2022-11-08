@@ -77,7 +77,7 @@ ipcMain.on ('runCode', (event, filePath) => {
   );
 
   exec (
-  'cd ../Assembler/ && ./assemble.o < ../User/TAC.tac > ../User/byteCode.byte',
+  'cd ../Assembler/ && make all && ./assemble.o < ../User/Assembly.asm > ../User/byteCode.byte',
   [],
   (err, stdout, stderr) => {
     if (err) {

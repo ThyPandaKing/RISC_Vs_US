@@ -97,7 +97,7 @@ class CodeOptimizer:
         # replacing '#' with '__' for labels
         final_tac=final_tac.replace('#','__')
 
-        print(final_tac)
+        #print(final_tac)
 
         block_lines = ''
         for line in final_tac.splitlines():

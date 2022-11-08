@@ -171,26 +171,31 @@
         last.parentNode.removeChild(last);
         parent.append(container);
         parent.append(last);
-        if(input.value==="save")
+        var user_cmd = input.value;
+
+        if(user_cmd==="save")
         {
           input.value="";
           pout.innerHTML="Saved Successfully";
           var button=document.getElementById("saveButton");
           button.click();
         }
-        else if(input.value=="run")
+        else if(user_cmd=="run")
         {
           input.value="";
           pout.innerHTML="Command Succesfully executed";
           var button=document.getElementById("runButton");
           button.click();
         }
-        else if(input.value=="clear")
+        else if(user_cmd=="clear")
         {
           input.value="";
           pout.innerHTML="Successfully cleared the file";
           var button=document.getElementById("clearButton");
           button.click();
+        }else if(user_cmd "send"){
+          input.value = "";
+          pout.innerHTML=""
         }
         else
         {
