@@ -143,19 +143,6 @@ void conversion(){
                 vm.push_back(op_map[tac[i][3]] + " " + tac[i][5]);
                 if(op_map[tac[i][3]] != "eq")
                     vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                // string label1 = "#E" + to_string(label_counter++);
-                // string label2 = "#E" + to_string(label_counter++);
-                // string label3 = "#E" + to_string(label_counter++);
-                // vm.push_back("if-goto " + label1);
-                // vm.push_back("goto " + label2);
-                // vm.push_back("label " + label1);
-                // vm.push_back("push constant 1 INT");
-                // vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                // vm.push_back("goto " + label3);
-                // vm.push_back("label " + label2);
-                // vm.push_back("push constant 0 INT");
-                // vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                // vm.push_back("label " + label3);
             }
             else if(tac[i].size() == 2 and tac[i][0] == "GOTO"){
                 vm.push_back("goto " + tac[i][1]);
@@ -164,7 +151,8 @@ void conversion(){
                 if(tac[i][0] == "return"){
                     pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
                     vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
-                    vm.push_back("return " + tac[i][2]);
+                    vm.push_back("pop argument 0 " + type_a.first.second);
+                    vm.push_back("return");
                 }
                 else if(tac[i][0] == "-"){
                     // for local variable declaration
@@ -215,6 +203,14 @@ void conversion(){
                     vm.push_back("not");
                 vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + a.first.second);
             }
+            else if(tac[i].size() == 6){
+                if(tac[i][2] == "@call"){
+                    vm.push_back("call " + tac[i][3] + " " + tac[i][5]);
+                    pair<pair<int, string>, string> a = get_type(tac[i][0], tac[i][4]);
+                    vm.push_back("push argument 0 " + tac[i][4]);
+                    vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + a.first.second);
+                }
+            }
             else if(tac[i].size() == 7){
                 if(tac[i][1] == "["){
                     // arr [ 8 ] = @t0 INT
@@ -225,9 +221,8 @@ void conversion(){
                     vm.push_back("push constant " + to_string(local[tac[i][0]].first) + " INT");
                     vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
                     vm.push_back("add");
-                    vm.push_back("pop pointer 0");
+                    // vm.push_back("pop pointer 0");
                     vm.push_back("pop that 0");
-                    // vm.push_back("pop local " + to_string(local[tac[i][0]].first + stoi(tac[i][2])) + " " + tac[i][6]);
                 }
                 else if(tac[i][3] == "["){
                     // @t5 = arr [ c ] INT
@@ -237,11 +232,12 @@ void conversion(){
                     vm.push_back("push constant " + to_string(local[tac[i][2]].first) + " " + tac[i][6]);
                     vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
                     vm.push_back("add");
-                    vm.push_back("pop pointer 0");
+                    // vm.push_back("pop pointer 0");
                     vm.push_back("push that 0");
                     vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + tac[i][6]);
                 }
                 else{
+                    // if t0 goto L1 else goto L2
                     pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
                     // vm.push_back("push constant 0 INT");
                     // vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
