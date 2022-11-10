@@ -99,7 +99,7 @@ class VM:
         elif(datatype == Datatypes.FLOAT.value):
             index = float(line[2])
 
-        if(segment != Segment.constant.value):
+        if(segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
             if(segment == Segment.local.value):
                 pointer = self.lcl
@@ -162,6 +162,16 @@ class VM:
                 self.text_segment += f"addi x2, x2, -4\n"
 
             self.text_segment += "\n"
+        else:
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"li x6, -{self.lcl}\n"
+            self.text_segment += f"lw x6, 0(x6)\n"
+            self.text_segment += f"sub x6, x6, x5\n"
+            self.text_segment += f"lw x7, 0(x6)\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+
         self.text_segment += "\n"
 
     def pop(self, line):
@@ -180,6 +190,19 @@ class VM:
             pointer = self.tmp
         elif(segment == Segment.argument.value):
             pointer = self.arg
+
+        if(segment == Segment.that.value):
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"li x7, -{self.lcl}\n"
+            self.text_segment += f"lw x7, 0(x7)\n"
+            self.text_segment += f"sub x7, x7, x5\n"
+            self.text_segment += f"sw x6, 0(x7)\n"
+
+            self.text_segment += '\n'
+            return
 
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
