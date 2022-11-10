@@ -1604,30 +1604,6 @@
       <pos x="-1580" y="2000"/>
     </visualElement>
     <visualElement>
-      <elementName>Or</elementName>
-      <elementAttributes>
-        <entry>
-          <string>wideShape</string>
-          <boolean>true</boolean>
-        </entry>
-      </elementAttributes>
-      <pos x="-1860" y="2160"/>
-    </visualElement>
-    <visualElement>
-      <elementName>Tunnel</elementName>
-      <elementAttributes>
-        <entry>
-          <string>rotation</string>
-          <rotation reference="../../../../visualElement[132]/elementAttributes/entry/rotation"/>
-        </entry>
-        <entry>
-          <string>NetName</string>
-          <string>State_1</string>
-        </entry>
-      </elementAttributes>
-      <pos x="-2080" y="2160"/>
-    </visualElement>
-    <visualElement>
       <elementName>Tunnel</elementName>
       <elementAttributes>
         <entry>
@@ -1639,7 +1615,7 @@
           <string>State_0</string>
         </entry>
       </elementAttributes>
-      <pos x="-2080" y="2200"/>
+      <pos x="-2000" y="2180"/>
     </visualElement>
     <visualElement>
       <elementName>Out</elementName>
@@ -2064,7 +2040,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[165]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[163]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2088,7 +2064,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[169]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[167]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2208,7 +2184,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[177]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[175]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2364,7 +2340,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[189]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[187]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2392,7 +2368,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[191]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[189]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2458,7 +2434,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[196]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[194]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2472,7 +2448,7 @@
       <elementAttributes>
         <entry>
           <string>rotation</string>
-          <rotation reference="../../../../visualElement[191]/elementAttributes/entry/rotation"/>
+          <rotation reference="../../../../visualElement[189]/elementAttributes/entry/rotation"/>
         </entry>
         <entry>
           <string>NetName</string>
@@ -2942,10 +2918,6 @@
       <p2 x="-2660" y="880"/>
     </wire>
     <wire>
-      <p1 x="-2080" y="2160"/>
-      <p2 x="-1860" y="2160"/>
-    </wire>
-    <wire>
       <p1 x="-2780" y="-120"/>
       <p2 x="-2640" y="-120"/>
     </wire>
@@ -2994,7 +2966,7 @@
       <p2 x="-2640" y="640"/>
     </wire>
     <wire>
-      <p1 x="-1780" y="2180"/>
+      <p1 x="-2000" y="2180"/>
       <p2 x="-1580" y="2180"/>
     </wire>
     <wire>
@@ -3060,10 +3032,6 @@
     <wire>
       <p1 x="-2120" y="920"/>
       <p2 x="-1640" y="920"/>
-    </wire>
-    <wire>
-      <p1 x="-2080" y="2200"/>
-      <p2 x="-1860" y="2200"/>
     </wire>
     <wire>
       <p1 x="-1020" y="1180"/>
