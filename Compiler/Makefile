@@ -7,7 +7,7 @@ run: parser vm
 # dummy: parser
 # 	./parser < test-cases/input1.txt > tac.txt
 
-vm: tac.txt
+vm: tac-vm.cpp
 	g++ tac-vm.cpp -o tac-vm
 
 parser: y.tab.c lex.yy.c y.tab.h
@@ -23,4 +23,4 @@ optimal:
 	./Optimization/a.out > tac_optimized.txt
 	
 clean:
-	rm -f parser y.tab.c lex.yy.c y.tab.h y.output a.out tac-vm 
+	rm -f parser y.tab.c lex.yy.c y.tab.h y.output a.out tac-vm tac.txt vm.vm tac_optimized.txt

@@ -3,7 +3,7 @@ using namespace std;
 
 vector<vector<string>> tac;
 vector<string> vm;
-map<string, pair<int, string>> constant;
+map<string, pair<float, string>> constant;
 map<string, pair<int, string>> local;
 int local_idx = 0;
 map<string, pair<int, string>> argument;
@@ -11,6 +11,8 @@ int arg_idx = 0;
 map<string, pair<int, string>> temp;
 int temp_idx = 0;
 map<string, string> op_map;
+map<string, int> strings;
+int str_idx=0;
 
 
 void initialize(){
@@ -36,8 +38,24 @@ vector<string> tokenize(string in){
             }
             i--;
         }
-        else
-            temp += in[i];
+        else{
+            if(in[i] == '"'){
+                string str="";
+                while(i<in.size() && in[i] != '\n')
+                    str += in[i++];
+
+                int l=0;
+                while(in[i] != '"'){
+                    i--;
+                    l++;
+                }
+
+                temp = str.substr(0,str.length()-l+1);
+            }
+            else{
+                temp += in[i];
+            }
+        }
     }
     if(temp.size())
         res.push_back(temp);
@@ -55,7 +73,7 @@ void print(){
 
 bool isNumber(string& str){
     for (char const &c : str){      
-        if (isdigit(c) == 0)
+        if (isdigit(c) == 0 && c != '.')
           return false;
     }
     return true;
@@ -80,8 +98,8 @@ pair<pair<int, string>, string> get_type(string var, string type){
     }
     else if(isNumber(var)){
         if(constant.find(var) == constant.end()){
-            constant[var].first = stoi(var);
-            constant[var].second = "INT";
+            constant[var].first = stof(var);
+            constant[var].second = type;
             // check for the constant type
         }
         temp_var.first.first = constant[var].first;
@@ -135,8 +153,8 @@ void conversion(){
         if(tac[i].size() > 1){
             if(tac[i].size() == 6 and tac[i][1] == "=" and isOperator(tac[i][3])){
                 pair<pair<int, string>, string> type_a = get_type(tac[i][0], tac[i][5]);
-                pair<pair<int, string>, string> type_b = get_type(tac[i][2], "null");
-                pair<pair<int, string>, string> type_c = get_type(tac[i][4], "null");
+                pair<pair<int, string>, string> type_b = get_type(tac[i][2], tac[i][5]);
+                pair<pair<int, string>, string> type_c = get_type(tac[i][4], tac[i][5]);
                 vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
                 vm.push_back("push " + type_c.second + " " + to_string(type_c.first.first) + " " + type_c.first.second);
                 vm.push_back(op_map[tac[i][3]] + " " + tac[i][5]);
@@ -154,6 +172,8 @@ void conversion(){
                 }
                 else if(tac[i][0] == "-"){
                     // for local variable declaration
+                    if(tac[i][1] == "STR")
+                        continue;
                     if(tac[i].size() == 3){
                         local[tac[i][2]].first = local_idx++;
                         local[tac[i][2]].second = tac[i][1];
@@ -170,8 +190,12 @@ void conversion(){
                     vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                 }
                 else if(tac[i][0] == "output"){
-                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
-                    vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    if(tac[i][2] == "STR")
+                        vm.push_back("push data " + to_string(strings[tac[i][1]]) + " STR");
+                    else{
+                        pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
+                        vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    }
                     vm.push_back("print " + tac[i][2]);
                 }
             }
@@ -183,10 +207,19 @@ void conversion(){
                 }
                 else{
                     // simple assign : t0 = t1 INT
-                    pair<pair<int, string>, string> type_a = get_type(tac[i][0], tac[i][3]);
-                    pair<pair<int, string>, string> type_b = get_type(tac[i][2], "null");
-                    vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
-                    vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    if(tac[i][3] == "STR"){
+                        vm.push_back("push data " + to_string(str_idx) + " " + tac[i][2] + " STR");
+                        strings[tac[i][0]] = str_idx++;
+                    }
+                    else{
+                        pair<pair<int, string>, string> type_a = get_type(tac[i][0], tac[i][3]);
+                        pair<pair<int, string>, string> type_b = get_type(tac[i][2], tac[i][3]);
+                        if(type_b.second == "constant")
+                            vm.push_back("push " + type_b.second + " " + tac[i][2] + " " + type_b.first.second);
+                        else
+                            vm.push_back("push " + type_b.second + " " + to_string(type_b.first.first) + " " + type_b.first.second);
+                        vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                    }
                 }
             }
             else if(tac[i].size() == 5){
@@ -236,7 +269,7 @@ void conversion(){
                 }
                 else{
                     // if t0 goto L1 else goto L2
-                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], "null");
+                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], "INT");
                     vm.push_back("push constant 0 INT");
                     vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                     vm.push_back("eq INT");
