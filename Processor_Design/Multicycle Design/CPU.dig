@@ -32,7 +32,7 @@
       <elementAttributes>
         <entry>
           <string>Bits</string>
-          <int>32</int>
+          <int>24</int>
         </entry>
         <entry>
           <string>flipSelPos</string>
@@ -288,7 +288,7 @@
           <string>2,24,6</string>
         </entry>
       </elementAttributes>
-      <pos x="-1120" y="-120"/>
+      <pos x="-1320" y="-160"/>
     </visualElement>
     <visualElement>
       <elementName>Splitter</elementName>
@@ -752,9 +752,10 @@
 
 init STATE_REG=9;
 
-program(0xa42283,0x548933,0x1290933)
+program(0xc42383,0x738363,0x7427a3,0x742a23)
 
-memory Mem_Dummy(10)=43;
+memory Mem_Dummy(12)=43;
+memory Mem_Dummy(13)=10;
 
 let i = 0;
 
@@ -1000,6 +1001,20 @@ end while</dataString>
       </elementAttributes>
       <pos x="-720" y="-180"/>
     </visualElement>
+    <visualElement>
+      <elementName>Splitter</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Input Splitting</string>
+          <string>32</string>
+        </entry>
+        <entry>
+          <string>Output Splitting</string>
+          <string>24,8</string>
+        </entry>
+      </elementAttributes>
+      <pos x="-1320" y="-100"/>
+    </visualElement>
   </visualElements>
   <wires>
     <wire>
@@ -1079,10 +1094,6 @@ end while</dataString>
       <p2 x="560" y="520"/>
     </wire>
     <wire>
-      <p1 x="-1320" y="-140"/>
-      <p2 x="-1240" y="-140"/>
-    </wire>
-    <wire>
       <p1 x="-820" y="-780"/>
       <p2 x="-720" y="-780"/>
     </wire>
@@ -1093,6 +1104,10 @@ end while</dataString>
     <wire>
       <p1 x="-120" y="-780"/>
       <p2 x="-60" y="-780"/>
+    </wire>
+    <wire>
+      <p1 x="-1300" y="-140"/>
+      <p2 x="-1240" y="-140"/>
     </wire>
     <wire>
       <p1 x="560" y="140"/>
@@ -1571,12 +1586,12 @@ end while</dataString>
       <p2 x="-240" y="-100"/>
     </wire>
     <wire>
-      <p1 x="-1320" y="-100"/>
-      <p2 x="-1240" y="-100"/>
+      <p1 x="-1120" y="-100"/>
+      <p2 x="-1080" y="-100"/>
     </wire>
     <wire>
-      <p1 x="-1100" y="-100"/>
-      <p2 x="-1080" y="-100"/>
+      <p1 x="-1300" y="-100"/>
+      <p2 x="-1240" y="-100"/>
     </wire>
     <wire>
       <p1 x="-380" y="100"/>
@@ -1755,16 +1770,16 @@ end while</dataString>
       <p2 x="420" y="-20"/>
     </wire>
     <wire>
+      <p1 x="-1320" y="-1120"/>
+      <p2 x="-1320" y="-1100"/>
+    </wire>
+    <wire>
       <p1 x="-1320" y="-220"/>
-      <p2 x="-1320" y="-140"/>
+      <p2 x="-1320" y="-160"/>
     </wire>
     <wire>
       <p1 x="-1320" y="-100"/>
       <p2 x="-1320" y="1320"/>
-    </wire>
-    <wire>
-      <p1 x="-1320" y="-1120"/>
-      <p2 x="-1320" y="-1100"/>
     </wire>
     <wire>
       <p1 x="-40" y="40"/>
@@ -1925,6 +1940,10 @@ end while</dataString>
     <wire>
       <p1 x="-1120" y="0"/>
       <p2 x="-1120" y="1720"/>
+    </wire>
+    <wire>
+      <p1 x="-1120" y="-120"/>
+      <p2 x="-1120" y="-100"/>
     </wire>
     <wire>
       <p1 x="100" y="400"/>
