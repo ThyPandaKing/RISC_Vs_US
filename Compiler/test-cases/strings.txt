@@ -1,0 +1,6 @@
+int main(){
+    string a="hello\n";
+    string b="abc\n";
+    output(a);
+    output(b);
+}
