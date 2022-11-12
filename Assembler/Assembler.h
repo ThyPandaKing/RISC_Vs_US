@@ -47,7 +47,7 @@ class REGISTERS
 
 	public:
 		REGISTERS();
-		int setRegCode(int &ins, string reg, unsigned char type);
+		int setRegCode(int &ins, string reg, unsigned char type, int linenumber);
 		vector<int> extractRegisters(string reg, unsigned char type);
 		int extractImmediate(vector<int> &regs, string reg, unsigned char type, int imm_type);
 		int extractLabel(vector<int> &regs, string reg);
