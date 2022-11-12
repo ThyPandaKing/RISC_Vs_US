@@ -14,6 +14,9 @@ map<string, string> op_map;
 map<string, int> strings;
 int str_idx=0;
 
+map<string, pair<int, int>> fun_var_count;
+string curr_fun_name;
+
 
 void initialize(){
     // adding binary operations
@@ -135,14 +138,8 @@ void conversion(){
                 ins.pop_back();
                 vm.push_back(ins);
             }
-            else if(tac[i][0] != "end:"){
-                ins += "function ";
-                ins += tac[i][0];
-                ins.pop_back();
-                vm.push_back(ins);
-                // deal with arguments
-            }
             else if(tac[i][0] == "end:"){
+                fun_var_count[curr_fun_name] = {local_idx, temp_idx};
                 local_idx = 0;
                 temp_idx = 0;
                 local.clear();
@@ -161,8 +158,17 @@ void conversion(){
                 if(op_map[tac[i][3]] != "eq")
                     vm.push_back("pop " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
             }
-            else if(tac[i].size() == 2 and tac[i][0] == "GOTO"){
-                vm.push_back("goto " + tac[i][1]);
+            else if(tac[i].size() == 2){
+                if(tac[i][0] == "GOTO"){
+                    vm.push_back("goto " + tac[i][1]);
+                }
+                else if(tac[i][0][tac[i][0].size()-1] == ':'){
+                    string ins = "function " + tac[i][0];
+                    ins.pop_back();
+                    ins += " " + tac[i][1];
+                    vm.push_back(ins);
+                    curr_fun_name = tac[i][0].substr(0, tac[i][0].size()-1);
+                }
             }
             else if(tac[i].size() == 3){
                 if(tac[i][0] == "return"){
@@ -191,8 +197,13 @@ void conversion(){
                     vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                 }
                 else if(tac[i][0] == "output"){
-                    if(tac[i][2] == "STR")
+                    if(tac[i][2] == "STR"){
+                        if(tac[i][1][0] == '"'){
+                            vm.push_back("push data " + to_string(str_idx) + " " + tac[i][1] + " STR");
+                            strings[tac[i][1]] = str_idx++;
+                        }
                         vm.push_back("push data " + to_string(strings[tac[i][1]]) + " STR");
+                    }
                     else{
                         pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
                         vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
@@ -252,9 +263,15 @@ void conversion(){
 
                     vm.push_back("push constant " + to_string(local[tac[i][0]].first) + " INT");
                     vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("add");
                     vm.push_back("add");
                     // vm.push_back("pop pointer 0");
-                    vm.push_back("pop that 0");
+                    vm.push_back("pop that 0 " + tac[i][6]);
                 }
                 else if(tac[i][3] == "["){
                     // @t5 = arr [ c ] INT
@@ -263,9 +280,15 @@ void conversion(){
 
                     vm.push_back("push constant " + to_string(local[tac[i][2]].first) + " " + tac[i][6]);
                     vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + to_string(b.first.first) + " " + b.first.second);
+                    vm.push_back("add");
+                    vm.push_back("add");
                     vm.push_back("add");
                     // vm.push_back("pop pointer 0");
-                    vm.push_back("push that 0");
+                    vm.push_back("push that 0 " + tac[i][6]);
                     vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + tac[i][6]);
                 }
                 else{
@@ -284,7 +307,13 @@ void conversion(){
 
 void print_vm(){
     for(int i=0; i<vm.size(); i++){
-        cout << vm[i] << endl;
+        if(vm[i].substr(0,8) == "function"){
+            vector<string> temp;
+            temp = tokenize(vm[i]);
+            cout << temp[0] + " " + temp[1] + " " + to_string(fun_var_count[temp[1]].first) + " " + to_string(fun_var_count[temp[1]].second) << " " << temp[2] << endl;
+        }
+        else
+            cout << vm[i] << endl;
     }
 }
 
