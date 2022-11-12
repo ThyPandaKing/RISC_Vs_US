@@ -11,8 +11,12 @@ int arg_idx = 0;
 map<string, pair<int, string>> temp;
 int temp_idx = 0;
 map<string, string> op_map;
+map<string, int> strings;
 int str_idx=0;
 
+
+void initialize(){
+    // adding binary operations
     op_map["+"] = "add";
     op_map["-"] = "sub";
     op_map["=="] = "eq";
