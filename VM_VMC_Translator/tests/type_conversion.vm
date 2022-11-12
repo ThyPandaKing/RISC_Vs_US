@@ -1,0 +1,9 @@
+function main 10 10 INT
+push constant 5.6 FLOAT
+pop local 0 FLOAT
+push local 0 FLOAT
+print FLOAT
+push constant '1' CHAR
+pop local 0 FLOAT
+push local 0 FLOAT
+print FLOAT
