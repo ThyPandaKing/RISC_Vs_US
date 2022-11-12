@@ -819,6 +819,8 @@ class VM:
 
         for line in vm_code.splitlines():
             line = shlex.split(line)
+            if (len(line) == 0):
+                continue
 
             if (line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or
                     line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or

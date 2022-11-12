@@ -1,19 +1,16 @@
-custom_func:
-- STR a
-a = "inside custom function\n" STR
-output a STR
-@t0 = 0 INT
-return @t0 INT
-end:
-
 main:
-@t1 = 4 INT
-- INT y
-y = @t1 INT
-- STR a
-a = "inside main\n" STR
-@t2 = @call custom_func INT 0
-output a STR
+- INT arr [ 2 ] 
+arr [ 0 ] = 4 INT
+arr [ 1 ] = 6 INT
+@t0 = 0 INT
+@t1 = 1 INT
+arr [ @t0 ] = @t1 INT
+@t2 = arr [ @t0 ] INT
+arr [ @t1 ] = @t2 INT
+@t3 = arr [ @t0 ] INT
+output @t3 INT
+@t4 = arr [ @t1 ] INT
+output @t4 INT
 return @t0 INT
 end:
 
