@@ -750,12 +750,10 @@
           <testData>
             <dataString>Clock PC_val State_out I_out op_1 op_2 ALU_in Al_out MemDataRegOut
 
-init STATE_REG=9;
+program(0xe42303,0x1242383,0x600533,0x7005b3)
 
-program(0xc42383,0x738363,0x7427a3,0x742a23)
-
-memory Mem_Dummy(12)=43;
-memory Mem_Dummy(13)=10;
+memory Mem_Dummy(14)=1;
+memory Mem_Dummy(18)=17;
 
 let i = 0;
 
