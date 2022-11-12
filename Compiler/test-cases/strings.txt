@@ -1,6 +1,13 @@
-int main(){
-    string a="hello\n";
-    string b="abc\n";
+int custom_func(){
+    string a="inside custom function\n";
     output(a);
-    output(b);
+    return 0;
+}
+
+int main(){
+    int y=4;
+    string a="inside main\n";
+    custom_func();
+    output(a);
+    return 0;
 }

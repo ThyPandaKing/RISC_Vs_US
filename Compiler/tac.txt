@@ -1,0 +1,19 @@
+custom_func:
+- STR a
+a = "inside custom function\n" STR
+output a STR
+@t0 = 0 INT
+return @t0 INT
+end:
+
+main:
+@t1 = 4 INT
+- INT y
+y = @t1 INT
+- STR a
+a = "inside main\n" STR
+@t2 = @call custom_func INT 0
+output a STR
+return @t0 INT
+end:
+

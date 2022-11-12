@@ -1900,7 +1900,7 @@ yyreduce:
                                            {
                         check_declaration((yyvsp[-2].node).lexeme);
                         tac.push_back("input " + string((yyvsp[-2].node).lexeme) + " " + func_table[curr_func_name].symbol_table[string((yyvsp[-4].node).lexeme)].data_type);
-                        check_scope(string((yyvsp[-2].node).lexeme));
+                        // check_scope(string($3.lexeme));
                     }
 #line 1906 "y.tab.c"
     break;
@@ -3055,7 +3055,7 @@ bool check_scope(string variable){
         }
         temp_stack.pop();
     }
-    sem_errors.push_back("Scope of variable '" + variable +"' not marching in line " + to_string(countn+1) + ".");
+    sem_errors.push_back("Scope of variable '" + variable +"' not matching in line " + to_string(countn+1) + ".");
     return true;
 }
 

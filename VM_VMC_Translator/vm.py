@@ -1,6 +1,7 @@
 from enums import *
 from preprocess import *
 from postprocess import *
+import shlex
 
 
 class VM:
@@ -13,7 +14,7 @@ class VM:
         self.that = 8212
         # 8216 and 8220 for later use
         # start from 8224
-        self.text_segment = ".global main\nbeq x0, x0, main\n"
+        self.text_segment = ".section\n.text\n.global main\nbeq x0, x0, main\n"
         self.prev_operator = None
         self.prev_datatype = None
         self.prev_push_segment = None
@@ -21,7 +22,7 @@ class VM:
         self.return_type = 'INT'
         self.num_local = 0
         self.num_temp = 0
-        self.cur_function = None
+        self.cur_function = "global"
         self.prev_push_datatype = None
         self.data_segment_start = 0x10010000
         self.data_segment_dict = {}
@@ -54,16 +55,6 @@ class VM:
 
         self.text_segment += f"li x2, -9280\n"
         self.text_segment += f"add x2, x2, x8\n\n"
-
-    def function(self, line):
-        """
-        """
-        func = line[1].split('.')[0]
-        self.text_segment += f"{func}:\n"
-
-        self.text_segment += "\n"
-
-        self.init_mem()
 
     def label(self, line):
         """
@@ -112,8 +103,8 @@ class VM:
 
         if (segment == Segment.data.value):
             if (len(line) == 5):
-                string_val = line[-2]
-                var = f"__data{index}"
+                string_val = '"'+line[-2]+'"'
+                var = f"__{self.cur_function}__data{index}"
                 string_val = string_val[1:-1].replace(
                     "\\/", "/").encode().decode('unicode_escape')
                 length = len(string_val)
@@ -122,9 +113,9 @@ class VM:
                 self.data_segment_start += length+1
             else:
                 # perform printing here itself
-                var_name = f"__data{index}"
+                var_name = f"__{self.cur_function}__data{index}"
                 total = hex(self.data_segment_dict[var_name][2])[2:]
-                upper, mid, lower = self.get_ieee_rep(None, total)
+                upper, mid, lower = get_ieee_rep(None, total)
 
                 self.text_segment += f"lui a0, {upper}\n"
                 self.text_segment += f"addi a0, a0, {mid}\n"
@@ -827,7 +818,7 @@ class VM:
         vm_code = preprocess.preprocess(vm_code)
 
         for line in vm_code.splitlines():
-            line = line.split(' ')
+            line = shlex.split(line)
 
             if (line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or
                     line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or
@@ -864,7 +855,7 @@ class VM:
             self.data_segment_dict.items(), key=lambda x: x[1][2])
 
         for var, (type, value, _, __) in sorted_list:
-            self.data_segment += f"{var}:\n\t{type} {value}\n"
+            self.data_segment += f"{var}:\n\t{type} \"{value}\"\n"
 
         final_code = self.data_segment+'\n'+self.text_segment
         return final_code
