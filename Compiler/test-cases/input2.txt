@@ -1,0 +1,19 @@
+int main(){
+    int x=3;
+    int c;
+
+    if(x == 1){
+        c = 11;
+    }
+    elif(x == 2){
+        c = 33;
+    }
+    else{
+        c = 22;
+    }
+    c = c + 38;
+
+    output(c);
+    return 0;
+}
+

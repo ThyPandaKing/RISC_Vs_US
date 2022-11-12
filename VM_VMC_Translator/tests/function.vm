@@ -1,0 +1,25 @@
+function main 1 1 INT
+push constant 5 INT
+call fact 1
+print INT
+return
+
+function fact 1 1 INT
+push argument 0 INT
+push constant 1 INT
+gt INT
+if-goto REC
+goto ONE
+
+label REC
+push constant 1 INT
+push argument 0 INT
+sub INT
+call fact 1
+push argument 0 INT
+add INT
+return
+
+label ONE
+push constant 1 INT
+return
