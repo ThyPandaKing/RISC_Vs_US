@@ -22,6 +22,7 @@ class VM:
         self.num_local = 0
         self.num_temp = 0
         self.cur_function = None
+        self.prev_push_datatype = None
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
@@ -89,15 +90,20 @@ class VM:
         self.prev_push_segment = segment
         datatype = line[-1]
         index = 0
-        if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
+        self.prev_push_datatype = datatype
+
+        if(segment != Segment.constant.value):
             index = int(line[2])
-        elif(datatype == Datatypes.CHAR.value):
-            if(segment == Segment.constant.value):
-                index = ord(line[2][1])
-            else:
+        else:
+            if(datatype == Datatypes.INT.value or datatype == Datatypes.BOOL.value):
                 index = int(line[2])
-        elif(datatype == Datatypes.FLOAT.value):
-            index = float(line[2])
+            elif(datatype == Datatypes.CHAR.value):
+                if(segment == Segment.constant.value):
+                    index = ord(line[2][1])
+                else:
+                    index = int(line[2])
+            elif(datatype == Datatypes.FLOAT.value):
+                index = float(line[2])
 
         if(segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
@@ -206,7 +212,12 @@ class VM:
 
         if(datatype == Datatypes.INT.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lw x5, 0(x2)\n"
+
+            if(self.prev_push_datatype == Datatypes.FLOAT.value):
+                self.text_segment += f"flw f3, 0(x2)\n"
+                self.text_segment += f"fcvt.w.s x5, f3\n"
+            else:
+                self.text_segment += f"lw x5, 0(x2)\n"
 
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
 
@@ -218,7 +229,14 @@ class VM:
             self.text_segment += f"sw x5, 0(x6)\n"
         elif(datatype == Datatypes.CHAR.value or datatype == Datatypes.BOOL.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
+            if(self.prev_push_datatype == Datatypes.FLOAT.value):
+                self.text_segment += f"flw f3, 0(x2)\n"
+                self.text_segment += f"fcvt.w.s x5, f3\n"
+                self.text_segment += f"sb x5, 0(x2)\n"
+                self.text_segment += f"lb x5, 0(x2)\n"
+            else:
+                self.text_segment += f"lb x5, 0(x2)\n"
+
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
             self.text_segment += f"li x6, {-pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
@@ -228,7 +246,14 @@ class VM:
             self.text_segment += f"sb x5, 0(x6)\n"
         elif(datatype == Datatypes.FLOAT.value):
             self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"flw f3, 0(x2)\n"
+            if(self.prev_push_datatype == Datatypes.INT.value):
+                self.text_segment += f"lw x5, 0(x2)\n"
+                self.text_segment += f"fcvt.s.w f3, x5\n"
+            elif(self.prev_push_datatype == Datatypes.CHAR.value or self.prev_push_datatype == Datatypes.BOOL.value):
+                self.text_segment += f"lb x5, 0(x2)\n"
+                self.text_segment += f"fcvt.s.w f3, x5\n"
+            else:
+                self.text_segment += f"flw f3, 0(x2)\n"
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
             self.text_segment += f"li x6, {-pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
@@ -237,6 +262,7 @@ class VM:
             self.text_segment += f"addi x6, x6, {-(index*4+4)}\n"
             self.text_segment += f"fsw f3, 0(x6)\n"
 
+        self.prev_push_datatype = None
         self.text_segment += '\n'
 
     def Operator(self, line):

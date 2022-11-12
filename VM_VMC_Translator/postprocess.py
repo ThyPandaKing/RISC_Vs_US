@@ -21,7 +21,7 @@ def convert_rep(value):
 
     h = h.lstrip('0x')
 
-    if(len(h) < 8):
+    if (len(h) < 8):
         h = '0'*(8-len(h))+h
 
     upper = h[:5]
@@ -55,6 +55,8 @@ def postprocess(asm_code):
         else:
             mod_asm_code += line + '\n'
 
-    mod_asm_code += f"__END__:\n"
+    # mod_asm_code = asm_code + '\n'
 
+    mod_asm_code += f"__END__:\n"
+    
     return mod_asm_code
