@@ -223,12 +223,12 @@ stmt   		    :   declaration
                         if(!loop_continue.empty()){
                             tac.push_back("GOTO #L" + to_string(loop_continue.top()));
                         }
-                    }     
+                    }      
                     | switch_stmt
                     | INPUT OC ID CC SCOL  {
                         check_declaration($3.lexeme);
                         tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
-                        check_scope(string($3.lexeme));
+                        // check_scope(string($3.lexeme));
                     }
                     | OUTPUT OC expr CC SCOL {
                         tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
@@ -818,7 +818,7 @@ bool check_scope(string variable){
         }
         temp_stack.pop();
     }
-    sem_errors.push_back("Scope of variable '" + variable +"' not marching in line " + to_string(countn+1) + ".");
+    sem_errors.push_back("Scope of variable '" + variable +"' not matching in line " + to_string(countn+1) + ".");
     return true;
 }
 
