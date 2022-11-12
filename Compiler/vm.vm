@@ -1,0 +1,29 @@
+function add
+push local 0 null
+push local 1 null
+add INT
+pop temp 0 INT
+push temp 0 INT
+pop argument 0 INT
+return
+function main
+push constant 1 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 0 INT
+push constant 2 INT
+pop temp 1 INT
+push temp 1 INT
+pop local 1 INT
+push local 0 INT
+push local 1 INT
+call add 2
+push argument 0 INT
+pop temp 2 INT
+push temp 2 INT
+pop local 2 INT
+push constant 0 INT
+pop temp 3 INT
+push temp 3 INT
+pop argument 0 INT
+return

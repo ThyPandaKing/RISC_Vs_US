@@ -534,7 +534,7 @@ primary_expr    :   ID {
                             variable_count++;
                         }
                         else{
-                            tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                            //tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
                             strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
                             // variable_count++;
                         }
