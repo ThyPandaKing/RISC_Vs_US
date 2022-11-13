@@ -731,15 +731,15 @@ static const yytype_int16 yyrline[] =
      175,   180,   180,   188,   194,   199,   205,   206,   209,   210,
      211,   212,   213,   214,   215,   216,   221,   226,   227,   232,
      240,   243,   249,   257,   264,   274,   280,   280,   289,   289,
-     297,   307,   316,   319,   322,   329,   335,   341,   369,   397,
-     407,   417,   423,   429,   435,   445,   466,   487,   515,   521,
-     527,   548,   594,   640,   645,   650,   655,   660,   673,   690,
-     696,   711,   717,   718,   719,   720,   723,   727,   731,   737,
-     746,   757,   760,   769,   771,   757,   782,   787,   796,   799,
-     782,   806,   809,   809,   810,   813,   818,   822,   813,   832,
-     836,   839,   842,   839,   856,   857,   860,   866,   878,   860,
-     890,   894,   908,   913,   890,   925,   925,   937,   945,   953,
-     956
+     297,   307,   316,   319,   322,   329,   335,   341,   371,   401,
+     411,   421,   427,   433,   439,   449,   472,   495,   525,   531,
+     537,   560,   608,   656,   661,   666,   671,   676,   689,   706,
+     712,   727,   733,   734,   735,   736,   739,   743,   747,   753,
+     762,   773,   776,   785,   787,   773,   798,   803,   812,   815,
+     798,   822,   825,   825,   826,   829,   834,   838,   829,   848,
+     852,   855,   858,   855,   872,   873,   876,   882,   894,   876,
+     906,   910,   924,   929,   906,   941,   941,   953,   961,   969,
+     972
 };
 #endif
 
@@ -2117,12 +2117,14 @@ yyreduce:
                         free_temp.push(t2);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2122 "y.tab.c"
+#line 2124 "y.tab.c"
     break;
 
   case 48:
-#line 369 "parser.y"
+#line 371 "parser.y"
                                        {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string t0=get_temp();
@@ -2150,12 +2152,14 @@ yyreduce:
                         free_temp.push(t2);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2155 "y.tab.c"
+#line 2159 "y.tab.c"
     break;
 
   case 49:
-#line 397 "parser.y"
+#line 401 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string temp = get_temp();
@@ -2166,11 +2170,11 @@ yyreduce:
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2170 "y.tab.c"
+#line 2174 "y.tab.c"
     break;
 
   case 50:
-#line 407 "parser.y"
+#line 411 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string temp = get_temp();
@@ -2181,44 +2185,44 @@ yyreduce:
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2185 "y.tab.c"
+#line 2189 "y.tab.c"
     break;
 
   case 51:
-#line 417 "parser.y"
+#line 421 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         tac.push_back(string((yyval.node).lexeme) + " = " + string((yyvsp[-2].node).lexeme) + " " + string((yyvsp[-1].node).lexeme) + " " + string((yyvsp[0].node).lexeme) + " " + string((yyval.node).type));
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2196 "y.tab.c"
+#line 2200 "y.tab.c"
     break;
 
   case 52:
-#line 423 "parser.y"
+#line 427 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         tac.push_back(string((yyval.node).lexeme) + " = " + string((yyvsp[-2].node).lexeme) + " " + string((yyvsp[-1].node).lexeme) + " " + string((yyvsp[0].node).lexeme) + " " + string((yyval.node).type));
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2207 "y.tab.c"
+#line 2211 "y.tab.c"
     break;
 
   case 53:
-#line 429 "parser.y"
+#line 433 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         tac.push_back(string((yyval.node).lexeme) + " = " + string((yyvsp[-2].node).lexeme) + " " + string((yyvsp[-1].node).lexeme) + " " + string((yyvsp[0].node).lexeme) + " " + string((yyval.node).type));
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2218 "y.tab.c"
+#line 2222 "y.tab.c"
     break;
 
   case 54:
-#line 435 "parser.y"
+#line 439 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string temp = get_temp();
@@ -2229,11 +2233,11 @@ yyreduce:
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2233 "y.tab.c"
+#line 2237 "y.tab.c"
     break;
 
   case 55:
-#line 445 "parser.y"
+#line 449 "parser.y"
                                     {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string l0 = "#L" + to_string(++label_counter);
@@ -2254,12 +2258,14 @@ yyreduce:
 
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2259 "y.tab.c"
+#line 2265 "y.tab.c"
     break;
 
   case 56:
-#line 466 "parser.y"
+#line 472 "parser.y"
                                    {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string l0 = "#L" + to_string(++label_counter);
@@ -2280,12 +2286,14 @@ yyreduce:
 
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2285 "y.tab.c"
+#line 2293 "y.tab.c"
     break;
 
   case 57:
-#line 487 "parser.y"
+#line 495 "parser.y"
                                        {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string t0=get_temp();
@@ -2313,34 +2321,36 @@ yyreduce:
                         free_temp.push(t2);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2318 "y.tab.c"
+#line 2328 "y.tab.c"
     break;
 
   case 58:
-#line 515 "parser.y"
+#line 525 "parser.y"
                                        {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         tac.push_back(string((yyval.node).lexeme) + " = " + string((yyvsp[-2].node).lexeme) + " " + string((yyvsp[-1].node).lexeme) + " " + string((yyvsp[0].node).lexeme) + " " + string((yyval.node).type));
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2329 "y.tab.c"
+#line 2339 "y.tab.c"
     break;
 
   case 59:
-#line 521 "parser.y"
+#line 531 "parser.y"
                                       {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         tac.push_back(string((yyval.node).lexeme) + " = " + string((yyvsp[-2].node).lexeme) + " " + string((yyvsp[-1].node).lexeme) + " " + string((yyvsp[0].node).lexeme) + " " + string((yyval.node).type));
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2340 "y.tab.c"
+#line 2350 "y.tab.c"
     break;
 
   case 60:
-#line 527 "parser.y"
+#line 537 "parser.y"
                                     {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string a = string((yyval.node).lexeme);
@@ -2361,12 +2371,14 @@ yyreduce:
                         free_temp.push(c_);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2366 "y.tab.c"
+#line 2378 "y.tab.c"
     break;
 
   case 61:
-#line 548 "parser.y"
+#line 560 "parser.y"
                                           {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string d = string((yyvsp[0].node).lexeme);
@@ -2412,12 +2424,14 @@ yyreduce:
                         free_temp.push(c);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2417 "y.tab.c"
+#line 2431 "y.tab.c"
     break;
 
   case 62:
-#line 594 "parser.y"
+#line 608 "parser.y"
                                            {
                         add_tac((yyval.node), (yyvsp[-2].node), (yyvsp[-1].node), (yyvsp[0].node))
                         string d = string((yyvsp[0].node).lexeme);
@@ -2463,50 +2477,52 @@ yyreduce:
                         free_temp.push(c);
                         if(const_temps.find(string((yyvsp[-2].node).lexeme)) == const_temps.end() && (yyvsp[-2].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-2].node).lexeme));
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
+
+                        label_counter++;
                     }
-#line 2468 "y.tab.c"
+#line 2484 "y.tab.c"
     break;
 
   case 63:
-#line 640 "parser.y"
+#line 656 "parser.y"
                                  {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         sprintf((yyval.node).lexeme, "%s", (yyvsp[0].node).lexeme);
                     }
-#line 2478 "y.tab.c"
+#line 2494 "y.tab.c"
     break;
 
   case 64:
-#line 645 "parser.y"
+#line 661 "parser.y"
                                    {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         strcpy((yyval.node).lexeme, (yyvsp[0].node).lexeme);
                     }
-#line 2488 "y.tab.c"
+#line 2504 "y.tab.c"
     break;
 
   case 65:
-#line 650 "parser.y"
+#line 666 "parser.y"
                                    {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         sprintf((yyval.node).lexeme, "%s", (yyvsp[0].node).lexeme);
                     }
-#line 2497 "y.tab.c"
+#line 2513 "y.tab.c"
     break;
 
   case 66:
-#line 655 "parser.y"
+#line 671 "parser.y"
                               {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         sprintf((yyval.node).lexeme, "%s", (yyvsp[0].node).lexeme);
                     }
-#line 2506 "y.tab.c"
+#line 2522 "y.tab.c"
     break;
 
   case 67:
-#line 660 "parser.y"
+#line 676 "parser.y"
                                   {
                         if(check_declaration(string((yyvsp[-3].node).lexeme)) && func_table[curr_func_name].symbol_table[string((yyvsp[-3].node).lexeme)].isArray == 0) { 
                             sem_errors.push_back("Variable is not an array"); 
@@ -2518,11 +2534,11 @@ yyreduce:
                         
                         if(const_temps.find(string((yyvsp[-1].node).lexeme)) == const_temps.end() && (yyvsp[-1].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-1].node).lexeme));
                     }
-#line 2522 "y.tab.c"
+#line 2538 "y.tab.c"
     break;
 
   case 68:
-#line 673 "parser.y"
+#line 689 "parser.y"
                                           {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         sprintf((yyval.node).lexeme, get_temp().c_str());
@@ -2538,22 +2554,22 @@ yyreduce:
 
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2542 "y.tab.c"
+#line 2558 "y.tab.c"
     break;
 
   case 69:
-#line 690 "parser.y"
+#line 706 "parser.y"
                        {
                         check_declaration(string((yyvsp[0].node).lexeme));
                         // check_scope(string($1.lexeme));
                         strcpy((yyval.node).type, func_table[curr_func_name].symbol_table[string((yyvsp[0].node).lexeme)].data_type.c_str());
                         strcpy((yyval.node).lexeme, (yyvsp[0].node).lexeme);
                     }
-#line 2553 "y.tab.c"
+#line 2569 "y.tab.c"
     break;
 
   case 70:
-#line 696 "parser.y"
+#line 712 "parser.y"
                             {
                         strcpy((yyval.node).type, (yyvsp[0].node).type);
                         if(temp_map[string((yyvsp[0].node).lexeme)] == ""){
@@ -2569,47 +2585,47 @@ yyreduce:
                             strcpy((yyval.node).lexeme, temp_map[string((yyvsp[0].node).lexeme)].c_str());
                         }
                     }
-#line 2573 "y.tab.c"
+#line 2589 "y.tab.c"
     break;
 
   case 71:
-#line 711 "parser.y"
+#line 727 "parser.y"
                                  {
                         strcpy((yyval.node).type, (yyvsp[-1].node).type);
                         strcpy((yyval.node).lexeme, (yyvsp[-1].node).lexeme);
                     }
-#line 2582 "y.tab.c"
+#line 2598 "y.tab.c"
     break;
 
   case 76:
-#line 723 "parser.y"
+#line 739 "parser.y"
                             {
                         strcpy((yyval.node).type, "INT");
                         strcpy((yyval.node).lexeme, (yyvsp[0].node).lexeme);
                     }
-#line 2591 "y.tab.c"
+#line 2607 "y.tab.c"
     break;
 
   case 77:
-#line 727 "parser.y"
+#line 743 "parser.y"
                                 {
                         strcpy((yyval.node).type, "FLOAT");
                         strcpy((yyval.node).lexeme, (yyvsp[0].node).lexeme);
                     }
-#line 2600 "y.tab.c"
+#line 2616 "y.tab.c"
     break;
 
   case 78:
-#line 731 "parser.y"
+#line 747 "parser.y"
                                 {
                         strcpy((yyval.node).type, "CHAR");
                         strcpy((yyval.node).lexeme, (yyvsp[0].node).lexeme);
                     }
-#line 2609 "y.tab.c"
+#line 2625 "y.tab.c"
     break;
 
   case 79:
-#line 737 "parser.y"
+#line 753 "parser.y"
                                    {
                         check_type(func_table[curr_func_name].symbol_table[string((yyvsp[-2].node).lexeme)].data_type, string((yyvsp[0].node).type));
                         check_declaration(string((yyvsp[-2].node).lexeme));
@@ -2618,11 +2634,11 @@ yyreduce:
 
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2622 "y.tab.c"
+#line 2638 "y.tab.c"
     break;
 
   case 80:
-#line 746 "parser.y"
+#line 762 "parser.y"
                                               {
                         check_type(func_table[curr_func_name].symbol_table[string((yyvsp[-5].node).lexeme)].data_type, string((yyvsp[0].node).type));
                         if(check_declaration(string((yyvsp[-5].node).lexeme)) && func_table[curr_func_name].symbol_table[string((yyvsp[-5].node).lexeme)].isArray == 0) { 
@@ -2633,167 +2649,167 @@ yyreduce:
 
                         if(const_temps.find(string((yyvsp[0].node).lexeme)) == const_temps.end() && (yyvsp[0].node).lexeme[0] == '@') free_temp.push(string((yyvsp[0].node).lexeme));
                     }
-#line 2637 "y.tab.c"
+#line 2653 "y.tab.c"
     break;
 
   case 81:
-#line 757 "parser.y"
+#line 773 "parser.y"
                         {
-                        sprintf((yyvsp[0].node).parentNext, "#L%d", ++label_counter);
+                        sprintf((yyvsp[0].node).parentNext, "#L%d", label_counter++);
                     }
-#line 2645 "y.tab.c"
+#line 2661 "y.tab.c"
     break;
 
   case 82:
-#line 760 "parser.y"
+#line 776 "parser.y"
                                { 
                         tac.push_back("if " + string((yyvsp[-1].node).lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        sprintf((yyvsp[-1].node).if_body, "#L%d", ++label_counter);
-                        sprintf((yyvsp[-1].node).else_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).if_body, "#L%d", label_counter++);
+                        sprintf((yyvsp[-1].node).else_body, "#L%d", label_counter++); 
                         tac.push_back(string((yyvsp[-1].node).if_body) + ":");
 
                         if(const_temps.find(string((yyvsp[-1].node).lexeme)) == const_temps.end() && (yyvsp[-1].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-1].node).lexeme));
                     }
-#line 2658 "y.tab.c"
+#line 2674 "y.tab.c"
     break;
 
   case 83:
-#line 769 "parser.y"
+#line 785 "parser.y"
                     {
                       scope_history.push(++scope_counter);  
                     }
-#line 2666 "y.tab.c"
+#line 2682 "y.tab.c"
     break;
 
   case 84:
-#line 771 "parser.y"
+#line 787 "parser.y"
                                    {  
                         scope_history.pop(); 
                         --scope_counter;
                         tac.push_back("GOTO " + string((yyvsp[-9].node).parentNext));
                         tac.push_back(string((yyvsp[-6].node).else_body) + ":");
                     }
-#line 2677 "y.tab.c"
+#line 2693 "y.tab.c"
     break;
 
   case 85:
-#line 777 "parser.y"
+#line 793 "parser.y"
                                          {   
                         tac.push_back(string((yyvsp[-12].node).parentNext) + ":");
                     }
-#line 2685 "y.tab.c"
+#line 2701 "y.tab.c"
     break;
 
   case 86:
-#line 782 "parser.y"
+#line 798 "parser.y"
                          {
                         string str = tac[tac.size()-2].substr(5);
                         char* hold = const_cast<char*>(str.c_str());
                         sprintf((yyvsp[0].node).parentNext, "%s", hold);
                     }
-#line 2695 "y.tab.c"
+#line 2711 "y.tab.c"
     break;
 
   case 87:
-#line 787 "parser.y"
+#line 803 "parser.y"
                                {
                         tac.push_back("if " + string((yyvsp[-1].node).lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        sprintf((yyvsp[-1].node).if_body, "#L%d", ++label_counter);
-                        sprintf((yyvsp[-1].node).else_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).if_body, "#L%d", label_counter++);
+                        sprintf((yyvsp[-1].node).else_body, "#L%d", label_counter++); 
                         tac.push_back(string((yyvsp[-1].node).if_body) + ":");
 
                         if(const_temps.find(string((yyvsp[-1].node).lexeme)) == const_temps.end() && (yyvsp[-1].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-1].node).lexeme));
                     }
-#line 2708 "y.tab.c"
+#line 2724 "y.tab.c"
     break;
 
   case 88:
-#line 796 "parser.y"
+#line 812 "parser.y"
                     {
                         scope_history.push(++scope_counter);
                     }
-#line 2716 "y.tab.c"
+#line 2732 "y.tab.c"
     break;
 
   case 89:
-#line 799 "parser.y"
+#line 815 "parser.y"
                                  {
                         scope_history.pop();
                         --scope_counter;
                         tac.push_back("GOTO " + string((yyvsp[-9].node).parentNext));
                         tac.push_back(string((yyvsp[-6].node).else_body) + ":");
                     }
-#line 2727 "y.tab.c"
+#line 2743 "y.tab.c"
     break;
 
   case 92:
-#line 809 "parser.y"
+#line 825 "parser.y"
                             {scope_history.push(++scope_counter);}
-#line 2733 "y.tab.c"
-    break;
-
-  case 93:
-#line 809 "parser.y"
-                                                                               {scope_history.pop(); --scope_counter;}
-#line 2739 "y.tab.c"
-    break;
-
-  case 95:
-#line 813 "parser.y"
-                           {
-                        int temp_label = label_counter;
-                        loop_break.push(temp_label);
-                        sprintf((yyvsp[0].node).parentNext, "#L%d", ++label_counter);
-                    }
 #line 2749 "y.tab.c"
     break;
 
+  case 93:
+#line 825 "parser.y"
+                                                                               {scope_history.pop(); --scope_counter;}
+#line 2755 "y.tab.c"
+    break;
+
+  case 95:
+#line 829 "parser.y"
+                           {
+                        int temp_label = label_counter;
+                        loop_break.push(temp_label);
+                        sprintf((yyvsp[0].node).parentNext, "#L%d", label_counter++);
+                    }
+#line 2765 "y.tab.c"
+    break;
+
   case 96:
-#line 818 "parser.y"
+#line 834 "parser.y"
                           {
                         temp_index = variable_count;
                         tac.push_back("@t" + to_string(variable_count++) + " = " + string((yyvsp[0].node).lexeme));
                     }
-#line 2758 "y.tab.c"
+#line 2774 "y.tab.c"
     break;
 
   case 97:
-#line 822 "parser.y"
+#line 838 "parser.y"
                                          {
                         // strcpy($8.id, $4.lexeme);
                         // strcpy($8.parentNext, $1.parentNext);
                     }
-#line 2767 "y.tab.c"
+#line 2783 "y.tab.c"
     break;
 
   case 98:
-#line 826 "parser.y"
+#line 842 "parser.y"
                                     {
                         tac.push_back(string((yyvsp[-10].node).parentNext));
                         loop_break.pop();
                     }
-#line 2776 "y.tab.c"
+#line 2792 "y.tab.c"
     break;
 
   case 99:
-#line 832 "parser.y"
+#line 848 "parser.y"
                                              {
                         strcpy((yyvsp[-1].node).id, (yyval.node).id);
                         strcpy((yyvsp[-1].node).parentNext, (yyval.node).parentNext);
                     }
-#line 2785 "y.tab.c"
+#line 2801 "y.tab.c"
     break;
 
   case 101:
-#line 839 "parser.y"
+#line 855 "parser.y"
                          {
                         // tac.push_back(string($4.if_body) + ":");
                     }
-#line 2793 "y.tab.c"
+#line 2809 "y.tab.c"
     break;
 
   case 102:
-#line 842 "parser.y"
+#line 858 "parser.y"
                              {
                         char* hold = const_cast<char*>(to_string(variable_count).c_str());
                         sprintf((yyvsp[0].node).temp, "%s", hold);
@@ -2801,37 +2817,37 @@ yyreduce:
                         tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string((yyvsp[0].node).temp) + " INT");
                         tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
                         tac.push_back("#L" + to_string(label_counter) + ":");
-                        sprintf((yyvsp[0].node).case_body, "#L%d", ++label_counter);
-                        sprintf((yyvsp[0].node).parentNext, "#L%d", ++label_counter);
+                        sprintf((yyvsp[0].node).case_body, "#L%d", label_counter++);
+                        sprintf((yyvsp[0].node).parentNext, "#L%d", label_counter++);
                     }
-#line 2808 "y.tab.c"
+#line 2824 "y.tab.c"
     break;
 
   case 103:
-#line 852 "parser.y"
+#line 868 "parser.y"
                                        {
                         tac.push_back(string((yyvsp[-4].node).parentNext) + ":");
                     }
-#line 2816 "y.tab.c"
+#line 2832 "y.tab.c"
     break;
 
   case 106:
-#line 860 "parser.y"
+#line 876 "parser.y"
                           {
                         sprintf((yyvsp[0].node).loop_body, "#L%d", label_counter); 
-                        loop_continue.push(++label_counter);
+                        loop_continue.push(label_counter++);
                         tac.push_back("\n" + string((yyvsp[0].node).loop_body) + ":");
                     }
-#line 2826 "y.tab.c"
+#line 2842 "y.tab.c"
     break;
 
   case 107:
-#line 866 "parser.y"
+#line 882 "parser.y"
                     {
-                        sprintf((yyvsp[-1].node).if_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).if_body, "#L%d", label_counter++); 
 
                         loop_break.push(label_counter);
-                        sprintf((yyvsp[-1].node).else_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).else_body, "#L%d", label_counter++); 
 
                         tac.push_back("\nif " + string((yyvsp[-1].node).lexeme) + " GOTO " + string((yyvsp[-1].node).if_body) + " else GOTO " + string((yyvsp[-1].node).else_body));
                         tac.push_back("\n" + string((yyvsp[-1].node).if_body) + ":");
@@ -2839,19 +2855,19 @@ yyreduce:
                         if(const_temps.find(string((yyvsp[-1].node).lexeme)) == const_temps.end() && (yyvsp[-1].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-1].node).lexeme));
                         
                     }
-#line 2843 "y.tab.c"
+#line 2859 "y.tab.c"
     break;
 
   case 108:
-#line 878 "parser.y"
+#line 894 "parser.y"
                       {
                         scope_history.push(++scope_counter);
                     }
-#line 2851 "y.tab.c"
+#line 2867 "y.tab.c"
     break;
 
   case 109:
-#line 881 "parser.y"
+#line 897 "parser.y"
                     {
                         scope_history.pop();
                         --scope_counter;
@@ -2860,56 +2876,56 @@ yyreduce:
                         loop_continue.pop();
                         loop_break.pop();
                     }
-#line 2864 "y.tab.c"
+#line 2880 "y.tab.c"
     break;
 
   case 110:
-#line 890 "parser.y"
+#line 906 "parser.y"
                                        {
-                        sprintf((yyvsp[-3].node).loop_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-3].node).loop_body, "#L%d", label_counter++); 
                         tac.push_back("\n" + string((yyvsp[-3].node).loop_body) + ":");
                     }
-#line 2873 "y.tab.c"
+#line 2889 "y.tab.c"
     break;
 
   case 111:
-#line 894 "parser.y"
+#line 910 "parser.y"
                               {  
-                        sprintf((yyvsp[-1].node).if_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).if_body, "#L%d", label_counter++); 
 
                         loop_break.push(label_counter);
-                        sprintf((yyvsp[-1].node).else_body, "#L%d", ++label_counter); 
+                        sprintf((yyvsp[-1].node).else_body, "#L%d", label_counter++); 
 
                         tac.push_back("\nif " + string((yyvsp[-1].node).lexeme) + " GOTO " + string((yyvsp[-1].node).if_body) + " else GOTO " + string((yyvsp[-1].node).else_body));
 
                         sprintf((yyvsp[-1].node).loop_body, "#L%d", label_counter); 
-                        loop_continue.push(++label_counter);
+                        loop_continue.push(label_counter++);
                         tac.push_back("\n" + string((yyvsp[-1].node).loop_body) + ":");
 
                         if(const_temps.find(string((yyvsp[-1].node).lexeme)) == const_temps.end() && (yyvsp[-1].node).lexeme[0] == '@') free_temp.push(string((yyvsp[-1].node).lexeme));
                     }
-#line 2892 "y.tab.c"
+#line 2908 "y.tab.c"
     break;
 
   case 112:
-#line 908 "parser.y"
+#line 924 "parser.y"
                               {
                         tac.push_back("GOTO " + string((yyvsp[-9].node).loop_body));
                         tac.push_back("\n" + string((yyvsp[-4].node).if_body) + ":");
                     }
-#line 2901 "y.tab.c"
+#line 2917 "y.tab.c"
     break;
 
   case 113:
-#line 913 "parser.y"
+#line 929 "parser.y"
                     {
                         scope_history.push(++scope_counter);
                     }
-#line 2909 "y.tab.c"
+#line 2925 "y.tab.c"
     break;
 
   case 114:
-#line 916 "parser.y"
+#line 932 "parser.y"
                                  {
                         scope_history.pop();
                         --scope_counter;
@@ -2918,19 +2934,19 @@ yyreduce:
                         loop_continue.pop();
                         loop_break.pop();
                     }
-#line 2922 "y.tab.c"
+#line 2938 "y.tab.c"
     break;
 
   case 115:
-#line 925 "parser.y"
+#line 941 "parser.y"
                        {
                         func_call_id.push({string((yyvsp[0].node).lexeme), func_table[string((yyvsp[0].node).lexeme)].param_types});
                     }
-#line 2930 "y.tab.c"
+#line 2946 "y.tab.c"
     break;
 
   case 116:
-#line 928 "parser.y"
+#line 944 "parser.y"
                                     {
                         strcpy((yyval.node).type, func_table[string((yyvsp[-4].node).lexeme)].return_type.c_str());
                         func_call_id.pop();
@@ -2938,11 +2954,11 @@ yyreduce:
 
                         tac.push_back(string((yyval.node).lexeme) + " = @call " + string((yyvsp[-4].node).lexeme) + " " + func_table[string((yyvsp[-4].node).lexeme)].return_type + " " + to_string(func_table[string((yyvsp[-4].node).lexeme)].num_params));
                     }
-#line 2942 "y.tab.c"
+#line 2958 "y.tab.c"
     break;
 
   case 117:
-#line 937 "parser.y"
+#line 953 "parser.y"
                                        {
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
@@ -2951,11 +2967,11 @@ yyreduce:
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
-#line 2955 "y.tab.c"
+#line 2971 "y.tab.c"
     break;
 
   case 118:
-#line 945 "parser.y"
+#line 961 "parser.y"
                           {
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
@@ -2964,19 +2980,19 @@ yyreduce:
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
-#line 2968 "y.tab.c"
+#line 2984 "y.tab.c"
     break;
 
   case 120:
-#line 956 "parser.y"
+#line 972 "parser.y"
                          {
                         tac.push_back("param " + string((yyvsp[0].node).lexeme) + " " + string((yyvsp[0].node).type));
                     }
-#line 2976 "y.tab.c"
+#line 2992 "y.tab.c"
     break;
 
 
-#line 2980 "y.tab.c"
+#line 2996 "y.tab.c"
 
       default: break;
     }
@@ -3208,7 +3224,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 961 "parser.y"
+#line 977 "parser.y"
 
 
 int main(int argc, char *argv[]) {

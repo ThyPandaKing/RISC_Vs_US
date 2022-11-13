@@ -310,7 +310,7 @@ class VM:
             self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
-            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
             self.text_segment += f"sw x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif (datatype == Datatypes.CHAR.value):
@@ -318,7 +318,7 @@ class VM:
             self.text_segment += f"lb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
             self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif (datatype == Datatypes.BOOL.value):
@@ -326,7 +326,7 @@ class VM:
             self.text_segment += f"lb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"{instruction[0]} x5, x5, x6\n"
+            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
             self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
         elif (datatype == Datatypes.FLOAT.value):
@@ -335,7 +335,7 @@ class VM:
                 self.text_segment += f"flw f3, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, 4\n"
                 self.text_segment += f"flw f4, 0(x2)\n"
-                self.text_segment += f"{instruction[1]} f3, f3, f4\n"
+                self.text_segment += f"{instruction[1]} f3, f4, f3\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
                 self.text_segment += f"addi x2, x2, -4\n"
             # float does not have any other operations

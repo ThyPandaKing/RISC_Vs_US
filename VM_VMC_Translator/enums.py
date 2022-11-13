@@ -25,9 +25,9 @@ class Instructions(enum.Enum):
     Sub = 'sub'
     LShift = 'lshift'
     RShift = 'rshift'
-    BitAnd = 'bitand'
-    BitOr = 'bitor'
-    BitXor = 'bitxor'
+    BitAnd = 'and'
+    BitOr = 'or'
+    BitXor = 'xor'
 
 
 class Segment(enum.Enum):
