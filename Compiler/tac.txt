@@ -1,16 +1,1 @@
-main:
-- INT arr [ 2 ] 
-arr [ 0 ] = 4 INT
-arr [ 1 ] = 6 INT
-@t0 = 0 INT
-@t1 = 1 INT
-arr [ @t0 ] = @t1 INT
-@t2 = arr [ @t0 ] INT
-arr [ @t1 ] = @t2 INT
-@t3 = arr [ @t0 ] INT
-output @t3 INT
-@t4 = arr [ @t1 ] INT
-output @t4 INT
-return @t0 INT
-end:
-
+syntax error in line 54

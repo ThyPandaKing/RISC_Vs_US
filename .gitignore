@@ -8,3 +8,4 @@ User
 *.pyc
 Assembler/generate_test.py
 .gitignore
+final-tests/
