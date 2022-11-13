@@ -169,30 +169,6 @@ lw x7, 0(x7)
 sub x7, x7, x5
 sw x6, 0(x7)
 
-lui x5, 0xffffd
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 0
-add x5, x5, x8
-lw x5, 0(x5)
-addi x5, x5, -4
-lb x5, 0(x5)
-sb x5, 0(x2)
-addi x2, x2, -4
-
-
-addi x2, x2, 4
-lb x5, 0(x2)
-add a0, x5, x0
-addi x2, x2, -4
-lui a7, 0x00000
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 2
-ecall
-
 lui x5, 0x00000
 addi x5, x5, 39
 addi x5, x5, 39
@@ -292,30 +268,6 @@ lw x7, 0(x7)
 sub x7, x7, x5
 sw x6, 0(x7)
 
-lui x5, 0xffffd
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 0
-add x5, x5, x8
-lw x5, 0(x5)
-addi x5, x5, -8
-lb x5, 0(x5)
-sb x5, 0(x2)
-addi x2, x2, -4
-
-
-addi x2, x2, 4
-lb x5, 0(x2)
-add a0, x5, x0
-addi x2, x2, -4
-lui a7, 0x00000
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 2
-ecall
-
 lui x5, 0x00000
 addi x5, x5, 40
 addi x5, x5, 40
@@ -414,30 +366,6 @@ addi x7, x7, 0
 lw x7, 0(x7)
 sub x7, x7, x5
 sw x6, 0(x7)
-
-lui x5, 0xffffd
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 1364
-addi x5, x5, 0
-add x5, x5, x8
-lw x5, 0(x5)
-addi x5, x5, -12
-lb x5, 0(x5)
-sb x5, 0(x2)
-addi x2, x2, -4
-
-
-addi x2, x2, 4
-lb x5, 0(x2)
-add a0, x5, x0
-addi x2, x2, -4
-lui a7, 0x00000
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 3
-addi a7, a7, 2
-ecall
 
 lui x5, 0x00000
 addi x5, x5, 40
@@ -882,11 +810,11 @@ ecall
 
 
 lui x5, 0x00000
-addi x5, x5, 16
-addi x5, x5, 16
-addi x5, x5, 16
 addi x5, x5, 0
-sb x5, 0(x2)
+addi x5, x5, 0
+addi x5, x5, 0
+addi x5, x5, 0
+sw x5, 0(x2)
 addi x2, x2, -4
 
 
@@ -1007,8 +935,8 @@ addi x5, x5, 1
 add x5, x5, x8
 lw x5, 0(x5)
 addi x5, x5, -16
-lb x5, 0(x5)
-sb x5, 0(x2)
+lw x5, 0(x5)
+sw x5, 0(x2)
 addi x2, x2, -4
 
 

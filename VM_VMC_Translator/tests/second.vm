@@ -10,8 +10,6 @@ add INT
 add INT
 add INT
 pop that 0 CHAR
-push local 0 CHAR
-print CHAR
 push constant 'w' CHAR
 push constant 0 INT
 push constant 1 INT
@@ -23,8 +21,6 @@ add INT
 add INT
 add INT
 pop that 0 CHAR
-push local 1 CHAR
-print CHAR
 push constant 'x' CHAR
 push constant 0 INT
 push constant 2 INT
@@ -36,8 +32,6 @@ add INT
 add INT
 add INT
 pop that 0 CHAR
-push local 2 CHAR
-print CHAR
 push constant 'y' CHAR
 push constant 0 INT
 push constant 3 INT
@@ -88,7 +82,7 @@ label #L1
 push data 0 "Ascii value of " STR
 push data 0 STR
 print STR
-push constant 0 CHAR
+push constant 0 INT
 push local 5 INT
 push local 5 INT
 add INT
@@ -99,7 +93,7 @@ add INT
 add INT
 push that 0 CHAR
 pop temp 3 CHAR
-push temp 3 CHAR
+push temp 3 INT
 print CHAR
 push data 1 " is " STR
 push data 1 STR
