@@ -1,0 +1,7 @@
+int main(){
+    int a=8;
+    int b=3;
+    int c=a%b;
+    output(c);
+    return 0;
+}

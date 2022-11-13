@@ -13,6 +13,7 @@ push local 18 INT
 push temp 1 INT
 lt INT
 pop temp 2 INT
+push temp 2 INT
 if-goto #L1
 goto #L2
 label #L3
@@ -50,6 +51,7 @@ push local 18 INT
 push temp 1 INT
 lt INT
 pop temp 3 INT
+push temp 3 INT
 if-goto #L5
 goto #L6
 label #L7
@@ -84,6 +86,7 @@ push local 30 INT
 push temp 3 INT
 lt INT
 pop temp 4 INT
+push temp 4 INT
 if-goto #L9
 goto #L10
 label #L11
@@ -102,6 +105,7 @@ push local 31 INT
 push temp 3 INT
 lt INT
 pop temp 4 INT
+push temp 4 INT
 if-goto #L13
 goto #L14
 label #L15
@@ -122,6 +126,7 @@ push local 33 INT
 push temp 3 INT
 lt INT
 pop temp 4 INT
+push temp 4 INT
 if-goto #L17
 goto #L18
 label #L19
@@ -144,6 +149,7 @@ push temp 5 INT
 push temp 3 INT
 lt INT
 pop temp 7 INT
+push temp 7 INT
 if-goto #L22
 goto #L23
 label #L22
@@ -178,14 +184,15 @@ push constant 0 INT
 pop temp 4 INT
 push constant 1 INT
 pop temp 8 INT
-label #L24
+label #L25
 push temp 4 INT
 push temp 3 INT
 lt INT
 pop temp 5 INT
-if-goto #L25
-goto #L26
-label #L25
+push temp 5 INT
+if-goto #L26
+goto #L27
+label #L26
 push temp 6 INT
 push local 33 INT
 add INT
@@ -194,8 +201,8 @@ push temp 4 INT
 push temp 8 INT
 add INT
 pop temp 4 INT
-goto #L24
-label #L26
+goto #L25
+label #L27
 push temp 6 INT
 push local 31 INT
 add INT
@@ -217,14 +224,15 @@ push constant 0 INT
 pop temp 6 INT
 push constant 1 INT
 pop temp 9 INT
-label #L27
+label #L29
 push temp 6 INT
 push temp 5 INT
 lt INT
 pop temp 4 INT
-if-goto #L28
-goto #L29
-label #L28
+push temp 4 INT
+if-goto #L30
+goto #L31
+label #L30
 push temp 8 INT
 push temp 7 INT
 add INT
@@ -233,8 +241,8 @@ push temp 6 INT
 push temp 9 INT
 add INT
 pop temp 6 INT
-goto #L27
-label #L29
+goto #L29
+label #L31
 push local 32 INT
 push temp 8 INT
 add INT
@@ -249,14 +257,15 @@ push constant 0 INT
 pop temp 9 INT
 push constant 1 INT
 pop temp 5 INT
-label #L30
+label #L33
 push temp 9 INT
 push temp 3 INT
 lt INT
 pop temp 7 INT
-if-goto #L31
-goto #L32
-label #L31
+push temp 7 INT
+if-goto #L34
+goto #L35
+label #L34
 push temp 4 INT
 push local 30 INT
 add INT
@@ -265,8 +274,8 @@ push temp 9 INT
 push temp 5 INT
 add INT
 pop temp 9 INT
-goto #L30
-label #L32
+goto #L33
+label #L35
 push temp 4 INT
 push local 31 INT
 add INT
@@ -288,22 +297,23 @@ goto #L11
 label #L10
 push temp 0 INT
 pop local 18 INT
-label #L32
+label #L36
 push local 18 INT
 push temp 1 INT
 lt INT
 pop temp 6 INT
-if-goto #L33
-goto #L34
-label #L35
+push temp 6 INT
+if-goto #L37
+goto #L38
+label #L39
 push local 18 INT
 push temp 2 INT
 add INT
 pop temp 9 INT
 push temp 9 INT
 pop local 18 INT
-goto #L32
-label #L33
+goto #L36
+label #L37
 push constant 21 INT
 push local 18 INT
 push local 18 INT
@@ -327,35 +337,41 @@ push temp 5 INT
 pop temp 6 INT
 push constant 1 INT
 pop temp 10 INT
-label #L38
-if-goto #L39
-goto #L40
-label #L39
+label #L42
+push temp 9 INT
+if-goto #L43
+goto #L44
+label #L43
 push temp 6 INT
 push temp 3 INT
 sub INT
 pop temp 6 INT
-goto #L38
-label #L40
+goto #L42
+label #L44
 push temp 6 INT
 pop temp 4 INT
 push temp 4 INT
 push temp 0 INT
 eq INT
-if-goto #L40
-goto #L41
-label #L40
+pop temp 6 INT
+push temp 6 INT
+if-goto #L45
+goto #L46
+label #L45
 push data 2 "\n" STR
 push data 2 STR
 print STR
-goto #L36
-label #L41
+goto #L40
+label #L46
 push data 3 " " STR
 push data 3 STR
 print STR
-label #L36
-goto #L35
-label #L34
+label #L40
+goto #L39
+label #L38
 push temp 0 INT
+pop argument 0 INT
+return
+push constant 0 INT
 pop argument 0 INT
 return
