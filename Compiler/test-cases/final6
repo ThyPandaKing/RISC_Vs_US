@@ -1,0 +1,43 @@
+// Queue - push, pop
+void main(){
+	
+	int q[100];
+	int qs = 0;
+
+	string msg = "\nOperations:\n1. Push back to the Queue\n2. Pop from the front of the Queue\n3. End\n\n";
+
+	while(1){
+
+		output("Queue: ");
+		int i;
+		for(i=0; i<qs; i=i+1){
+			output(q[i]);
+			output(" " );
+		}
+		output("\n");
+
+		output(msg);
+
+		int op;
+		input(op);
+
+		switch(op){
+			case(1):
+				output("Enter the number: ");
+				int t;
+				input(t);
+				q[qs] = t;
+				qs = qs+1;
+                break;
+			case(2):
+				for(i=1; i<qs; i=i+1){
+					q[i-1] = q[i];
+				}
+				qs = qs-1;
+                break;
+			case(3):
+				break;
+		}
+
+	}
+}
