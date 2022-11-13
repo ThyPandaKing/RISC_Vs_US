@@ -1,3 +1,4 @@
+// Queue - push, pop
 void main(){
 	
 	int q[100];

@@ -824,7 +824,7 @@ switch_stmt     :   SWITCH {
                         // strcpy($8.parentNext, $1.parentNext);
                     }
                     default_stmt CF {
-                        tac.push_back("Label " + string($1.parentNext));
+                        tac.push_back(string($1.parentNext));
                         loop_break.pop();
                     }
                     ;
@@ -850,7 +850,7 @@ case_stmt       :   CASE {
                         sprintf($4.parentNext, "#L%d", label_counter++);
                     }
                     CC COLON stmt_list {
-                        tac.push_back("Label " + string($4.parentNext) + ":");
+                        tac.push_back(string($4.parentNext) + ":");
                     } 
 
 default_stmt    :   DEFAULT COLON stmt_list
@@ -1053,6 +1053,7 @@ string get_temp(){
     string t=free_temp.front();
     free_temp.pop(); 
     return t; 
+}
 void PrintStack(stack<int> s)
 {
     if (s.empty())
