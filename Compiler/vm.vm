@@ -1,0 +1,137 @@
+function main 2 8 INT
+push data 0 "Enter the number: " STR
+push data 0 STR
+print STR
+scan local 0 INT
+push constant 2 INT
+pop temp 0 INT
+push constant 0 INT
+pop temp 1 INT
+push local 0 INT
+pop temp 2 INT
+push constant 1 INT
+pop temp 3 INT
+label #L1
+push temp 2 INT
+push temp 0 INT
+ge INT
+pop temp 4 INT
+push temp 4 INT
+if-goto #L2
+goto #L3
+label #L2
+push temp 1 INT
+push temp 3 INT
+add INT
+pop temp 1 INT
+push temp 2 INT
+push temp 0 INT
+sub INT
+pop temp 2 INT
+goto #L1
+label #L3
+push temp 1 INT
+print INT
+push data 1 "\n" STR
+push data 1 STR
+print STR
+push temp 0 INT
+pop local 1 INT
+label #L4
+push local 1 INT
+push local 0 INT
+lt INT
+pop temp 2 INT
+push temp 2 INT
+if-goto #L5
+goto #L6
+label #L7
+push constant 1 INT
+pop temp 4 INT
+push local 1 INT
+push temp 4 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 1 INT
+goto #L4
+label #L5
+push constant 0 INT
+pop temp 2 INT
+push local 0 INT
+pop temp 3 INT
+push constant 1 INT
+pop temp 5 INT
+label #L9
+push temp 3 INT
+push local 1 INT
+ge INT
+pop temp 6 INT
+push temp 6 INT
+if-goto #L10
+goto #L11
+label #L10
+push temp 3 INT
+push local 1 INT
+sub INT
+pop temp 3 INT
+goto #L9
+label #L11
+push temp 3 INT
+pop temp 2 INT
+push temp 2 INT
+print INT
+push constant 0 INT
+pop temp 3 INT
+push local 0 INT
+pop temp 6 INT
+push constant 1 INT
+pop temp 7 INT
+label #L14
+push temp 6 INT
+push local 1 INT
+ge INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L15
+goto #L16
+label #L15
+push temp 6 INT
+push local 1 INT
+sub INT
+pop temp 6 INT
+goto #L14
+label #L16
+push temp 6 INT
+pop temp 3 INT
+push constant 0 INT
+pop temp 6 INT
+push temp 3 INT
+push temp 6 INT
+eq INT
+pop temp 7 INT
+push temp 7 INT
+not INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L17
+goto #L18
+label #L17
+goto #L7
+goto #L12
+label #L18
+push data 2 "It is not a prime number.\n" STR
+push data 2 STR
+print STR
+push temp 6 INT
+pop argument 0 INT
+return
+label #L12
+goto #L7
+label #L6
+push data 3 "It is a prime number.\n" STR
+push data 3 STR
+print STR
+push temp 6 INT
+pop argument 0 INT
+return
