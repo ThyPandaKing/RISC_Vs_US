@@ -755,12 +755,12 @@ assign          :   ID ASSIGN expr {
                     }
 
 if_stmt         :   IF  {
-                        sprintf($1.parentNext, "#L%d", label_counter++);
+                        sprintf($1.parentNext, "#L%d", ++label_counter);
                     } 
                     OC expr CC { 
                         tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        sprintf($4.if_body, "#L%d", label_counter++);
-                        sprintf($4.else_body, "#L%d", label_counter++); 
+                        sprintf($4.if_body, "#L%d", ++label_counter);
+                        sprintf($4.else_body, "#L%d", ++label_counter); 
                         tac.push_back(string($4.if_body) + ":");
 
                         if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
@@ -786,8 +786,8 @@ elif_stmt       :   ELIF {
                     } 
                     OC expr CC {
                         tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        sprintf($4.if_body, "#L%d", label_counter++);
-                        sprintf($4.else_body, "#L%d", label_counter++); 
+                        sprintf($4.if_body, "#L%d", ++label_counter);
+                        sprintf($4.else_body, "#L%d", ++label_counter); 
                         tac.push_back(string($4.if_body) + ":");
 
                         if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
@@ -813,7 +813,7 @@ else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{
 switch_stmt     :   SWITCH {
                         int temp_label = label_counter;
                         loop_break.push(temp_label);
-                        sprintf($1.parentNext, "#L%d", label_counter++);
+                        sprintf($1.parentNext, "#L%d", ++label_counter);
                     } 
                     OC ID {
                         temp_index = variable_count;
@@ -846,8 +846,8 @@ case_stmt       :   CASE {
                         tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp) + " INT");
                         tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
                         tac.push_back("#L" + to_string(label_counter) + ":");
-                        sprintf($4.case_body, "#L%d", label_counter++);
-                        sprintf($4.parentNext, "#L%d", label_counter++);
+                        sprintf($4.case_body, "#L%d", ++label_counter);
+                        sprintf($4.parentNext, "#L%d", ++label_counter);
                     }
                     CC COLON stmt_list {
                         tac.push_back(string($4.parentNext) + ":");
@@ -859,15 +859,15 @@ default_stmt    :   DEFAULT COLON stmt_list
 
 while_loop_stmt :   WHILE {
                         sprintf($1.loop_body, "#L%d", label_counter); 
-                        loop_continue.push(label_counter++);
+                        loop_continue.push(++label_counter);
                         tac.push_back("\n" + string($1.loop_body) + ":");
                     } 
                     OC expr CC 
                     {
-                        sprintf($4.if_body, "#L%d", label_counter++); 
+                        sprintf($4.if_body, "#L%d", ++label_counter); 
 
                         loop_break.push(label_counter);
-                        sprintf($4.else_body, "#L%d", label_counter++); 
+                        sprintf($4.else_body, "#L%d", ++label_counter); 
 
                         tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body));
                         tac.push_back("\n" + string($4.if_body) + ":");
@@ -888,19 +888,19 @@ while_loop_stmt :   WHILE {
                     }
 
 for_loop_stmt   :   FOR OC assign SCOL {
-                        sprintf($1.loop_body, "#L%d", label_counter++); 
+                        sprintf($1.loop_body, "#L%d", ++label_counter); 
                         tac.push_back("\n" + string($1.loop_body) + ":");
                     } 
                     expr SCOL {  
-                        sprintf($6.if_body, "#L%d", label_counter++); 
+                        sprintf($6.if_body, "#L%d", ++label_counter); 
 
                         loop_break.push(label_counter);
-                        sprintf($6.else_body, "#L%d", label_counter++); 
+                        sprintf($6.else_body, "#L%d", ++label_counter); 
 
                         tac.push_back("\nif " + string($6.lexeme) + " GOTO " + string($6.if_body) + " else GOTO " + string($6.else_body));
 
                         sprintf($6.loop_body, "#L%d", label_counter); 
-                        loop_continue.push(label_counter++);
+                        loop_continue.push(++label_counter);
                         tac.push_back("\n" + string($6.loop_body) + ":");
 
                         if(const_temps.find(string($6.lexeme)) == const_temps.end() && $6.lexeme[0] == '@') free_temp.push(string($6.lexeme));
