@@ -1,10 +1,9 @@
 // Queue
 int main(int x, char y){
-    int a=x;
-    int b=y;
-    while(a-b<20){
-        a = 1+2+3-8-5;
-    }
+    int a[2];
+    input(a[1]);
+    int b=3;
+    input(a[b-3]);
 
     return 7;
 }
