@@ -1,5 +1,5 @@
 // Queue - push, pop
-void main(){
+int main(){
 	
 	int q[100];
 	int qs = 0;
@@ -36,7 +36,7 @@ void main(){
 				qs = qs-1;
                 break;
 			case(3):
-				break;
+				return 0;
 		}
 
 	}
