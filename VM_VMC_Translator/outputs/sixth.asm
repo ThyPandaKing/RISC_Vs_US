@@ -1,12 +1,16 @@
 .section
 .data
-__main__data0:
-	.asciz "Enter n: "
-__main__data1:
-	.asciz "Enter r: "
+__nCr__data0:
+	.asciz "\n"
+__nCr__data1:
+	.asciz "\n"
 __main__data2:
-	.asciz "nCr: "
+	.asciz "Enter n: "
 __main__data3:
+	.asciz "Enter r: "
+__main__data4:
+	.asciz "nCr: "
+__main__data5:
 	.asciz "\n"
 
 .section
@@ -31,6 +35,58 @@ addi x5, x5, 1
 sw x2, 0(x5)
 addi x2, x2, -40
 
+lui x5, 0xffffd
+addi x5, x5, 1364
+addi x5, x5, 1364
+addi x5, x5, 1364
+addi x5, x5, 0
+add x5, x5, x8
+lw x5, 0(x5)
+addi x5, x5, -4
+lw x5, 0(x5)
+sw x5, 0(x2)
+addi x2, x2, -4
+addi x2, x2, 4
+lw x5, 0(x2)
+add a0, x5, x0
+addi x2, x2, -4
+lui a7, 0x00000
+addi a7, a7, 0
+addi a7, a7, 0
+addi a7, a7, 0
+addi a7, a7, 1
+ecall
+lui a0, 0x10010
+addi a0, a0, 0x0
+addi a0, a0, 0x00
+addi a7, x0, 4
+ecall
+lui x5, 0xffffd
+addi x5, x5, 1364
+addi x5, x5, 1364
+addi x5, x5, 1364
+addi x5, x5, 0
+add x5, x5, x8
+lw x5, 0(x5)
+addi x5, x5, -8
+lw x5, 0(x5)
+sw x5, 0(x2)
+addi x2, x2, -4
+addi x2, x2, 4
+lw x5, 0(x2)
+add a0, x5, x0
+addi x2, x2, -4
+lui a7, 0x00000
+addi a7, a7, 0
+addi a7, a7, 0
+addi a7, a7, 0
+addi a7, a7, 1
+ecall
+lui a0, 0x10010
+addi a0, a0, 0x0
+addi a0, a0, 0x02
+addi a7, x0, 4
+ecall
 lui x5, 0xffffd
 addi x5, x5, 1364
 addi x5, x5, 1364
@@ -1086,7 +1142,7 @@ add x2, x2, x8
 
 lui a0, 0x10010
 addi a0, a0, 0x0
-addi a0, a0, 0x00
+addi a0, a0, 0x04
 addi a7, x0, 4
 ecall
 addi a7, x0, 5
@@ -1106,7 +1162,7 @@ addi x6, x6, -4
 sw x5, 0(x6)
 lui a0, 0x10010
 addi a0, a0, 0x0
-addi a0, a0, 0x0a
+addi a0, a0, 0x0e
 addi a7, x0, 4
 ecall
 addi a7, x0, 5
@@ -1240,7 +1296,7 @@ addi x6, x6, -12
 sw x5, 0(x6)
 lui a0, 0x10010
 addi a0, a0, 0x0
-addi a0, a0, 0x14
+addi a0, a0, 0x18
 addi a7, x0, 4
 ecall
 lui x5, 0xffffd
@@ -1266,7 +1322,7 @@ addi a7, a7, 1
 ecall
 lui a0, 0x10010
 addi a0, a0, 0x0
-addi a0, a0, 0x1a
+addi a0, a0, 0x1e
 addi a7, x0, 4
 ecall
 lui x5, 0xffffd

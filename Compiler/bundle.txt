@@ -1,18 +1,18 @@
-int main(){
-    char arr[5] = {'v', 'w', 'x', 'y', 'z'};
-    //int arr[5] = {1,2,3,4,5};
-    int i;
-    for(i=0; i<5; i=i+1){
-        output("Ascii value of ");
-        output(arr[i]);
-        output(" is ");
-        int temp = arr[i];
-        output(temp);
-        output(".\n");
+int fact(int a){
+    if(a==1){
+        return 1;
     }
-    
-    string str = "This is a string.\n";
-    
-    output(str);
+    int x=fact(a-1);
+    int y=x+a;
+    return y;
+}
+
+int main(){
+    int a;
+    output("enter factorial: ");
+    input(a);
+
+    int x=fact(a);
+    output(x);
     return 0;
 }
