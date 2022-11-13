@@ -28,7 +28,7 @@ push temp 3 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L2
+label #L3
 push temp 1 INT
 push temp 5 INT
 eq INT
@@ -43,7 +43,7 @@ push temp 3 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L4
+label #L5
 push temp 1 INT
 push temp 7 INT
 eq INT
@@ -78,7 +78,7 @@ push temp 3 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L6
+label #L7
 push temp 1 INT
 push temp 12 INT
 eq INT
@@ -109,7 +109,7 @@ push temp 8 INT
 pop local 4 FLOAT
 push local 4 FLOAT
 print FLOAT
-label #L11
+label #L12
 push temp 1 INT
 push temp 14 INT
 eq INT
@@ -124,7 +124,7 @@ push temp 10 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L16
+label #L17
 push temp 1 INT
 push temp 16 INT
 eq INT
@@ -139,7 +139,7 @@ push temp 9 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L18
+label #L19
 push temp 1 INT
 push temp 18 INT
 eq INT
@@ -168,7 +168,7 @@ push temp 3 INT
 pop local 3 INT
 push local 3 INT
 print INT
-label #L20
+label #L21
 push data 4 "Invalid Operation.\n" STR
 push data 4 STR
 print STR

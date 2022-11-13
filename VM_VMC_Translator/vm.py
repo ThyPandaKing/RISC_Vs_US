@@ -430,7 +430,10 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
-            self.text_segment += f"{branch[1]} f3, f4, {label1}\n"
+            # self.text_segment += f"{branch[1]} f3, f4, {label1}\n"
+            self.text_segment += f"{branch[1]} x28, f3, f4\n"
+            self.text_segment += f"bne x28, x0, {label1}\n"
+
             self.text_segment += f"fadd.s f5, f0, f0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"

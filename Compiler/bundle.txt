@@ -1,55 +1,41 @@
-// Various operations using switch-case
 int main(){
-
-    int a;
-    int b;
     
-    output("Enter \\\"a\\\" value = ");
-    input(a);
-    //a=5;
-    
-    output("Enter \\\"b\\\" value = ");
-    input(b);
-    //b=7;
+    int q[100];
+    int qs = 0;
 
-    output("Select the operation: \n1. Sum (+)\n2. Difference (-)\n3. Product (*)\n4. Division (/)\n5. Modulo (%)\n6. Bitwise And (&)\n7. Bitwise Or (|)\n8. Bitwise XOR (^)\n\n");
+    string msg = "\nOperations:\n1. Push back to the Queue\n2. Pop from the front of the Queue\n3. End\n\n";
 
-    int op;
-    input(op);
-    //op=3;
+    while(1){
 
-    int c;
-    float f;
+        output("Queue: ");
+        int i;
+        for(i=0; i<qs; i=i+1){
+            output(q[i]);
+            output(" " );
+        }
+        output("\n");
 
-    output("Result: ");
+        output(msg);
 
-    switch (op){
+        int op;
+        input(op);
 
-        case(1):
-            c = a+b;
-            output(c);
-        case(2):
-            c = a-b;
-            output(c);
-        case(3):
-            c = a*b;
-            output(c);
-        case(4):
-            f = a/b;
-            output(f);
-        case(6):
-            c = a&b;
-            output(c);
-        case(7):
-            c = a|b;
-            output(c);
-        case(8):
-            c = a^b;
-            output(c);
-        default:
-            output("Invalid Operation.\n");
+        switch(op){
+            case(1):
+                output("Enter the number: ");
+                int t;
+                input(t);
+                q[qs] = t;
+                qs = qs+1;
+            case(2):
+                for(i=1; i<qs; i=i+1){
+                    q[i-1] = q[i];
+                }
+                qs = qs-1;
+            case(3):
+                break;
+        }
+
     }
-
-    output("\n");
     return 0;
 }
