@@ -45,6 +45,7 @@
     bool function_check(string variable, int flag);
     bool type_check(string type1, string type2);
     bool check_type(string l, string r);
+    void PrintStack(stack<int> s);
 
     struct var_info {
         string data_type;
@@ -145,6 +146,7 @@ func            :   func_prefix OF
                             sem_errors.push_back("Return stmt not there for function: " + curr_func_name);
                         }
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("end:\n");
                         has_return_stmt = 0;
                     }
@@ -233,7 +235,9 @@ stmt   		    :   declaration
  
 declaration     :   data_type ID SCOL { 
                         is_reserved_word(string($2.lexeme));
-                        multiple_declaration(string($2.lexeme));
+                        // if(multiple_declaration(string($2.lexeme))){
+                        //     check_scope(string($2.lexeme));
+                        // };
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
                     }
@@ -242,11 +246,11 @@ declaration     :   data_type ID SCOL {
                         multiple_declaration(string($2.lexeme));
                         tac.push_back("- STR " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
-                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", scope_counter, string($4.lexeme).length(), 0, countn+1 };
                     }
                     | data_type ID ASSIGN expr SCOL {
                         is_reserved_word(string($2.lexeme));
-                        multiple_declaration(string($2.lexeme));
+                        //multiple_declaration(string($2.lexeme));
                         check_type(string($1.type), string($4.type));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
@@ -595,6 +599,7 @@ if_stmt         :   IF  {
                       scope_history.push(++scope_counter);  
                     } stmt_list CF {  
                         scope_history.pop(); 
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -621,6 +626,7 @@ elif_stmt       :   ELIF {
                     } 
                     stmt_list CF {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -628,7 +634,7 @@ elif_stmt       :   ELIF {
                     |
                     ;
 
-else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{scope_history.pop();}
+else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{scope_history.pop(); --scope_counter;}
                     |
                     ;       
 
@@ -667,7 +673,7 @@ case_stmt       :   CASE {
                         tac.push_back("@t" + to_string(variable_count++) + " = " + $4.lexeme);
                         tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp));
                         tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        tac.push_back("Label #L" + to_string(label_counter) + ":");
+                        tac.push_back("#L" + to_string(label_counter) + ":");
                         sprintf($4.case_body, "#L%d", label_counter++);
                         sprintf($4.parentNext, "#L%d", label_counter++);
                     }
@@ -701,6 +707,7 @@ while_loop_stmt :   WHILE {
                     } stmt_list CF    
                     {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($4.else_body) + ":");
                         loop_continue.pop();
@@ -733,6 +740,7 @@ for_loop_stmt   :   FOR OC assign SCOL {
                     }
                     stmt_list CF {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($6.loop_body));
                         tac.push_back("\n" + string($6.else_body) + ":");
                         loop_continue.pop();
@@ -820,22 +828,26 @@ bool check_scope(string variable){
     int var_scope = func_table[curr_func_name].symbol_table[variable].scope;
     // int curr_scope = scope_counter;
     stack<int> temp_stack(scope_history);
+    // cout << "variable: " << variable << endl;
+    // cout << "var_scope: " << var_scope << endl;
+    // PrintStack(temp_stack);
+    // cout << endl;
     while(!temp_stack.empty()){
         if(temp_stack.top() == var_scope){
-            return false;
+            return true;
         }
         temp_stack.pop();
     }
     sem_errors.push_back("Scope of variable '" + variable +"' not marching in line " + to_string(countn+1) + ".");
-    return true;
+    return false;
 }
 
 bool multiple_declaration(string variable){
     if(!(func_table[curr_func_name].symbol_table.find(variable) == func_table[curr_func_name].symbol_table.end())){
         sem_errors.push_back("redeclaration of '" + variable + "' in line " + to_string(countn+1));
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 bool check_type(string l, string r){
@@ -875,6 +887,17 @@ void yyerror(const char* msg) {
         cout << item << endl;
     fprintf(stderr, "%s\n", msg);
     exit(1);
+}
+
+void PrintStack(stack<int> s)
+{
+    if (s.empty())
+        return;
+    int x = s.top();
+    s.pop();
+    cout << x << ' ';
+    PrintStack(s);
+    s.push(x);
 }
 
 
