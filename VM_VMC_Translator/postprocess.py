@@ -1,12 +1,13 @@
 import struct
 
 
-def get_ieee_rep(value):
-    h = ''.join('{:02x}'.format(x)[::-1]
-                for x in struct.pack('f', float(value)))[::-1]
-    upper = h[:5]
-    mid = h[5]
-    lower = h[6:]
+def get_ieee_rep(value, hex=None):
+    if hex is None:
+        hex = ''.join('{:02x}'.format(x)[::-1]
+                      for x in struct.pack('f', float(value)))[::-1]
+    upper = hex[:5]
+    mid = hex[5]
+    lower = hex[6:]
     return ('0x'+upper, '0x'+mid, '0x'+lower)
 
 
@@ -35,7 +36,7 @@ def postprocess(asm_code):
     mod_asm_code = ''
 
     for line in asm_code.splitlines():
-        if(line.split(' ')[0] == 'li'):
+        if (line.split(' ')[0] == 'li'):
             # li x5, 4
             reg = line.split(' ')[1][:-1]
             upper, val, extra = convert_rep(line.split(' ')[-1])
@@ -44,7 +45,7 @@ def postprocess(asm_code):
             mod_asm_code += f"addi {reg}, {reg}, {val}\n"
             mod_asm_code += f"addi {reg}, {reg}, {val}\n"
             mod_asm_code += f"addi {reg}, {reg}, {extra}\n"
-        elif(line.split(' ')[0] == 'fli'):
+        elif (line.split(' ')[0] == 'fli'):
             # fli f3, -247.6
             reg = line.split(' ')[1][:-1]
             upper, mid, lower = get_ieee_rep(line.split(' ')[-1])
@@ -58,5 +59,5 @@ def postprocess(asm_code):
     # mod_asm_code = asm_code + '\n'
 
     mod_asm_code += f"__END__:\n"
-    
+
     return mod_asm_code

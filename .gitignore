@@ -6,3 +6,5 @@ node_modules
 User
 .DS_Store
 *.pyc
+Assembler/generate_test.py
+.gitignore

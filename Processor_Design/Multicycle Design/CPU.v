@@ -1481,8 +1481,8 @@ module CPU (
   wire s1;
   wire [31:0] PC_val_temp;
   wire s2;
-  wire [31:0] s3;
-  wire [31:0] s4;
+  wire [23:0] s3;
+  wire [23:0] s4;
   wire [23:0] s5;
   wire [31:0] B_reg_temp;
   wire Mem_Write;
@@ -1493,12 +1493,13 @@ module CPU (
   wire [31:0] MemDataRegOut_temp;
   wire MemToReg;
   wire [31:0] s7;
+  wire [31:0] s8;
   wire RegWrite;
-  wire [4:0] s8;
   wire [4:0] s9;
   wire [4:0] s10;
-  wire [31:0] s11;
+  wire [4:0] s11;
   wire [31:0] s12;
+  wire [31:0] s13;
   wire [31:0] A_reg_temp;
   wire ALU_a_temp;
   wire [31:0] op_1_temp;
@@ -1507,11 +1508,10 @@ module CPU (
   wire [31:0] op_2_temp;
   wire [3:0] ALU_in_temp;
   wire [31:0] Al_out_temp;
-  wire s13;
   wire s14;
   wire s15;
-  wire [6:0] s16;
-  wire s17;
+  wire s16;
+  wire [6:0] s17;
   wire s18;
   wire s19;
   wire s20;
@@ -1525,18 +1525,19 @@ module CPU (
   wire s28;
   wire s29;
   wire s30;
+  wire s31;
   wire ALUOp0;
   wire ALUOp1;
-  wire s31;
   wire s32;
   wire s33;
   wire s34;
   wire s35;
   wire s36;
-  wire [3:0] s37;
+  wire s37;
+  wire [3:0] s38;
   wire [3:0] State_out_temp;
-  wire [1:0] s38;
-  wire [3:0] s39;
+  wire [1:0] s39;
+  wire [3:0] s40;
   wire I_Type;
   // PC
   DIG_Register_BUS #(
@@ -1549,13 +1550,13 @@ module CPU (
     .Q( PC_val_temp )
   );
   Mux_2x1_NBits #(
-    .Bits(32)
+    .Bits(24)
   )
   Mux_2x1_NBits_i1 (
     .sel( s2 ),
-    .in_0( PC_val_temp ),
-    .in_1( s3 ),
-    .out( s4 )
+    .in_0( s3 ),
+    .in_1( s4 ),
+    .out( s5 )
   );
   // Mem_Dummy
   DIG_RAMDualPort #(
@@ -1595,27 +1596,27 @@ module CPU (
   )
   Mux_2x1_NBits_i5 (
     .sel( MemToReg ),
-    .in_0( s3 ),
+    .in_0( s7 ),
     .in_1( MemDataRegOut_temp ),
-    .out( s7 )
+    .out( s8 )
   );
   // RegFile
   RegFile32Bit RegFile32Bit_i6 (
-    .DataToWrite( s7 ),
+    .DataToWrite( s8 ),
     .writeEnable( RegWrite ),
-    .writeReg( s8 ),
-    .Read1( s9 ),
-    .Read2( s10 ),
+    .writeReg( s9 ),
+    .Read1( s10 ),
+    .Read2( s11 ),
     .CPU_clock( Clock ),
-    .Register1( s11 ),
-    .Register2( s12 )
+    .Register1( s12 ),
+    .Register2( s13 )
   );
   // A_reg
   DIG_Register_BUS #(
     .Bits(32)
   )
   DIG_Register_BUS_i7 (
-    .D( s11 ),
+    .D( s12 ),
     .C( Clock ),
     .en( 1'b1 ),
     .Q( A_reg_temp )
@@ -1625,7 +1626,7 @@ module CPU (
     .Bits(32)
   )
   DIG_Register_BUS_i8 (
-    .D( s12 ),
+    .D( s13 ),
     .C( Clock ),
     .en( 1'b1 ),
     .Q( B_reg_temp )
@@ -1660,15 +1661,15 @@ module CPU (
     .a( op_1_temp ),
     .b( op_2_temp ),
     .ALU_out( Al_out_temp ),
-    .zero( s13 )
+    .zero( s14 )
   );
   Mux_2x1_NBits #(
     .Bits(32)
   )
   Mux_2x1_NBits_i13 (
-    .sel( s15 ),
+    .sel( s16 ),
     .in_0( Al_out_temp ),
-    .in_1( s3 ),
+    .in_1( s7 ),
     .out( s0 )
   );
   // ALU_out
@@ -1679,86 +1680,87 @@ module CPU (
     .D( Al_out_temp ),
     .C( Clock ),
     .en( 1'b1 ),
-    .Q( s3 )
+    .Q( s7 )
   );
   // ControlUnit
   OPCodeControlUnit OPCodeControlUnit_i15 (
-    .I0( s17 ),
-    .I1( s18 ),
-    .I2( s19 ),
-    .I3( s20 ),
-    .I4( s21 ),
-    .I5( s22 ),
-    .I6( s23 ),
-    .S_0( s24 ),
-    .S_1( s25 ),
-    .S_2( s26 ),
-    .S_3( s27 ),
-    .PCWrite( s28 ),
-    .PCWriteCond( s14 ),
+    .I0( s18 ),
+    .I1( s19 ),
+    .I2( s20 ),
+    .I3( s21 ),
+    .I4( s22 ),
+    .I5( s23 ),
+    .I6( s24 ),
+    .S_0( s25 ),
+    .S_1( s26 ),
+    .S_2( s27 ),
+    .S_3( s28 ),
+    .PCWrite( s29 ),
+    .PCWriteCond( s15 ),
     .IorD( s2 ),
     .MemWrite( Mem_Write ),
     .MemRead( Mem_Read ),
     .IRWrite( IRWrite ),
     .MemtoReg( MemToReg ),
-    .PCSource0( s29 ),
-    .PCSource1( s30 ),
+    .PCSource0( s30 ),
+    .PCSource1( s31 ),
     .ALUOp0( ALUOp0 ),
     .ALUOp1( ALUOp1 ),
-    .ALUSrcB1( s31 ),
-    .ALUSrcB0( s32 ),
+    .ALUSrcB1( s32 ),
+    .ALUSrcB0( s33 ),
     .ALUSrcA( ALU_a_temp ),
     .RegWrite( RegWrite ),
-    .NS_0( s33 ),
-    .NS_1( s34 ),
-    .NS_2( s35 ),
-    .NS_3( s36 )
+    .NS_0( s34 ),
+    .NS_1( s35 ),
+    .NS_2( s36 ),
+    .NS_3( s37 )
   );
   // STATE_REG
   DIG_Register_BUS #(
     .Bits(4)
   )
   DIG_Register_BUS_i16 (
-    .D( s37 ),
+    .D( s38 ),
     .C( Clock ),
     .en( 1'b1 ),
     .Q( State_out_temp )
   );
-  assign s37[0] = s33;
-  assign s37[1] = s34;
-  assign s37[2] = s35;
-  assign s37[3] = s36;
-  assign s1 = (s28 | (s14 & s13));
-  assign ALU_b_temp[0] = s32;
-  assign ALU_b_temp[1] = s31;
+  assign s38[0] = s34;
+  assign s38[1] = s35;
+  assign s38[2] = s36;
+  assign s38[3] = s37;
+  assign s1 = (s29 | (s15 & s14));
+  assign ALU_b_temp[0] = s33;
+  assign ALU_b_temp[1] = s32;
   alu_control_unit_2 alu_control_unit_2_i17 (
-    .ALUop( s38 ),
-    .F( s39 ),
+    .ALUop( s39 ),
+    .F( s40 ),
     .Itype( I_Type ),
     .Operation( ALU_in_temp )
   );
-  assign s38[0] = ALUOp0;
-  assign s38[1] = ALUOp1;
-  assign s39[2:0] = I_out_temp[14:12];
-  assign s39[3] = I_out_temp[30];
-  assign s15 = (s29 | s30);
-  assign s16 = I_out_temp[6:0];
-  assign s8 = I_out_temp[11:7];
-  assign s9 = I_out_temp[19:15];
-  assign s10 = I_out_temp[24:20];
-  assign s5 = s4[25:2];
-  assign s17 = s16[0];
-  assign s18 = s16[1];
-  assign s19 = s16[2];
-  assign s20 = s16[3];
-  assign s21 = s16[4];
-  assign s22 = s16[5];
-  assign s23 = s16[6];
-  assign s24 = State_out_temp[0];
-  assign s25 = State_out_temp[1];
-  assign s26 = State_out_temp[2];
-  assign s27 = State_out_temp[3];
+  assign s39[0] = ALUOp0;
+  assign s39[1] = ALUOp1;
+  assign s40[2:0] = I_out_temp[14:12];
+  assign s40[3] = I_out_temp[30];
+  assign s16 = (s30 | s31);
+  assign s17 = I_out_temp[6:0];
+  assign s9 = I_out_temp[11:7];
+  assign s10 = I_out_temp[19:15];
+  assign s11 = I_out_temp[24:20];
+  assign s3 = PC_val_temp[25:2];
+  assign s18 = s17[0];
+  assign s19 = s17[1];
+  assign s20 = s17[2];
+  assign s21 = s17[3];
+  assign s22 = s17[4];
+  assign s23 = s17[5];
+  assign s24 = s17[6];
+  assign s25 = State_out_temp[0];
+  assign s26 = State_out_temp[1];
+  assign s27 = State_out_temp[2];
+  assign s28 = State_out_temp[3];
   assign I_Type = I_out_temp[5];
+  assign s4 = s7[23:0];
   assign PC_val = PC_val_temp;
   assign State_out = State_out_temp;
   assign A_reg = A_reg_temp;
