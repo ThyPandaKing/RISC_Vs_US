@@ -431,10 +431,11 @@ class VM:
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
             self.text_segment += f"{branch} f3, f4, {label1}\n"
-            self.text_segment += f"addi f5, f0, 0\n"
+            self.text_segment += f"add.s f5, f0, f0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
-            self.text_segment += f"addi f5, f0, 1\n"
+            # self.text_segment += f"add.s f5, f0, 1\n"
+            self.text_segment += f"fli f5, 1\n"
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"fsub.s x5, x5, x6\n"
@@ -513,8 +514,8 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
-            self.text_segment += f"blt f3, f4, {label1}\n"
-            self.text_segment += f"beq f3, f4, {label1}\n"
+            self.text_segment += f"flt.s f3, f4, {label1}\n"
+            self.text_segment += f"fle.s f3, f4, {label1}\n"
             self.text_segment += f"addi f5, f0, 0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
@@ -597,12 +598,12 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
-            self.text_segment += f"blt f3, f4, {label1}\n"
-            self.text_segment += f"beq f3, f4, {label1}\n"
-            self.text_segment += f"addi f5, f0, 1\n"
+            self.text_segment += f"flt.s f3, f4, {label1}\n"
+            self.text_segment += f"fle.s f3, f4, {label1}\n"
+            self.text_segment += f"fli f5, 1\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
-            self.text_segment += f"addi f5, f0, 0\n"
+            self.text_segment += f"fli f5, 0\n"
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"fsub.s x5, x5, x6\n"
@@ -634,9 +635,11 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"
             # the top of the stack does not store the subtracted value
-            if (len(self.prev_operator.value) == 3):
-                self.text_segment += f"fsub.s f3, f0, f3\n"
-            self.text_segment += f"{self.prev_operator.value[1]} f3, f0, {label}\n"
+            # if (len(self.prev_operator.value) == 3):
+            # self.text_segment += f"fsub.s f3, f0, f3\n"
+            # self.text_segment += f"{self.prev_operator.value[1]} f3, f0, {label}\n"
+            self.text_segment += f"fli f4, 1\n"
+            self.text_segment += f"fle.s f3, f4, {label}\n"
 
         self.text_segment += '\n'
 
