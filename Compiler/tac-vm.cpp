@@ -305,7 +305,7 @@ void conversion(){
                 }
                 else{
                     // if t0 goto L1 else goto L2
-                    pair<pair<string, string>, string> type_a = get_type(tac[i][1], "null");
+                    pair<pair<string, string>, string> type_a = get_type(tac[i][1], "INT");
                     // vm.push_back("push constant 0 INT");
                     // vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
                     // vm.push_back("eq INT");
