@@ -1,3 +1,16 @@
-Scope of variable 'c' not matching in line 21.
-Scope of variable 'c' not matching in line 25.
-Scope of variable 'c' not matching in line 29.
+main: INT
+- INT a
+- INT b
+- INT c
+output "Enter \\\"a\\\" value = " STR
+input a INT
+output "Enter \\\"b\\\" value = " STR
+input b INT
+output "Select the operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n" STR
+- INT op
+input op INT
+output op INT
+@t0 = 0 INT
+return @t0 INT
+end:
+

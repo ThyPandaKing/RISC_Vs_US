@@ -93,7 +93,8 @@ class VM:
                 index = int(line[2])
             elif (datatype == Datatypes.CHAR.value):
                 if (segment == Segment.constant.value):
-                    index = ord(line[2][1])
+                    print(line)
+                    index = ord(line[2])
                 else:
                     index = int(line[2])
             elif (datatype == Datatypes.FLOAT.value):
@@ -845,6 +846,7 @@ class VM:
 
         for line in vm_code.splitlines():
             line = shlex.split(line)
+            # line = line.split(' ')
             if (len(line) == 0):
                 continue
 

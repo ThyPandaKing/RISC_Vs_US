@@ -2785,7 +2785,7 @@ yyreduce:
   case 98:
 #line 842 "parser.y"
                                     {
-                        tac.push_back(string((yyvsp[-10].node).parentNext));
+                        tac.push_back(string((yyvsp[-10].node).parentNext) + ":");
                         loop_break.pop();
                     }
 #line 2792 "y.tab.c"

@@ -1,0 +1,21 @@
+// Various operations using switch-case
+int main(){
+
+    int a;
+    int b;
+    int c;
+    
+    output("Enter \\\"a\\\" value = ");
+    input(a);
+    
+    output("Enter \\\"b\\\" value = ");
+    input(b);
+
+    output("Select the operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n");
+
+    int op;
+    input(op);
+
+    output(op);
+    return 0;
+}
