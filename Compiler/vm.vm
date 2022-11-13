@@ -1,0 +1,182 @@
+function main 5 20 INT
+push data 0 "Enter \\\"a\\\" value = " STR
+push data 0 STR
+print STR
+scan local 0 INT
+push data 1 "Enter \\\"b\\\" value = " STR
+push data 1 STR
+print STR
+scan local 1 INT
+push data 2 "Select the operation: \n1. Sum (+)\n2. Difference (-)\n3. Product (*)\n4. Division (/)\n5. Modulo (%)\n6. Bitwise And (&)\n7. Bitwise Or (|)\n8. Bitwise XOR (^)\n\n" STR
+push data 2 STR
+print STR
+scan local 2 INT
+push data 3 "Result: " STR
+push data 3 STR
+print STR
+push temp 1 INT
+push temp 2 INT
+eq INT
+if-goto #L1
+goto #L2
+label #L1
+push local 0 INT
+push local 1 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L2
+push temp 1 INT
+push temp 5 INT
+eq INT
+if-goto #L3
+goto #L4
+label #L3
+push local 0 INT
+push local 1 INT
+sub INT
+pop temp 3 INT
+push temp 3 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L4
+push temp 1 INT
+push temp 7 INT
+eq INT
+if-goto #L5
+goto #L6
+label #L5
+push constant 0 INT
+pop temp 3 INT
+push constant 0 INT
+pop temp 8 INT
+push constant 1 INT
+pop temp 9 INT
+label #L8
+push temp 8 INT
+push local 1 INT
+lt INT
+pop temp 10 INT
+if-goto #L9
+goto #L10
+label #L9
+push temp 3 INT
+push local 0 INT
+add INT
+pop temp 3 INT
+push temp 8 INT
+push temp 9 INT
+add INT
+pop temp 8 INT
+goto #L8
+label #L10
+push temp 3 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L6
+push temp 1 INT
+push temp 12 INT
+eq INT
+if-goto #L10
+goto #L11
+label #L10
+push constant 0 INT
+pop temp 8 INT
+push local 0 INT
+pop temp 10 INT
+push constant 1 INT
+pop temp 3 INT
+label #L13
+if-goto #L14
+goto #L15
+label #L14
+push temp 8 INT
+push temp 3 INT
+add INT
+pop temp 8 INT
+push temp 10 INT
+push local 1 INT
+sub INT
+pop temp 10 INT
+goto #L13
+label #L15
+push temp 8 INT
+pop local 4 FLOAT
+push local 4 FLOAT
+print FLOAT
+label #L11
+push temp 1 INT
+push temp 14 INT
+eq INT
+if-goto #L15
+goto #L16
+label #L15
+push local 0 INT
+push local 1 INT
+and INT
+pop temp 10 INT
+push temp 10 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L16
+push temp 1 INT
+push temp 16 INT
+eq INT
+if-goto #L17
+goto #L18
+label #L17
+push local 0 INT
+push local 1 INT
+or INT
+pop temp 9 INT
+push temp 9 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L18
+push temp 1 INT
+push temp 18 INT
+eq INT
+if-goto #L19
+goto #L20
+label #L19
+push local 0 INT
+not INT
+pop temp 8 INT
+push local 1 INT
+not INT
+pop temp 10 INT
+push local 0 INT
+push temp 10 INT
+and INT
+pop temp 9 INT
+push temp 8 INT
+push local 1 INT
+and INT
+pop temp 19 INT
+push temp 9 INT
+push temp 19 INT
+or INT
+pop temp 3 INT
+push temp 3 INT
+pop local 3 INT
+push local 3 INT
+print INT
+label #L20
+push data 4 "Invalid Operation.\n" STR
+push data 4 STR
+print STR
+push data 5 "\n" STR
+push data 5 STR
+print STR
+push constant 0 INT
+pop temp 8 INT
+push temp 8 INT
+pop argument 0 INT
+return

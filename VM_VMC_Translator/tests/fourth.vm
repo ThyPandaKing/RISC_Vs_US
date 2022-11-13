@@ -1,0 +1,118 @@
+function main 4 7 INT
+push data 0 "Enter a decimal number: " STR
+push data 0 STR
+print STR
+scan local 0 FLOAT
+push data 1 "Final decimal number precision: " STR
+push data 1 STR
+print STR
+scan local 1 INT
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 2 INT
+label #L0
+push local 2 INT
+push local 1 INT
+lt INT
+pop temp 1 INT
+if-goto #L1
+goto #L2
+label #L3
+push constant 1 INT
+pop temp 1 INT
+push local 2 INT
+push temp 1 INT
+add INT
+pop temp 2 INT
+push temp 2 INT
+pop local 2 INT
+goto #L0
+label #L1
+push constant 10 INT
+pop temp 2 INT
+push constant 0 INT
+pop temp 3 FLOAT
+push constant 0 INT
+pop temp 4 FLOAT
+push constant 1 INT
+pop temp 5 FLOAT
+label #L5
+push temp 4 FLOAT
+push temp 2 INT
+lt FLOAT
+pop temp 6 FLOAT
+if-goto #L6
+goto #L7
+label #L6
+push temp 3 FLOAT
+push local 0 FLOAT
+add FLOAT
+pop temp 3 FLOAT
+push temp 4 FLOAT
+push temp 5 FLOAT
+add FLOAT
+pop temp 4 FLOAT
+goto #L5
+label #L7
+push temp 3 FLOAT
+pop local 0 FLOAT
+goto #L3
+label #L2
+push local 0 FLOAT
+pop local 3 INT
+push local 3 INT
+pop local 0 FLOAT
+push temp 0 INT
+pop local 2 INT
+label #L7
+push local 2 INT
+push local 1 INT
+lt INT
+pop temp 4 FLOAT
+if-goto #L8
+goto #L9
+label #L10
+push local 2 INT
+push temp 1 INT
+add INT
+pop temp 6 FLOAT
+push temp 6 FLOAT
+pop local 2 INT
+goto #L7
+label #L8
+push constant 0 INT
+pop temp 5 FLOAT
+push local 0 FLOAT
+pop temp 3 FLOAT
+push constant 1 INT
+pop temp 6 FLOAT
+label #L12
+if-goto #L13
+goto #L14
+label #L13
+push temp 5 FLOAT
+push temp 6 FLOAT
+add FLOAT
+pop temp 5 FLOAT
+push temp 3 FLOAT
+push temp 2 INT
+sub FLOAT
+pop temp 3 FLOAT
+goto #L12
+label #L14
+push temp 5 FLOAT
+pop local 0 FLOAT
+goto #L10
+label #L9
+push data 2 "Rounded number: " STR
+push data 2 STR
+print STR
+push local 0 FLOAT
+print FLOAT
+push data 3 "\n" STR
+push data 3 STR
+print STR
+push temp 0 INT
+pop argument 0 INT
+return

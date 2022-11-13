@@ -1,0 +1,361 @@
+function main 34 11 void
+push data 0 "Enter the contents of matrix 1:\n" STR
+push data 0 STR
+print STR
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 18 INT
+label #L0
+push constant 9 INT
+pop temp 1 INT
+push local 18 INT
+push temp 1 INT
+lt INT
+pop temp 2 INT
+if-goto #L1
+goto #L2
+label #L3
+push constant 1 INT
+pop temp 2 INT
+push local 18 INT
+push temp 2 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 18 INT
+goto #L0
+label #L1
+scan local 19 INT
+push local 19 INT
+push constant 0 INT
+push local 18 INT
+push local 18 INT
+add INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L3
+label #L2
+push data 1 "Enter the contents of matrix 2:\n" STR
+push data 1 STR
+print STR
+push temp 0 INT
+pop local 18 INT
+label #L4
+push local 18 INT
+push temp 1 INT
+lt INT
+pop temp 3 INT
+if-goto #L5
+goto #L6
+label #L7
+push local 18 INT
+push temp 2 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 18 INT
+goto #L4
+label #L5
+scan local 20 INT
+push local 20 INT
+push constant 9 INT
+push local 18 INT
+push local 18 INT
+add INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L7
+label #L6
+push temp 0 INT
+pop local 30 INT
+label #L8
+push constant 3 INT
+pop temp 3 INT
+push local 30 INT
+push temp 3 INT
+lt INT
+pop temp 4 INT
+if-goto #L9
+goto #L10
+label #L11
+push local 30 INT
+push temp 2 INT
+add INT
+pop temp 4 INT
+push temp 4 INT
+pop local 30 INT
+goto #L8
+label #L9
+push temp 0 INT
+pop local 31 INT
+label #L12
+push local 31 INT
+push temp 3 INT
+lt INT
+pop temp 4 INT
+if-goto #L13
+goto #L14
+label #L15
+push local 31 INT
+push temp 2 INT
+add INT
+pop temp 4 INT
+push temp 4 INT
+pop local 31 INT
+goto #L12
+label #L13
+push temp 0 INT
+pop local 32 INT
+push temp 0 INT
+pop local 33 INT
+label #L16
+push local 33 INT
+push temp 3 INT
+lt INT
+pop temp 4 INT
+if-goto #L17
+goto #L18
+label #L19
+push local 33 INT
+push temp 2 INT
+add INT
+pop temp 4 INT
+push temp 4 INT
+pop local 33 INT
+goto #L16
+label #L17
+push constant 0 INT
+pop temp 4 INT
+push constant 0 INT
+pop temp 5 INT
+push constant 1 INT
+pop temp 6 INT
+label #L21
+push temp 5 INT
+push temp 3 INT
+lt INT
+pop temp 7 INT
+if-goto #L22
+goto #L23
+label #L22
+push temp 4 INT
+push local 30 INT
+add INT
+pop temp 4 INT
+push temp 5 INT
+push temp 6 INT
+add INT
+pop temp 5 INT
+goto #L21
+label #L23
+push temp 4 INT
+push local 33 INT
+add INT
+pop temp 5 INT
+push constant 0 INT
+push temp 5 INT
+push temp 5 INT
+add INT
+push temp 5 INT
+push temp 5 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 7 INT
+push constant 0 INT
+pop temp 6 INT
+push constant 0 INT
+pop temp 4 INT
+push constant 1 INT
+pop temp 8 INT
+label #L24
+push temp 4 INT
+push temp 3 INT
+lt INT
+pop temp 5 INT
+if-goto #L25
+goto #L26
+label #L25
+push temp 6 INT
+push local 33 INT
+add INT
+pop temp 6 INT
+push temp 4 INT
+push temp 8 INT
+add INT
+pop temp 4 INT
+goto #L24
+label #L26
+push temp 6 INT
+push local 31 INT
+add INT
+pop temp 4 INT
+push constant 9 INT
+push temp 4 INT
+push temp 4 INT
+add INT
+push temp 4 INT
+push temp 4 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 5 INT
+push constant 0 INT
+pop temp 8 INT
+push constant 0 INT
+pop temp 6 INT
+push constant 1 INT
+pop temp 9 INT
+label #L27
+push temp 6 INT
+push temp 5 INT
+lt INT
+pop temp 4 INT
+if-goto #L28
+goto #L29
+label #L28
+push temp 8 INT
+push temp 7 INT
+add INT
+pop temp 8 INT
+push temp 6 INT
+push temp 9 INT
+add INT
+pop temp 6 INT
+goto #L27
+label #L29
+push local 32 INT
+push temp 8 INT
+add INT
+pop temp 6 INT
+push temp 6 INT
+pop local 32 INT
+goto #L19
+label #L18
+push constant 0 INT
+pop temp 4 INT
+push constant 0 INT
+pop temp 9 INT
+push constant 1 INT
+pop temp 5 INT
+label #L30
+push temp 9 INT
+push temp 3 INT
+lt INT
+pop temp 7 INT
+if-goto #L31
+goto #L32
+label #L31
+push temp 4 INT
+push local 30 INT
+add INT
+pop temp 4 INT
+push temp 9 INT
+push temp 5 INT
+add INT
+pop temp 9 INT
+goto #L30
+label #L32
+push temp 4 INT
+push local 31 INT
+add INT
+pop temp 8 INT
+push local 32 INT
+push constant 21 INT
+push temp 8 INT
+push temp 8 INT
+add INT
+push temp 8 INT
+push temp 8 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L15
+label #L14
+goto #L11
+label #L10
+push temp 0 INT
+pop local 18 INT
+label #L32
+push local 18 INT
+push temp 1 INT
+lt INT
+pop temp 6 INT
+if-goto #L33
+goto #L34
+label #L35
+push local 18 INT
+push temp 2 INT
+add INT
+pop temp 9 INT
+push temp 9 INT
+pop local 18 INT
+goto #L32
+label #L33
+push constant 21 INT
+push local 18 INT
+push local 18 INT
+add INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 7 INT
+push temp 7 INT
+print INT
+push local 18 INT
+push temp 2 INT
+add INT
+pop temp 5 INT
+push constant 0 INT
+pop temp 4 INT
+push temp 5 INT
+pop temp 6 INT
+push constant 1 INT
+pop temp 10 INT
+label #L38
+if-goto #L39
+goto #L40
+label #L39
+push temp 6 INT
+push temp 3 INT
+sub INT
+pop temp 6 INT
+goto #L38
+label #L40
+push temp 6 INT
+pop temp 4 INT
+push temp 4 INT
+push temp 0 INT
+eq INT
+if-goto #L40
+goto #L41
+label #L40
+push data 2 "\n" STR
+push data 2 STR
+print STR
+goto #L36
+label #L41
+push data 3 " " STR
+push data 3 STR
+print STR
+label #L36
+goto #L35
+label #L34
+push temp 0 INT
+pop argument 0 INT
+return
