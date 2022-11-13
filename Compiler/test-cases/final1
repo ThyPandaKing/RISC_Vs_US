@@ -1,19 +1,4 @@
 // Various operations using switch-case
 void main(){
-
-	int a;
-    int b;
-	
-	output("Enter \"a\" value = ");
-	input(a);
-	
-	output("Enter \"b\" value = ");
-	input(b);
-
-	output("Select the operation: \n1. Sum (+)\n2. Difference (-)\n3. Product (*)\n4. Division (/)\n5. Modulo (%)\n6. Bitwise And (&)\n7. Bitwise Or (|)\n8. Bitwise XOR (^)\n\n");
-
-	int op;
-	input(op);
-
-	output("Result: ");
+	output(8%3);
 }

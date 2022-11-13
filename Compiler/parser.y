@@ -400,21 +400,13 @@ expr      	    :   expr ADD expr {
                     }
                     | expr LE expr {
                         add_tac($$, $1, $2, $3)
-                        string temp = get_temp();
-                        tac.push_back(temp + " = " + string($1.lexeme) + " > " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
-
-                        free_temp.push(temp);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                         if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
                         if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr GE expr {
                         add_tac($$, $1, $2, $3)
-                        string temp = get_temp();
-                        tac.push_back(temp + " = " + string($1.lexeme) + " < " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
-
-                        free_temp.push(temp);
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
                         if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
                         if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
