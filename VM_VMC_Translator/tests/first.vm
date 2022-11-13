@@ -71,9 +71,6 @@ goto #L6
 label #L8
 push temp 3 INT
 pop local 2 INT
-push data 4 "h" STR
-push data 4 STR
-print STR
 goto #L0
 label #L4
 push constant 3 INT
@@ -94,8 +91,8 @@ push temp 6 INT
 pop local 2 INT
 goto #L0
 label #L10
-push data 5 "Invalid\n" STR
-push data 5 STR
+push data 4 "Invalid\n" STR
+push data 4 STR
 print STR
 label #L0
 push local 2 INT

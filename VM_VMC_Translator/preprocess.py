@@ -34,12 +34,12 @@ class Preprocess:
                 label0 = self.get_new_label()
                 label1 = self.get_new_label()
                 mod_vm_code += f"push constant 0 {line[-1]}\n"
-                mod_vm_code += f"Eq {line[-1]}\n"
+                mod_vm_code += f"eq {line[-1]}\n"
                 mod_vm_code += f"if-goto {label0}\n"
-                mod_vm_code += f"push constant 1 {line[-1]}\n"
+                mod_vm_code += f"push constant 0 {line[-1]}\n"
                 mod_vm_code += f"goto {label1}\n"
                 mod_vm_code += f"label {label0}\n"
-                mod_vm_code += f"push constant 0 {line[-1]}\n"
+                mod_vm_code += f"push constant 1 {line[-1]}\n"
                 mod_vm_code += f"label {label1}\n"
             elif (';' in line):
                 mod_vm_code += re.sub(r';.*', '\n', line).strip()

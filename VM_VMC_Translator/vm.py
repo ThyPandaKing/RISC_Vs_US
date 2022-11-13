@@ -635,7 +635,6 @@ class VM:
         datatype = self.prev_datatype
         label = line[-1]
 
-        print(label, self.prev_datatype)
         if (datatype == Datatypes.INT):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
@@ -859,10 +858,10 @@ class VM:
         vm_code = preprocess.preprocess(vm_code)
 
         for line in vm_code.splitlines():
+            print(line)
             line = shlex.split(line)
             if (len(line) == 0):
                 continue
-            # print(line)
 
             if (line[0] == Instructions.Add.value or line[0] == Instructions.Sub.value or line[0] == Instructions.BitAnd.value or
                     line[0] == Instructions.BitOr.value or line[0] == Instructions.BitXor.value or line[0] == Instructions.LShift.value or
