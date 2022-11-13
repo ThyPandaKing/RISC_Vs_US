@@ -11,6 +11,7 @@ class Instructions(enum.Enum):
     if_goto = 'if-goto'
     print_stmt = 'print'
     call = 'call'
+    scan = 'scan'
 
     Eq = 'eq'
     Lt = 'lt'
@@ -18,6 +19,7 @@ class Instructions(enum.Enum):
     Ge = 'ge'
     Le = 'le'
     Neq = 'neq'
+    Not = 'not'
 
     Add = 'add'
     Sub = 'sub'

@@ -812,6 +812,26 @@ class VM:
 
         self.text_segment += '\n'
 
+    def scan(self, line):
+        datatype = line[-1]
+
+        if (datatype == Datatypes.INT.value):
+            self.text_segment += "addi a7, x0, 5\necall\n"
+            self.text_segment += f"sw a0, 0(x2)\n"
+
+        # taking char input
+        elif (datatype == Datatypes.CHAR.value):
+            self.text_segment += "addi a7, x0, 12\necall\n"
+            self.text_segment += f"sw a0, 0(x2)\n"
+
+        # taking float input
+        elif (datatype == Datatypes.FLOAT.value):
+            self.text_segment += "addi a7, x0, 6\necall\n"
+            self.text_segment += f"fsw fa0, 0(x2)\n"
+
+        self.text_segment += f"addi x2, x2, -4\n"
+        self.pop(f"pop {line[1]} {line[2]} {line[3]}".split(' '))
+
     def generate_target_code(self, vm_code):
 
         preprocess = Preprocess()
@@ -850,6 +870,8 @@ class VM:
                 self.print_stmt(line)
             elif (line[0] == Instructions.call.value):
                 self.function_call(line)
+            elif (line[0] == Instructions.scan.value):
+                self.scan(line)
 
         self.text_segment = postprocess(self.text_segment)
 
