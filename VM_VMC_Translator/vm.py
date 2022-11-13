@@ -359,13 +359,13 @@ class VM:
 
         if (condition == Instructions.Eq.value):
             condition = Operators.Eq
-            branch = Operators.Eq.value[0]
+            branch = Operators.Eq.value
         elif (condition == Instructions.Lt.value):
             condition = Operators.Lt
-            branch = Operators.Lt.value[0]
+            branch = Operators.Lt.value
         elif (condition == Instructions.Ge.value):
             condition = Operators.Ge
-            branch = Operators.Ge.value[0]
+            branch = Operators.Ge.value
 
         self.prev_operator = condition
 
@@ -378,7 +378,7 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"      # LHS
 
-            self.text_segment += f"{branch} x5, x6, {label1}\n"
+            self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
@@ -395,7 +395,7 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x5, 0(x2)\n"      # RHS
 
-            self.text_segment += f"{branch} x5, x6, {label1}\n"
+            self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
@@ -412,7 +412,7 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lb x5, 0(x2)\n"      # RHS
 
-            self.text_segment += f"{branch} x5, x6, {label1}\n"
+            self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
@@ -430,8 +430,8 @@ class VM:
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
-            self.text_segment += f"{branch} f3, f4, {label1}\n"
-            self.text_segment += f"add.s f5, f0, f0\n"
+            self.text_segment += f"{branch[1]} f3, f4, {label1}\n"
+            self.text_segment += f"fadd.s f5, f0, f0\n"
             self.text_segment += f"beq x0, x0, {label2}\n"
             self.text_segment += f"{label1}:\n"
             # self.text_segment += f"add.s f5, f0, 1\n"
