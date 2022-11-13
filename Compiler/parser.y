@@ -840,7 +840,7 @@ switch_stmt     :   SWITCH {
                         // strcpy($8.parentNext, $1.parentNext);
                     }
                     default_stmt CF {
-                        tac.push_back(string($1.parentNext));
+                        tac.push_back(string($1.parentNext) + ":");
                         loop_break.pop();
                     }
                     ;
