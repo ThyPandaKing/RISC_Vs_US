@@ -224,7 +224,15 @@ stmt   		    :   declaration
                     | switch_stmt
                     | INPUT OC ID CC SCOL  {
                         check_declaration($3.lexeme);
-                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        // check_scope(string($3.lexeme));
+                    }
+                    | INPUT OC ID OS expr CS CC SCOL {
+                        check_declaration($3.lexeme);
+                        string temp = get_temp();
+                        tac.push_back("input " + temp + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        tac.push_back(string($3.lexeme) + " [ " + string($5.lexeme) + " ] = " + temp + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        free_temp.push(temp);
                         // check_scope(string($3.lexeme));
                     }
                     | OUTPUT OC expr CC SCOL {
