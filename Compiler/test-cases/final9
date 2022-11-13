@@ -1,0 +1,38 @@
+// Selection Sort
+
+int main(){
+
+	int arr[10];
+
+	output("Enter array elements: ");
+	int i;
+	for(i=0; i<10; i=i+1){
+        int temp;
+		input(temp);
+        arr[i] = temp;
+		// arr[i] = 9-i;
+	}
+
+	for(i=0; i<9; i=i+1){
+		int min_i = i;
+		int j;
+		for(j=i+1; j<10; j=j+1){
+			if(arr[j] < arr[min_i]){
+				min_i = j;
+            }
+		}
+		int temp = arr[min_i];
+		arr[min_i] = arr[i];
+		arr[i] = temp;
+	}
+
+	output("Sorted array: ");
+	for(i=0; i<10; i=i+1){
+		output(arr[i]);
+		output(" ");
+	}
+	output("\n");
+
+    return 0;
+
+}

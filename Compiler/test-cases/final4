@@ -1,0 +1,27 @@
+// Rounding off a decimal number
+void main(){
+
+	float f;
+	int dec;
+
+	output("Enter a decimal number: ");
+	input(f);
+	output("Final decimal number precision: ");
+	input(dec);
+
+	int i;
+	for(i=0; i<dec; i=i+1){
+		f = f * 10;
+	}
+	
+	int w = f;
+	f = w;
+
+	for(i=0; i<dec; i=i+1){
+		f = f / 10;
+	}
+
+	output("Rounded number: ");
+	output(f);
+	output("\n");
+}

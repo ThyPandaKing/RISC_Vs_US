@@ -15,7 +15,7 @@ map<string, int> strings;
 int str_idx=0;
 
 map<string, pair<int, int>> fun_var_count;
-string curr_fun_name;
+string curr_fun_name, curr_ret_type;
 
 
 void initialize(){
@@ -140,6 +140,11 @@ void conversion(){
             }
             else if(tac[i][0] == "end:"){
                 fun_var_count[curr_fun_name] = {local_idx, temp_idx};
+                if(curr_ret_type == "VOID"){
+                    vm.push_back("push constant 0 INT");
+                    vm.push_back("pop argument 0 INT");
+                    vm.push_back("return");
+                }
                 local_idx = 0;
                 temp_idx = 0;
                 local.clear();
@@ -168,6 +173,7 @@ void conversion(){
                     ins += " " + tac[i][1];
                     vm.push_back(ins);
                     curr_fun_name = tac[i][0].substr(0, tac[i][0].size()-1);
+                    curr_ret_type = tac[i][1];
                 }
             }
             else if(tac[i].size() == 3){
@@ -185,16 +191,14 @@ void conversion(){
                         local[tac[i][2]].first = local_idx++;
                         local[tac[i][2]].second = tac[i][1];
                     }
-                    else{
-                        // array declarations
-                        local[tac[i][2]].first = local_idx;
-                        local_idx += stoi(tac[i][4]);
-                        local[tac[i][2]].second = tac[i][1];
-                    }
                 }
                 else if(tac[i][0] == "param"){
                     pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
                     vm.push_back("push " + type_a.second + " " + to_string(type_a.first.first) + " " + type_a.first.second);
+                }
+                else if(tac[i][0] == "input"){
+                    pair<pair<int, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
+                    vm.push_back("scan " + type_a.second + " " + to_string(type_a.first.first) + " " + tac[i][2]);
                 }
                 else if(tac[i][0] == "output"){
                     if(tac[i][2] == "STR"){
@@ -252,6 +256,12 @@ void conversion(){
                     pair<pair<int, string>, string> a = get_type(tac[i][0], tac[i][4]);
                     vm.push_back("push argument 0 " + tac[i][4]);
                     vm.push_back("pop " + a.second + " " + to_string(a.first.first) + " " + a.first.second);
+                }
+                else if(tac[i][3] == "["){
+                    // array declarations
+                    local[tac[i][2]].first = local_idx;
+                    local_idx += stoi(tac[i][4]);
+                    local[tac[i][2]].second = tac[i][1];
                 }
             }
             else if(tac[i].size() == 7){

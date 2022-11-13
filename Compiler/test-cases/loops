@@ -2,8 +2,6 @@
 int main(int x, char y){
     int a[2];
     input(a[1]);
-    int b=3;
-    input(a[b-3]);
 
     return 7;
 }
