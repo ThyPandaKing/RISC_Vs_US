@@ -843,7 +843,7 @@ case_stmt       :   CASE {
                         char* hold = const_cast<char*>(to_string(variable_count).c_str());
                         sprintf($4.temp, "%s", hold);
                         tac.push_back("@t" + to_string(variable_count++) + " = " + $4.lexeme);
-                        tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp));
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp) + " INT");
                         tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
                         tac.push_back("#L" + to_string(label_counter) + ":");
                         sprintf($4.case_body, "#L%d", label_counter++);

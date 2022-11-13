@@ -24,27 +24,35 @@ void main(){
 		case(1):
 			c = a+b;
 			output(c);
+            break;
 		case(2):
 			c = a-b;
 			output(c);
+            break;
 		case(3):
 			c = a*b;
 			output(c);
+            break;
 		case(4):
 			f = a/b;
 			output(f);
+            break;
 		case(5):
 			c = a%b;
 			output(c);
+            break;
 		case(6):
 			c = a&b;
 			output(c);
+            break;
 		case(7):
 			c = a|b;
 			output(c);
+            break;
 		case(8):
 			c = a^b;
 			output(c);
+            break;
 		default:
 			output("Invalid Operation.\n");
 	}
