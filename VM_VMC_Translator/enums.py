@@ -34,6 +34,7 @@ class Segment(enum.Enum):
     constant = 'constant'
     temp = 'temp'
     that = 'that'
+    data = 'data'
 
 
 class Datatypes(enum.Enum):

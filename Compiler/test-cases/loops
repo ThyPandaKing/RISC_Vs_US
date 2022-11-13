@@ -1,0 +1,7 @@
+// Queue
+int main(int x, char y){
+    int a[2];
+    input(a[1]);
+
+    return 7;
+}

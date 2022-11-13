@@ -1,4 +1,4 @@
-run: parser vm
+run: parser vm bundle
 	./bundle > bundle.txt
 	./parser < bundle.txt > tac.txt;\
 	./tac-vm > vm.vm
@@ -28,4 +28,4 @@ optimal:
 	./Optimization/a.out > tac_optimized.txt
 	
 clean:
-	rm -f parser y.tab.c lex.yy.c y.tab.h y.output a.out tac-vm tac.txt vm.vm bundle
+	rm -f parser y.tab.c lex.yy.c y.tab.h y.output a.out tac-vm tac.txt vm.vm bundle bundle.txt

@@ -1,3 +1,8 @@
+.section
+.data
+
+.section
+.text
 .global main
 beq x0, x0, main
 main:
