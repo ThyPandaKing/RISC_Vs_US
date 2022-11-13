@@ -142,7 +142,7 @@ void conversion(){
             }
             else if(tac[i][0] == "end:"){
                 fun_var_count[curr_fun_name] = {local_idx, temp_idx};
-                if(curr_ret_type == "VOID"){
+                if(curr_ret_type == "void"){
                     vm.push_back("push constant 0 INT");
                     vm.push_back("pop argument 0 INT");
                     vm.push_back("return");
@@ -162,8 +162,8 @@ void conversion(){
                 vm.push_back("push " + type_b.second + " " + type_b.first.first + " " + type_b.first.second);
                 vm.push_back("push " + type_c.second + " " + type_c.first.first + " " + type_c.first.second);
                 vm.push_back(op_map[tac[i][3]] + " " + tac[i][5]);
-                if(op_map[tac[i][3]] != "eq")
-                    vm.push_back("pop " + type_a.second + " " + type_a.first.first + " " + type_a.first.second);
+                // if(op_map[tac[i][3]] != "eq")
+                vm.push_back("pop " + type_a.second + " " + type_a.first.first + " " + type_a.first.second);
             }
             else if(tac[i].size() == 2){
                 if(tac[i][0] == "GOTO"){
@@ -274,11 +274,11 @@ void conversion(){
                     vm.push_back("push " + a.second + " " + a.first.first + " " + a.first.second);
 
                     vm.push_back("push constant " + local[tac[i][0]].first + " INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
@@ -290,12 +290,12 @@ void conversion(){
                     auto a = get_type(tac[i][0], tac[i][6]);
                     auto b = get_type(tac[i][4], "INT");
 
-                    vm.push_back("push constant " + local[tac[i][2]].first + " " + tac[i][6]);
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
+                    vm.push_back("push constant " + local[tac[i][2]].first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
-                    vm.push_back("push " + b.second + " " + b.first.first + " " + b.first.second);
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
