@@ -27,6 +27,9 @@ void initialize(){
     op_map["<"] = "lt";
     op_map["&"] = "and";
     op_map["|"] = "or";
+    op_map["<="] = "le";
+    op_map[">="] = "ge";
+    op_map["!="] = "neq";
 }
 
 vector<string> tokenize(string in){

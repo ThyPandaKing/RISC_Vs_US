@@ -7,16 +7,19 @@ int main(){
 	input(number);
 
     int i;
-    for (i = 2; i <= number / 2; i=i+1) {
+    output(number/2);
+    output("\n");
+    for (i = 2; i < number; i=i+1) {
+        output(number%i);
         if (number % i != 0){
             continue;
         }
         else{
-            output("It is a prime number.\n");
+            output("It is not a prime number.\n");
 			return 0;
 		}
     }
-	output("It is not a prime number.\n");
+	output("It is a prime number.\n");
 
     return 0;
 }
