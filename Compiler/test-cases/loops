@@ -1,5 +1,6 @@
 // Queue
 int main(int x, char y){
-    for(x=0; x<)
+    int arr[2];
+    arr[1] = 10;
     return 0;
 }
