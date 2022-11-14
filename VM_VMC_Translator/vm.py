@@ -225,7 +225,7 @@ class VM:
             self.text_segment += f"sub x7, x7, x5\n"
             self.text_segment += f"sw x6, 0(x7)\n"
 
-            self.text_segment += '\n'
+            # self.text_segment += '\n'
             return
 
         if (datatype == Datatypes.INT.value):
@@ -281,7 +281,7 @@ class VM:
             self.text_segment += f"fsw f3, 0(x6)\n"
 
         self.prev_push_datatype = None
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def Operator(self, line):
         """
@@ -341,7 +341,7 @@ class VM:
                 self.text_segment += f"addi x2, x2, -4\n"
             # float does not have any other operations
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def Condtion_builtin(self, line):
         """
@@ -627,7 +627,7 @@ class VM:
             self.text_segment += f"addi x2, x2, -4\n"
             self.prev_datatype = Datatypes.FLOAT
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def if_goto(self, line):
         """
@@ -658,7 +658,7 @@ class VM:
             self.text_segment += f"fle.s x28, f3, f4\n"
             self.text_segment += f"bne x28, x0, {label}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
         # self.prev_datatype = None
         self.prev_operator = None
@@ -700,7 +700,7 @@ class VM:
         elif (datatype == Datatypes.STR.value):
             pass
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def function_call(self, line):
         num_args = int(line[-1])
@@ -745,7 +745,7 @@ class VM:
 
         self.text_segment += f"jal x1, {line[1]}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def function_def(self, line):
         """
@@ -759,7 +759,7 @@ class VM:
         if (function == 'main'):
             self.text_segment += f"{function}:\n"
             self.init_mem()
-            self.text_segment += '\n'
+            # self.text_segment += '\n'
             return
 
         self.text_segment += f"{function}:\n"
@@ -779,7 +779,7 @@ class VM:
         # setting new working stack
         self.text_segment += f"addi x2, x2, -{(self.num_temp+self.num_local)*4}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def return_call(self, line):
 
@@ -830,7 +830,7 @@ class VM:
 
         self.text_segment += f"jalr x28, x5, 0\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def scan(self, line):
         datatype = line[-1]
@@ -902,5 +902,5 @@ class VM:
         for var, (type, value, _, __) in sorted_list:
             self.data_segment += f"{var}:\n\t{type} \"{value}\"\n"
 
-        final_code = self.data_segment+'\n'+self.text_segment
+        final_code = self.data_segment+ self.text_segment
         return final_code
