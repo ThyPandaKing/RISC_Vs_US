@@ -27,6 +27,8 @@ class VM:
         self.data_segment_start = 0x10010000
         self.data_segment_dict = {}
         self.data_segment = ".section\n.data\n"
+        self.print_start = 2**18
+        self.demo = False
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
@@ -113,14 +115,32 @@ class VM:
                 self.data_segment_start += length+1
             else:
                 # perform printing here itself
-                var_name = f"__{self.cur_function}__data{index}"
-                total = hex(self.data_segment_dict[var_name][2])[2:]
-                upper, mid, lower = get_ieee_rep(None, total)
+                if (self.demo):
+                    var_name = f"__{self.cur_function}__data{index}"
+                    total = hex(self.data_segment_dict[var_name][2])[2:]
+                    upper, mid, lower = get_ieee_rep(None, total)
 
-                self.text_segment += f"lui a0, {upper}\n"
-                self.text_segment += f"addi a0, a0, {mid}\n"
-                self.text_segment += f"addi a0, a0, {lower}\n"
-                self.text_segment += "addi a7, x0, 4\necall\n"
+                    self.text_segment += f"lui a0, {upper}\n"
+                    self.text_segment += f"addi a0, a0, {mid}\n"
+                    self.text_segment += f"addi a0, a0, {lower}\n"
+                    self.text_segment += "addi a7, x0, 4\necall\n"
+                else:
+                    var_name = f"__{self.cur_function}__data{index}"
+                    total = hex(self.data_segment_dict[var_name][2])[2:]
+                    upper, mid, lower = get_ieee_rep(None, total)
+
+                    self.text_segment += f"lui x5, {upper}\n"
+                    self.text_segment += f"addi x5, x5, {mid}\n"
+                    self.text_segment += f"addi x5, x5, {lower}\n"
+
+                    for i in self.data_segment_dict[var_name][1].lstrip('"').rstrip('"'):
+                        self.text_segment += f"li x6, {ord(i)}\n"
+                        self.text_segment += f"sw x6, -{self.print_start}\n"
+                        self.print_start += 4
+                        self.text_segment += f"nop CHAR\n"
+                    self.text_segment += f"sw x0, -{self.print_start}\n"
+                    self.print_start += 4
+                    self.text_segment += f"nop CHAR\n"
 
         elif (segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
@@ -702,6 +722,20 @@ class VM:
 
         # self.text_segment += '\n'
 
+    def new_print_stmt(self, line):
+        datatype = line[-1]
+        if (datatype == Datatypes.INT.value or datatype == Datatypes.CHAR.value or
+                datatype == Datatypes.BOOL.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x6, 0(x5)\n"
+            self.print_start += 4
+            self.text_segment += f"nop {datatype}\n"
+        elif (datatype == Datatypes.STR.value):
+            pass
+
     def function_call(self, line):
         num_args = int(line[-1])
 
@@ -888,7 +922,10 @@ class VM:
             elif (line[0] == Instructions.label.value):
                 self.label(line)
             elif (line[0] == Instructions.print_stmt.value):
-                self.print_stmt(line)
+                if (self.demo):
+                    self.print_stmt(line)
+                else:
+                    self.new_print_stmt(line)
             elif (line[0] == Instructions.call.value):
                 self.function_call(line)
             elif (line[0] == Instructions.scan.value):
@@ -902,5 +939,5 @@ class VM:
         for var, (type, value, _, __) in sorted_list:
             self.data_segment += f"{var}:\n\t{type} \"{value}\"\n"
 
-        final_code = self.data_segment+ self.text_segment
+        final_code = self.data_segment + self.text_segment
         return final_code
