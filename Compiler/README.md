@@ -9,7 +9,7 @@ Table of contents
 * [Known issues and limitations](#known-issues-and-limitations)
 
 ## Introduction
-1. In this project you can find a compiler for the programming language developed by #RISC_Vs_US team.
+1. In this project you can find a compiler for the programming language developed by <mark style="background-color: lightblue">RISC_Vs_US</mark> team.
 
 
 ## Installation and Usage
