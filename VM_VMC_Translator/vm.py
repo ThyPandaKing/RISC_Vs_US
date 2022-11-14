@@ -635,7 +635,6 @@ class VM:
         datatype = self.prev_datatype
         label = line[-1]
         if (datatype == Datatypes.INT or datatype == None):
-            print('-----------------------')
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"li x6, 1\n"

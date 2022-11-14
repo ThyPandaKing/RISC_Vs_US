@@ -1,0 +1,20 @@
+int add(int a){
+    int ans = a + 5;
+    return ans;
+}
+
+int main(){
+    int a;
+    output("Enter a: ");
+    input(a);
+
+    int ans = add(a);
+
+    output("5 + ");
+    output(a);
+    output(" = ");
+    output(ans);
+    output("\n");
+
+    return 0;
+}

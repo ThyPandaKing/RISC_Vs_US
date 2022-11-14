@@ -1,37 +1,22 @@
-// Combinations using recursion
-
-int nCr(int n, int r){
-	output(n);
-	output("\n");
-	if(n < r){
-		return 0;
-	}
-	elif(n == r){
-		return 1;
-	}
-	else{
-		if(r==0){
-			return 1;
-		}
-		return nCr(n-1, r-1) + nCr(n-1, r); 
-	}
+int factorial(int n){
+    if(n==0){
+        return 1;
+    }
+    else{
+        return factorial(n-1) * n;
+    }
 }
 
 int main(){
 
-	output("Enter n: ");
-	int n;
-	input(n);
+    int n;
+    output("Enter n: ");
+    input(n);
 
-	output("Enter r: ");
-	int r;
-	input(r);
+    int res = factorial(n);
 
-	int res = nCr(n, r);
-
-	output("nCr: ");
-	output(res);
-	output("\n");
+    output(res);
+    output("\n");
 
     return 0;
 }
