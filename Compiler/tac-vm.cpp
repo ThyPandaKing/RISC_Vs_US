@@ -277,13 +277,20 @@ void conversion(){
                     vm.push_back("push " + a.second + " " + a.first.first + " " + a.first.second);
 
                     vm.push_back("push constant " + local[tac[i][0]].first + " INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push constant " + local[tac[i][0]].first + " INT");
+                    vm.push_back("push constant " + local[tac[i][0]].first + " INT");
+                    vm.push_back("push constant " + local[tac[i][0]].first + " INT");
+                    vm.push_back("add INT");
+                    vm.push_back("add INT");
                     vm.push_back("add INT");
                     vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
+                    vm.push_back("add INT");
+
                     vm.push_back("add INT");
                     // vm.push_back("pop pointer 0");
                     vm.push_back("pop that 0 " + tac[i][6]);
@@ -294,13 +301,20 @@ void conversion(){
                     auto b = get_type(tac[i][4], "INT");
 
                     vm.push_back("push constant " + local[tac[i][2]].first + " INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
-                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push constant " + local[tac[i][2]].first + " INT");
+                    vm.push_back("push constant " + local[tac[i][2]].first + " INT");
+                    vm.push_back("push constant " + local[tac[i][2]].first + " INT");
+                    vm.push_back("add INT");
+                    vm.push_back("add INT");
                     vm.push_back("add INT");
                     vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
+                    vm.push_back("push " + b.second + " " + b.first.first + " INT");
                     vm.push_back("add INT");
                     vm.push_back("add INT");
+                    vm.push_back("add INT");
+
                     vm.push_back("add INT");
                     // vm.push_back("pop pointer 0");
                     vm.push_back("push that 0 " + tac[i][6]);
