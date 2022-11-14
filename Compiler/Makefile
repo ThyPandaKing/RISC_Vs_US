@@ -1,14 +1,19 @@
-run: parser
-	@echo "Filename: "; \
-	read FILENAME; \
-	./parser < $${FILENAME} > tac.txt;\
-	./a.out > vm.vm
+run: parser vm bundle
+	./bundle > bundle.txt
+	./parser < bundle.txt > tac.txt;\
+	./tac-vm > vm.vm
 
+# run: parser vm bundle
+# 	./parser < bundle.txt > tac.txt;\
+# 	./tac-vm > vm.vm
 # dummy: parser
 # 	./parser < test-cases/input1.txt > tac.txt
 
-vm: tac.txt
-	g++ tac-vm.cpp
+bundle: bundle.cpp
+	g++ bundle.cpp -o bundle
+
+vm: tac-vm.cpp
+	g++ tac-vm.cpp -o tac-vm
 
 parser: y.tab.c lex.yy.c y.tab.h
 	g++ -w y.tab.c lex.yy.c -lfl -o parser
@@ -23,4 +28,4 @@ optimal:
 	./Optimization/a.out > tac_optimized.txt
 	
 clean:
-	rm -f parser y.tab.c lex.yy.c y.tab.h y.output 
+	rm -f parser y.tab.c lex.yy.c y.tab.h y.output a.out tac-vm tac.txt vm.vm bundle bundle.txt

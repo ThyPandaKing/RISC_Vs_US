@@ -298,7 +298,7 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 		extractLabel(regs, reg);
 	return regs;	
 }
-int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
+int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumber)
 {
 	cout<<reg<<endl;
 	
@@ -391,16 +391,18 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type)
 		// rs2
 		ins=ins|(regs[1]<<20);
 
+		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
+		int offset=(regs[2]-linenumber)*4;
 		// imm
 		// imm is split into 4 segments
 		// bit 11 from LSB at index 7 of ins
 		// bits 1 to 4 from LSB - starting from index 8 of ins
 		// bits 5 to 10 from LSB - starting from index 25 of ins
 		// bit 12 from LSB at index 31 of ins
-		ins=ins|(((regs[2]>>10)&1)<<7);
-		ins=ins|((regs[2]&15)<<8);
-		ins=ins|((regs[2]&1008)>>4<<25);
-		ins=ins|(((regs[2]>>11)&1)<<31);
+		ins=ins|(((offset>>10)&1)<<7);
+		ins=ins|((offset&15)<<8);
+		ins=ins|((offset&1008)>>4<<25);
+		ins=ins|(((offset>>11)&1)<<31);
 	}
 	else if(type=='U')
 	{
@@ -651,6 +653,8 @@ int Assembler::firstPass(string vmout)
 
 				while(getline(fin, vm_line))
 				{
+					if(vm_line.length()==0)
+						continue;
 					if(vm_line==".section")
 						break;
 					string label=extractLabel(vm_line);
@@ -680,11 +684,12 @@ int Assembler::firstPass(string vmout)
 					string label=extractLabel(vm_line, false);
 					if(label=="")
 					{
-						linenumber++;
+						string comment=extractComment(vm_line);
+						if(comment=="")
+							linenumber++;
 						continue;
 					}
 
-					// TODO : Just line number or line number * 4 as each instruction corresponds to 4 bytes
 					ST_Entry S(0, linenumber);
 					symbol_table[label]=S;
 				}
@@ -719,6 +724,7 @@ int Assembler::secondPass(string vmout, string asmout)
 	string op, reg_list;
 	int ins=0;
 	unsigned char type='\0';
+	int linenumber=0;
 
 	// Run through till .section .text
 	while(getline(fin, ins_tac))
@@ -740,6 +746,9 @@ int Assembler::secondPass(string vmout, string asmout)
 
 	while(getline(fin, ins_tac))
 	{
+		if(ins_tac.length()==0)
+			continue;
+		
 		if(extractLabel(ins_tac, false)!="")
 			continue;
 
@@ -748,6 +757,7 @@ int Assembler::secondPass(string vmout, string asmout)
 
 		// Some ins have info hardcoded in uid (independent of registers, immediate etc)
 		// If more such ins should be added (We can add in a set and check)
+		ins=0;
 		if(ins_tac=="ecall")
 		{
 			// OP
@@ -764,7 +774,10 @@ int Assembler::secondPass(string vmout, string asmout)
 			{
 				perror("Invalid Operation");
 				return terminate(4);
-			}	
+			}
+			bitset<32> binary(ins);
+			fout<<binary<<endl;
+			linenumber++;
 			continue;
 		}
 
@@ -797,14 +810,14 @@ int Assembler::secondPass(string vmout, string asmout)
 		// REG_LIST
 		try
 		{
-			if(Map::getInstance()->getRegisters()->setRegCode(ins, reg_list, type)!=0)
+			if(Map::getInstance()->getRegisters()->setRegCode(ins, reg_list, type, linenumber)!=0)
 			{
 				perror("Invalid Syntax");
 				return terminate(5);
 			}
 			bitset<32> binary(ins);
 			fout<<binary<<endl;
-			ins=0;
+			linenumber++;
 		}
 		catch(const exception& e)
 		{

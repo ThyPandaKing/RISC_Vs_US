@@ -1,0 +1,766 @@
+function main 34 31 INT
+push constant 1 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 2 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 1 INT
+push constant 1 INT
+push constant 1 INT
+push constant 1 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 3 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 2 INT
+push constant 2 INT
+push constant 2 INT
+push constant 2 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 4 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 3 INT
+push constant 3 INT
+push constant 3 INT
+push constant 3 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 5 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 4 INT
+push constant 4 INT
+push constant 4 INT
+push constant 4 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 6 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 5 INT
+push constant 5 INT
+push constant 5 INT
+push constant 5 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 7 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 6 INT
+push constant 6 INT
+push constant 6 INT
+push constant 6 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 8 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 7 INT
+push constant 7 INT
+push constant 7 INT
+push constant 7 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 9 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push constant 8 INT
+push constant 8 INT
+push constant 8 INT
+push constant 8 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 8 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 1 INT
+push constant 1 INT
+push constant 1 INT
+push constant 1 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 7 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 2 INT
+push constant 2 INT
+push constant 2 INT
+push constant 2 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 6 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 3 INT
+push constant 3 INT
+push constant 3 INT
+push constant 3 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 5 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 4 INT
+push constant 4 INT
+push constant 4 INT
+push constant 4 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 4 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 5 INT
+push constant 5 INT
+push constant 5 INT
+push constant 5 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 3 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 6 INT
+push constant 6 INT
+push constant 6 INT
+push constant 6 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 2 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 7 INT
+push constant 7 INT
+push constant 7 INT
+push constant 7 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push constant 1 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push constant 8 INT
+push constant 8 INT
+push constant 8 INT
+push constant 8 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push data 0 "Enter the contents of matrix 1:\n" STR
+push data 0 STR
+print STR
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 18 INT
+label #L0
+push constant 9 INT
+pop temp 1 INT
+push local 18 INT
+push temp 1 INT
+lt INT
+pop temp 2 INT
+push temp 2 INT
+if-goto #L1
+goto #L2
+label #L3
+push constant 1 INT
+pop temp 2 INT
+push local 18 INT
+push temp 2 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 18 INT
+goto #L0
+label #L1
+scan local 19 INT
+push local 19 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L3
+label #L2
+push data 1 "Enter the contents of matrix 2:\n" STR
+push data 1 STR
+print STR
+push constant 0 INT
+pop temp 3 INT
+push temp 3 INT
+pop local 18 INT
+label #L4
+push constant 9 INT
+pop temp 4 INT
+push local 18 INT
+push temp 4 INT
+lt INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L5
+goto #L6
+label #L7
+push constant 1 INT
+pop temp 5 INT
+push local 18 INT
+push temp 5 INT
+add INT
+pop temp 6 INT
+push temp 6 INT
+pop local 18 INT
+goto #L4
+label #L5
+scan local 20 INT
+push local 20 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L7
+label #L6
+push constant 0 INT
+pop temp 6 INT
+push temp 6 INT
+pop local 30 INT
+label #L8
+push constant 3 INT
+pop temp 7 INT
+push local 30 INT
+push temp 7 INT
+lt INT
+pop temp 8 INT
+push temp 8 INT
+if-goto #L9
+goto #L10
+label #L11
+push constant 1 INT
+pop temp 8 INT
+push local 30 INT
+push temp 8 INT
+add INT
+pop temp 9 INT
+push temp 9 INT
+pop local 30 INT
+goto #L8
+label #L9
+push constant 0 INT
+pop temp 9 INT
+push temp 9 INT
+pop local 31 INT
+label #L12
+push constant 3 INT
+pop temp 10 INT
+push local 31 INT
+push temp 10 INT
+lt INT
+pop temp 11 INT
+push temp 11 INT
+if-goto #L13
+goto #L14
+label #L15
+push constant 1 INT
+pop temp 11 INT
+push local 31 INT
+push temp 11 INT
+add INT
+pop temp 12 INT
+push temp 12 INT
+pop local 31 INT
+goto #L12
+label #L13
+push constant 0 INT
+pop temp 12 INT
+push temp 12 INT
+pop local 32 INT
+push constant 0 INT
+pop temp 13 INT
+push temp 13 INT
+pop local 33 INT
+label #L16
+push constant 3 INT
+pop temp 14 INT
+push local 33 INT
+push temp 14 INT
+lt INT
+pop temp 15 INT
+push temp 15 INT
+if-goto #L17
+goto #L18
+label #L19
+push constant 1 INT
+pop temp 15 INT
+push local 33 INT
+push temp 15 INT
+add INT
+pop temp 16 INT
+push temp 16 INT
+pop local 33 INT
+goto #L16
+label #L17
+push constant 3 INT
+pop temp 16 INT
+push constant 0 INT
+pop temp 17 INT
+push constant 0 INT
+pop temp 18 INT
+push constant 1 INT
+pop temp 19 INT
+label #L21
+push temp 18 INT
+push temp 16 INT
+lt INT
+pop temp 20 INT
+push temp 20 INT
+if-goto #L22
+goto #L23
+label #L22
+push temp 17 INT
+push local 30 INT
+add INT
+pop temp 17 INT
+push temp 18 INT
+push temp 19 INT
+add INT
+pop temp 18 INT
+goto #L21
+label #L23
+push temp 17 INT
+push local 33 INT
+add INT
+pop temp 18 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+push constant 0 INT
+add INT
+add INT
+add INT
+push temp 18 INT
+push temp 18 INT
+push temp 18 INT
+push temp 18 INT
+add INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 20 INT
+push constant 3 INT
+pop temp 19 INT
+push constant 0 INT
+pop temp 17 INT
+push constant 0 INT
+pop temp 18 INT
+push constant 1 INT
+pop temp 21 INT
+label #L25
+push temp 18 INT
+push temp 19 INT
+lt INT
+pop temp 22 INT
+push temp 22 INT
+if-goto #L26
+goto #L27
+label #L26
+push temp 17 INT
+push local 33 INT
+add INT
+pop temp 17 INT
+push temp 18 INT
+push temp 21 INT
+add INT
+pop temp 18 INT
+goto #L25
+label #L27
+push temp 17 INT
+push local 31 INT
+add INT
+pop temp 18 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+push constant 9 INT
+add INT
+add INT
+add INT
+push temp 18 INT
+push temp 18 INT
+push temp 18 INT
+push temp 18 INT
+add INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 22 INT
+push constant 0 INT
+pop temp 21 INT
+push constant 0 INT
+pop temp 17 INT
+push constant 1 INT
+pop temp 23 INT
+label #L29
+push temp 17 INT
+push temp 22 INT
+lt INT
+pop temp 18 INT
+push temp 18 INT
+if-goto #L30
+goto #L31
+label #L30
+push temp 21 INT
+push temp 20 INT
+add INT
+pop temp 21 INT
+push temp 17 INT
+push temp 23 INT
+add INT
+pop temp 17 INT
+goto #L29
+label #L31
+push local 32 INT
+push temp 21 INT
+add INT
+pop temp 17 INT
+push temp 17 INT
+pop local 32 INT
+goto #L19
+label #L18
+push constant 3 INT
+pop temp 18 INT
+push constant 0 INT
+pop temp 23 INT
+push constant 0 INT
+pop temp 20 INT
+push constant 1 INT
+pop temp 21 INT
+label #L33
+push temp 20 INT
+push temp 18 INT
+lt INT
+pop temp 22 INT
+push temp 22 INT
+if-goto #L34
+goto #L35
+label #L34
+push temp 23 INT
+push local 30 INT
+add INT
+pop temp 23 INT
+push temp 20 INT
+push temp 21 INT
+add INT
+pop temp 20 INT
+goto #L33
+label #L35
+push temp 23 INT
+push local 31 INT
+add INT
+pop temp 17 INT
+push local 32 INT
+push constant 21 INT
+push constant 21 INT
+push constant 21 INT
+push constant 21 INT
+add INT
+add INT
+add INT
+push temp 17 INT
+push temp 17 INT
+push temp 17 INT
+push temp 17 INT
+add INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L15
+label #L14
+goto #L11
+label #L10
+push data 2 "\n" STR
+push data 2 STR
+print STR
+push constant 0 INT
+pop temp 20 INT
+push temp 20 INT
+pop local 18 INT
+label #L36
+push constant 9 INT
+pop temp 22 INT
+push local 18 INT
+push temp 22 INT
+lt INT
+pop temp 21 INT
+push temp 21 INT
+if-goto #L37
+goto #L38
+label #L39
+push constant 1 INT
+pop temp 23 INT
+push local 18 INT
+push temp 23 INT
+add INT
+pop temp 21 INT
+push temp 21 INT
+pop local 18 INT
+goto #L36
+label #L37
+push constant 21 INT
+push constant 21 INT
+push constant 21 INT
+push constant 21 INT
+add INT
+add INT
+add INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+push local 18 INT
+add INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 21 INT
+push temp 21 INT
+print INT
+push constant 1 INT
+pop temp 24 INT
+push local 18 INT
+push temp 24 INT
+add INT
+pop temp 25 INT
+push constant 3 INT
+pop temp 26 INT
+push constant 0 INT
+pop temp 27 INT
+push temp 25 INT
+pop temp 28 INT
+push constant 1 INT
+pop temp 29 INT
+label #L42
+push temp 28 INT
+push temp 26 INT
+ge INT
+pop temp 30 INT
+push temp 30 INT
+if-goto #L43
+goto #L44
+label #L43
+push temp 28 INT
+push temp 26 INT
+sub INT
+pop temp 28 INT
+goto #L42
+label #L44
+push temp 28 INT
+pop temp 27 INT
+push constant 0 INT
+pop temp 28 INT
+push temp 27 INT
+push temp 28 INT
+eq INT
+pop temp 30 INT
+push temp 30 INT
+if-goto #L45
+goto #L46
+label #L45
+push data 3 "\n" STR
+push data 3 STR
+print STR
+goto #L40
+label #L46
+push data 4 " " STR
+push data 4 STR
+print STR
+label #L40
+goto #L39
+label #L38
+push constant 0 INT
+pop temp 29 INT
+push temp 29 INT
+return

@@ -4,10 +4,11 @@
     #include <ctype.h>
     #include <vector>
     #include <string.h>
+    #include <queue>
+    #include <set>
 
     #define add_tac($$, $1, $2, $3) {strcpy($$.type, $1.type);\
-        sprintf($$.lexeme, "@t%d", variable_count);\
-        variable_count++;\
+        sprintf($$.lexeme, get_temp().c_str());\
         string lt=string($1.type);\
         string rt=string($3.type);\
         if((lt == "CHAR" && rt == "INT") || (rt == "CHAR" && lt == "INT")){\
@@ -45,6 +46,11 @@
     bool function_check(string variable, int flag);
     bool type_check(string type1, string type2);
     bool check_type(string l, string r);
+    string get_temp();
+
+    queue<string> free_temp;
+    set<string> const_temps;
+    void PrintStack(stack<int> s);
 
     struct var_info {
         string data_type;
@@ -82,6 +88,8 @@
         vector<string> param_types;
         unordered_map<string, struct var_info> symbol_table;
     };
+
+    int has_return_stmt;
 
     unordered_map<string, struct func_info> func_table;
     string curr_func_name;
@@ -135,11 +143,17 @@ func_list       :   func_list func {}
 
 func            :   func_prefix OF
                     {
+                        has_return_stmt = 0;
                         scope_history.push(++scope_counter);
                     } stmt_list CF 
                     {
+                        if(func_table[curr_func_name].return_type != "void" && has_return_stmt == 0){
+                            sem_errors.push_back("Return stmt not there for function: " + curr_func_name);
+                        }
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("end:\n");
+                        has_return_stmt = 0;
                     }
  
 func_prefix     :   func_data_type ID 
@@ -147,7 +161,7 @@ func_prefix     :   func_data_type ID
                         if(func_table.find(string($2.lexeme)) != func_table.end()){
                             sem_errors.push_back("Error: Duplicate function name - " + string($2.lexeme));
                         }
-                        tac.push_back(string($2.lexeme) + ":"); 
+                        tac.push_back(string($2.lexeme) + ": " + string($1.type)); 
                         curr_func_name = string($2.lexeme);
                     } 
                     OC param_list CC {
@@ -208,12 +222,20 @@ stmt   		    :   declaration
                         if(!loop_continue.empty()){
                             tac.push_back("GOTO #L" + to_string(loop_continue.top()));
                         }
-                    }     
+                    }      
                     | switch_stmt
                     | INPUT OC ID CC SCOL  {
                         check_declaration($3.lexeme);
-                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
-                        check_scope(string($3.lexeme));
+                        tac.push_back("input " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        // check_scope(string($3.lexeme));
+                    }
+                    | INPUT OC ID OS expr CS CC SCOL {
+                        check_declaration($3.lexeme);
+                        string temp = get_temp();
+                        tac.push_back("input " + temp + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        tac.push_back(string($3.lexeme) + " [ " + string($5.lexeme) + " ] = " + temp + " " + func_table[curr_func_name].symbol_table[string($3.lexeme)].data_type);
+                        free_temp.push(temp);
+                        // check_scope(string($3.lexeme));
                     }
                     | OUTPUT OC expr CC SCOL {
                         tac.push_back("output " + string($3.lexeme) + " " + string($3.type));
@@ -226,7 +248,9 @@ stmt   		    :   declaration
  
 declaration     :   data_type ID SCOL { 
                         is_reserved_word(string($2.lexeme));
-                        multiple_declaration(string($2.lexeme));
+                        // if(multiple_declaration(string($2.lexeme))){
+                        //     check_scope(string($2.lexeme));
+                        // };
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
                     }
@@ -235,15 +259,17 @@ declaration     :   data_type ID SCOL {
                         multiple_declaration(string($2.lexeme));
                         tac.push_back("- STR " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " STR");
-                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", string($4.lexeme).length(), 0, countn+1 };
+                        func_table[curr_func_name].symbol_table[string($2.lexeme)] = { "STR", scope_counter, string($4.lexeme).length(), 0, countn+1 };
                     }
                     | data_type ID ASSIGN expr SCOL {
                         is_reserved_word(string($2.lexeme));
-                        multiple_declaration(string($2.lexeme));
+                        //multiple_declaration(string($2.lexeme));
                         check_type(string($1.type), string($4.type));
                         tac.push_back("- " + string($1.type) + " " + string($2.lexeme));
                         tac.push_back(string($2.lexeme) + " = " + string($4.lexeme) + " " + string($1.type));
                         func_table[curr_func_name].symbol_table[string($2.lexeme)] = { string($1.type), scope_counter, 0, 0, countn+1 };
+
+                        if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
                     }
                     | data_type ID OS INT_NUM CS SCOL {
                         is_reserved_word(string($2.lexeme));
@@ -281,7 +307,10 @@ arr_values      :   const {
 return_stmt     :   RETURN expr {
                         check_type(func_table[curr_func_name].return_type, string($2.type));
                         tac.push_back("return " + string($2.lexeme) + " " + func_table[curr_func_name].return_type);
-                    }
+                        has_return_stmt = 1;
+
+                        if(const_temps.find(string($2.lexeme)) == const_temps.end() && $2.lexeme[0] == '@') free_temp.push(string($2.lexeme));
+                    }  
                     ;
 
 data_type       :   INT {
@@ -300,16 +329,20 @@ data_type       :   INT {
 expr      	    :   expr ADD expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr SUBTRACT expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr MULTIPLY expr {
                         add_tac($$, $1, $2, $3)
-                        string t0="@t" + to_string(++variable_count);
-                        string t1="@t" + to_string(++variable_count);
-                        string t2="@t" + to_string(++variable_count);
+                        string t0=get_temp();
+                        string t1=get_temp();
+                        string t2=get_temp();
                         string a = string($$.lexeme);
                         string b = string($1.lexeme);
                         string c = string($3.lexeme);
@@ -326,12 +359,20 @@ expr      	    :   expr ADD expr {
                         tac.push_back(t0 + " = " + t0 + " + " + t2 +  "  " + dtype);
                         tac.push_back("GOTO #L" + to_string(label_counter-1));
                         tac.push_back("#L" + to_string(++label_counter) + ":");
+
+                        free_temp.push(t0);
+                        free_temp.push(t1);
+                        free_temp.push(t2);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr DIVIDE expr {
                         add_tac($$, $1, $2, $3)
-                        string t0="@t" + to_string(++variable_count);
-                        string t1="@t" + to_string(++variable_count);
-                        string t2="@t" + to_string(++variable_count);
+                        string t0=get_temp();
+                        string t1=get_temp();
+                        string t2=get_temp();
                         string a = string($$.lexeme);
                         string b = string($1.lexeme);
                         string c = string($3.lexeme);
@@ -348,36 +389,54 @@ expr      	    :   expr ADD expr {
                         tac.push_back(t0 + " = " + t0 + " - " + c +  "  " + dtype);
                         tac.push_back("GOTO #L" + to_string(label_counter-1));
                         tac.push_back("#L" + to_string(++label_counter) + ":");
+
+                        free_temp.push(t0);
+                        free_temp.push(t1);
+                        free_temp.push(t2);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr LE expr {
                         add_tac($$, $1, $2, $3)
-                        string temp = "@t" + to_string(++variable_count);
-                        tac.push_back(temp + " = " + string($1.lexeme) + " > " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr GE expr {
                         add_tac($$, $1, $2, $3)
-                        string temp = "@t" + to_string(++variable_count);
-                        tac.push_back(temp + " = " + string($1.lexeme) + " < " + string($3.lexeme) + " " + string($$.type));
-                        tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr LT expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr GT expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr EQ expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr NE expr {
                         add_tac($$, $1, $2, $3)
-                        string temp = "@t" + to_string(++variable_count);
+                        string temp = get_temp();
                         tac.push_back(temp + " = " + string($1.lexeme) + " == " + string($3.lexeme) + " " + string($$.type));
                         tac.push_back(string($$.lexeme) + " = ~ " + temp + " " + string($$.type)); 
+
+                        free_temp.push(temp);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr AND expr {
                         add_tac($$, $1, $2, $3)
@@ -396,6 +455,11 @@ expr      	    :   expr ADD expr {
                         tac.push_back(l1 + ":");
                         tac.push_back(string($$.lexeme) + " = 0 " + dtype);
                         tac.push_back(l2 + ":");
+
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr OR expr {
                         add_tac($$, $1, $2, $3)
@@ -414,12 +478,17 @@ expr      	    :   expr ADD expr {
                         tac.push_back(l1 + ":");
                         tac.push_back(string($$.lexeme) + " = 0 " + dtype);
                         tac.push_back(l2 + ":");
+
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr MODULO expr {
                         add_tac($$, $1, $2, $3)
-                        string t0="@t" + to_string(++variable_count);
-                        string t1="@t" + to_string(++variable_count);
-                        string t2="@t" + to_string(++variable_count);
+                        string t0=get_temp();
+                        string t1=get_temp();
+                        string t2=get_temp();
                         string a = string($$.lexeme);
                         string b = string($1.lexeme);
                         string c = string($3.lexeme);
@@ -436,34 +505,145 @@ expr      	    :   expr ADD expr {
                         tac.push_back("GOTO #L" + to_string(label_counter-1));
                         tac.push_back("#L" + to_string(++label_counter) + ":");
                         tac.push_back(a + " = " + t0 +  "  " + dtype);
+
+                        free_temp.push(t0);
+                        free_temp.push(t1);
+                        free_temp.push(t2);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr BITAND expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr BITOR expr {
                         add_tac($$, $1, $2, $3)
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($3.lexeme) + " " + string($$.type));
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     | expr XOR expr {
                         add_tac($$, $1, $2, $3)
                         string a = string($$.lexeme);
                         string b = string($1.lexeme);
-                        string b_= "@t" + to_string(++variable_count);
+                        string b_= get_temp();
                         string c = string($3.lexeme);
-                        string c_= "@t" + to_string(++variable_count);
+                        string c_= get_temp();
 
                         tac.push_back(b_ + " = ~ " + b + " " + string($1.type));
                         tac.push_back(c_ + " = ~ " + c + " " + string($3.type));
-                        tac.push_back("@t" + to_string(++variable_count) + " = " + b + " & " + c_ + " " + string($$.type));
-                        tac.push_back("@t" + to_string(++variable_count) + " = " + b_ + " & " + c + " " + string($$.type));
-                        tac.push_back(a + " = " + "@t" + to_string(variable_count-1) + " | " + "@t" + to_string(variable_count) + " " + string($$.type));
+                        string t1=get_temp();
+                        string t2=get_temp();
+                        tac.push_back(t1 + " = " + b + " & " + c_ + " " + string($$.type));
+                        tac.push_back(t2 + " = " + b_ + " & " + c + " " + string($$.type));
+                        tac.push_back(a + " = " + t1 + " | " + t2 + " " + string($$.type));
+
+                        free_temp.push(b_);
+                        free_temp.push(c_);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr LEFTSHIFT expr {
                         add_tac($$, $1, $2, $3)
+                        string d = string($3.lexeme);
+                        string t3 = get_temp();
+                        string t4 = get_temp();
+                        string l0 = "#L" + to_string(++label_counter);
+                        string l1 = "#L" + to_string(++label_counter);
+                        string l2 = "#L" + to_string(++label_counter);
+
+                        string t0= get_temp();
+                        string t1= get_temp();
+                        string t2= get_temp();
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string c = get_temp();
+                        tac.push_back(c + " = 2 INT");
+                        string dtype = string($$.type);
+                        
+                        tac.push_back(t3 + " = 0 INT");
+                        tac.push_back(l2 + ":");
+                        tac.push_back(t4 + " = " + t3 + " < " + d + " INT");
+                        tac.push_back("\nif " + t4 + " GOTO " + l0 + " else GOTO " + l1);
+                        tac.push_back(l0 + ":");
+                        tac.push_back(a + " = 0 " + dtype);
+                        tac.push_back(t0 + " = 0 " + dtype);
+                        tac.push_back(t2 + " = 1 " + dtype);
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t1 + " = " + t0 + " < " + c +  "  " + dtype);
+                        tac.push_back("if " + t1 + " GOTO " + "#L" + to_string(label_counter+1) + " else GOTO " + "#L" + to_string(label_counter+2));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(a + " = " + a + " + " + b +  "  " + dtype);
+                        tac.push_back(t0 + " = " + t0 + " + " + t2 +  "  " + dtype);
+                        tac.push_back("GOTO #L" + to_string(label_counter-1));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back("GOTO " + l2);
+                        tac.push_back(l1 + ":");
+
+                        free_temp.push(t0);
+                        free_temp.push(t1);
+                        free_temp.push(t2);
+                        free_temp.push(t3);
+                        free_temp.push(t4);
+                        free_temp.push(c);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | expr RIGHTSHIFT expr {
                         add_tac($$, $1, $2, $3)
+                        string d = string($3.lexeme);
+                        string t3 = get_temp();
+                        string t4 = get_temp();
+                        string l0 = "#L" + to_string(++label_counter);
+                        string l1 = "#L" + to_string(++label_counter);
+                        string l2 = "#L" + to_string(++label_counter);
+
+                        string t0=get_temp();
+                        string t1=get_temp();
+                        string t2=get_temp();
+                        string a = string($$.lexeme);
+                        string b = string($1.lexeme);
+                        string c = get_temp();
+                        tac.push_back(c + " = 2 INT");
+                        string dtype = string($$.type);
+                        
+                        tac.push_back(t3 + " = 0 INT");
+                        tac.push_back(l2 + ":");
+                        tac.push_back(t4 + " = " + t3 + " < " + d + " INT");
+                        tac.push_back("\nif " + t4 + " GOTO " + l0 + " else GOTO " + l1);
+                        tac.push_back(l0 + ":");
+                        tac.push_back(a + " = 0 " + dtype);
+                        tac.push_back(t0 + " = " + b + " " + dtype);
+                        tac.push_back(t2 + " = 1 " + dtype);
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(t1 + " = " + t0 + " >= " + c +  "  " + dtype);
+                        tac.push_back("if " + t1 + " GOTO " + "#L" + to_string(label_counter+1) + " else GOTO " + "#L" + to_string(label_counter+2));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back(a + " = " + a + " + " + t2 +  "  " + dtype);
+                        tac.push_back(t0 + " = " + t0 + " - " + c +  "  " + dtype);
+                        tac.push_back("GOTO #L" + to_string(label_counter-1));
+                        tac.push_back("#L" + to_string(++label_counter) + ":");
+                        tac.push_back("GOTO " + l2);
+                        tac.push_back(l1 + ":");
+
+                        free_temp.push(t0);
+                        free_temp.push(t1);
+                        free_temp.push(t2);
+                        free_temp.push(t3);
+                        free_temp.push(t4);
+                        free_temp.push(c);
+                        if(const_temps.find(string($1.lexeme)) == const_temps.end() && $1.lexeme[0] == '@') free_temp.push(string($1.lexeme));
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
+
+                        label_counter++;
                     }
                     | unary_expr {
                         strcpy($$.type, $1.type);
@@ -491,45 +671,57 @@ postfix_expr    :   func_call {
                         }
                         check_scope(string($1.lexeme));
                         strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
-                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        sprintf($$.lexeme, get_temp().c_str());
                         tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " [ " + string($3.lexeme) + " ] " + string($$.type));
+                        
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     ;
  
 unary_expr      :   unary_op primary_expr {
                         strcpy($$.type, $2.type);
-                        sprintf($$.lexeme, "@t%d", variable_count++);
+                        sprintf($$.lexeme, get_temp().c_str());
                         if(string($1.lexeme) == "~" || string($1.lexeme) == "-"){
                             tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($2.lexeme) + " " + string($$.type));
                         }
                         else if(string($1.lexeme) == "+"){
-                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type));
+                            tac.push_back(string($$.lexeme) + " = " + string($2.lexeme) + " " + string($$.type));
                         }
                         else{
                             tac.push_back(string($$.lexeme) + " = ~ " + string($2.lexeme) + " " + string($$.type));
                         }
+
+                        if(const_temps.find(string($2.lexeme)) == const_temps.end() && $2.lexeme[0] == '@') free_temp.push(string($2.lexeme));
                     }
                     ;
  
 primary_expr    :   ID {
                         check_declaration(string($1.lexeme));
-                        check_scope(string($1.lexeme));
+                        // check_scope(string($1.lexeme));
                         strcpy($$.type, func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type.c_str());
                         strcpy($$.lexeme, $1.lexeme);
                     }
                     | const {
                         strcpy($$.type, $1.type);
-                        if(temp_map[string($1.lexeme)] == ""){
-                            sprintf($$.lexeme, "@t%d", variable_count);
-                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
-                            temp_map[string($1.lexeme)] = string($$.lexeme);
-                            variable_count++;
-                        }
-                        else{
-                            tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
-                            strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
-                            // variable_count++;
-                        }
+
+                        string t=get_temp();
+                        sprintf($$.lexeme, t.c_str());
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        temp_map[string($1.lexeme)] = string($$.lexeme);
+
+                        const_temps.insert(t);
+                        // if(temp_map[string($1.lexeme)] == ""){
+                        //     string t=get_temp();
+                        //     sprintf($$.lexeme, t.c_str());
+                        //     tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        //     temp_map[string($1.lexeme)] = string($$.lexeme);
+
+                        //     const_temps.insert(t);
+                        // }
+                        // else{
+                        //     //tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        //     strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
+                        // }
                     }
                     | OC expr CC {
                         strcpy($$.type, $2.type);
@@ -562,6 +754,8 @@ assign          :   ID ASSIGN expr {
                         check_declaration(string($1.lexeme));
                         check_scope(string($1.lexeme));
                         tac.push_back(string($1.lexeme) + " = " + string($3.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+
+                        if(const_temps.find(string($3.lexeme)) == const_temps.end() && $3.lexeme[0] == '@') free_temp.push(string($3.lexeme));
                     }
                     |
                     ID OS expr CS ASSIGN expr {
@@ -571,6 +765,8 @@ assign          :   ID ASSIGN expr {
                         }
                         check_scope(string($1.lexeme));
                         tac.push_back(string($1.lexeme) + " [ " + string($3.lexeme) + " ] = " + string($6.lexeme) + " " + func_table[curr_func_name].symbol_table[string($1.lexeme)].data_type);
+
+                        if(const_temps.find(string($6.lexeme)) == const_temps.end() && $6.lexeme[0] == '@') free_temp.push(string($6.lexeme));
                     }
 
 if_stmt         :   IF  {
@@ -581,12 +777,15 @@ if_stmt         :   IF  {
                         sprintf($4.if_body, "#L%d", label_counter++);
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
+
+                        if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
                     } 
                     OF
                     {
                       scope_history.push(++scope_counter);  
                     } stmt_list CF {  
                         scope_history.pop(); 
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -601,11 +800,12 @@ elif_stmt       :   ELIF {
                         sprintf($1.parentNext, "%s", hold);
                     } 
                     OC expr CC {
-                        // sprintf(icg[ic_idx++], "\nif (%s != 0) GOTO L%d else GOTO L%d\n", $4.token, label, label+1);
                         tac.push_back("if " + string($4.lexeme) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
                         sprintf($4.if_body, "#L%d", label_counter++);
                         sprintf($4.else_body, "#L%d", label_counter++); 
                         tac.push_back(string($4.if_body) + ":");
+
+                        if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
                     } 
                     OF
                     {
@@ -613,6 +813,7 @@ elif_stmt       :   ELIF {
                     } 
                     stmt_list CF {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.parentNext));
                         tac.push_back(string($4.else_body) + ":");
                     } 
@@ -620,7 +821,7 @@ elif_stmt       :   ELIF {
                     |
                     ;
 
-else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{scope_history.pop();}
+else_stmt       :   ELSE OF {scope_history.push(++scope_counter);} stmt_list CF{scope_history.pop(); --scope_counter;}
                     |
                     ;       
 
@@ -631,14 +832,14 @@ switch_stmt     :   SWITCH {
                     } 
                     OC ID {
                         temp_index = variable_count;
-                        tac.push_back("@t" + to_string(variable_count++) + " = " + string($4.lexeme));
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + string($4.lexeme) + " " + func_table[curr_func_name].symbol_table[string($4.lexeme)].data_type);
                     } 
                     CC OF case_stmt_list {
                         // strcpy($8.id, $4.lexeme);
                         // strcpy($8.parentNext, $1.parentNext);
                     }
                     default_stmt CF {
-                        tac.push_back("Label " + string($1.parentNext));
+                        tac.push_back(string($1.parentNext) + ":");
                         loop_break.pop();
                     }
                     ;
@@ -656,16 +857,15 @@ case_stmt       :   CASE {
                     OC const {
                         char* hold = const_cast<char*>(to_string(variable_count).c_str());
                         sprintf($4.temp, "%s", hold);
-                        tac.push_back("@t" + to_string(variable_count++) + " = " + $4.lexeme);
-                        tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp));
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + string($4.lexeme) + " " + string($4.type));
+                        tac.push_back("@t" + to_string(variable_count++) + " = " + "@t" + to_string(temp_index) + " == " + "@t" + string($4.temp) + " INT");
                         tac.push_back("if @t" + to_string(variable_count-1) + " GOTO #L" + to_string(label_counter) + " else GOTO #L" + to_string(label_counter+1));
-                        tac.push_back("Label #L" + to_string(label_counter) + ":");
+                        tac.push_back("#L" + to_string(label_counter) + ":");
                         sprintf($4.case_body, "#L%d", label_counter++);
                         sprintf($4.parentNext, "#L%d", label_counter++);
                     }
                     CC COLON stmt_list {
-                        // tac.push_back("Label " + string($4.parentNext) + ":");
-                        tac.push_back("Label " + string($4.parentNext) + ":");
+                        tac.push_back(string($4.parentNext) + ":");
                     } 
 
 default_stmt    :   DEFAULT COLON stmt_list
@@ -686,6 +886,8 @@ while_loop_stmt :   WHILE {
 
                         tac.push_back("\nif " + string($4.lexeme) + " GOTO " + string($4.if_body) + " else GOTO " + string($4.else_body));
                         tac.push_back("\n" + string($4.if_body) + ":");
+
+                        if(const_temps.find(string($4.lexeme)) == const_temps.end() && $4.lexeme[0] == '@') free_temp.push(string($4.lexeme));
                         
                     } 
                     OF{
@@ -693,6 +895,7 @@ while_loop_stmt :   WHILE {
                     } stmt_list CF    
                     {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($1.loop_body));
                         tac.push_back("\n" + string($4.else_body) + ":");
                         loop_continue.pop();
@@ -714,6 +917,8 @@ for_loop_stmt   :   FOR OC assign SCOL {
                         sprintf($6.loop_body, "#L%d", label_counter); 
                         loop_continue.push(label_counter++);
                         tac.push_back("\n" + string($6.loop_body) + ":");
+
+                        if(const_temps.find(string($6.lexeme)) == const_temps.end() && $6.lexeme[0] == '@') free_temp.push(string($6.lexeme));
                     }
                     assign CC {
                         tac.push_back("GOTO " + string($1.loop_body));
@@ -725,6 +930,7 @@ for_loop_stmt   :   FOR OC assign SCOL {
                     }
                     stmt_list CF {
                         scope_history.pop();
+                        --scope_counter;
                         tac.push_back("GOTO " + string($6.loop_body));
                         tac.push_back("\n" + string($6.else_body) + ":");
                         loop_continue.pop();
@@ -733,38 +939,27 @@ for_loop_stmt   :   FOR OC assign SCOL {
 
 func_call       :   ID {
                         func_call_id.push({string($1.lexeme), func_table[string($1.lexeme)].param_types});
-                        } 
-                        OC arg_list CC  {
+                    } 
+                    OC arg_list CC  {
                         strcpy($$.type, func_table[string($1.lexeme)].return_type.c_str());
                         func_call_id.pop();
-                        sprintf($$.lexeme, "@t%d", variable_count);
-                        variable_count++;
-
-                        // checking if function is declared
-                        
+                        sprintf($$.lexeme, get_temp().c_str());
 
                         tac.push_back(string($$.lexeme) + " = @call " + string($1.lexeme) + " " + func_table[string($1.lexeme)].return_type + " " + to_string(func_table[string($1.lexeme)].num_params));
                     }
                     ;
 
 arg_list        :   arg COMMA arg_list {
-                        // cout << string($1.lexeme) << endl;
-                        // cout << "here" << string($1.type) << endl;
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
-                        // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
-                        // cout << type << endl;
                         if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
                         }
                     }
                     | arg {
-                        // cout << string($1.lexeme) << endl;
-                        // cout << "here" << string($1.type) << endl;
                         int sz = func_call_id.top().second.size();
                         string type = func_call_id.top().second[sz-1];
-                        // cout << "there" << type << endl;
                         func_call_id.top().second.pop_back();
                         if(type_check(string($1.type), type)) {
                             sem_errors.push_back("datatype for argument not matched in line " + to_string(countn+1));
@@ -783,21 +978,14 @@ arg             :   expr {
 int main(int argc, char *argv[]) {
     /* yydebug = 1; */
     yyparse();
+    for(auto item: sem_errors){
+        cout << item << endl;
+    }
+    if(sem_errors.size() > 0)
+        exit(0);
     for(auto x: tac)
         cout << x << endl;
-    for(auto item: sem_errors)
-        cout << item << endl;
-    /* for(auto item: func_table[curr_func_name].symbol_table)
-        cout << item.first << "-->" << item.second.data_type << endl; */
-    // cout << endl << "Symbol table" << endl;
-    // for(auto item : func_table["main"].symbol_table){
-    //     cout << item.first << " ---> " << item.second.scope <<endl;
-    // }
-
-    // for(auto i: temp_map){
-    //     cout << i.first << " --- " << i.second << endl;
-    // }
-
+    
 }
 
 bool check_declaration(string variable){
@@ -812,22 +1000,26 @@ bool check_scope(string variable){
     int var_scope = func_table[curr_func_name].symbol_table[variable].scope;
     // int curr_scope = scope_counter;
     stack<int> temp_stack(scope_history);
+    // cout << "variable: " << variable << endl;
+    // cout << "var_scope: " << var_scope << endl;
+    // PrintStack(temp_stack);
+    // cout << endl;
     while(!temp_stack.empty()){
         if(temp_stack.top() == var_scope){
-            return false;
+            return true;
         }
         temp_stack.pop();
     }
-    sem_errors.push_back("Scope of variable '" + variable +"' not marching in line " + to_string(countn+1) + ".");
+    sem_errors.push_back("Scope of variable '" + variable +"' not matching in line " + to_string(countn+1) + ".");
     return true;
 }
 
 bool multiple_declaration(string variable){
     if(!(func_table[curr_func_name].symbol_table.find(variable) == func_table[curr_func_name].symbol_table.end())){
         sem_errors.push_back("redeclaration of '" + variable + "' in line " + to_string(countn+1));
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 bool check_type(string l, string r){
@@ -869,11 +1061,29 @@ void yyerror(const char* msg) {
     exit(1);
 }
 
+string get_temp(){
+    if(free_temp.empty()){
+        return "@t" + to_string(variable_count++);
+    }
+    string t=free_temp.front();
+    free_temp.pop(); 
+    return t; 
+}
+void PrintStack(stack<int> s)
+{
+    if (s.empty())
+        return;
+    int x = s.top();
+    s.pop();
+    cout << x << ' ';
+    PrintStack(s);
+    s.push(x);
+}
+
 
 // check if void functions has return type
 // deal with scope for function arguments
 // deal with scope for arrays
 // scope in switch statement
 
-// check for f user-defined variables in if-goto statements
 

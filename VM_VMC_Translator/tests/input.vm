@@ -1,0 +1,5 @@
+function main 6 13 INT
+
+scan temp 0 CHAR
+push temp 0 CHAR
+print CHAR

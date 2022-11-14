@@ -11,6 +11,7 @@ class Instructions(enum.Enum):
     if_goto = 'if-goto'
     print_stmt = 'print'
     call = 'call'
+    scan = 'scan'
 
     Eq = 'eq'
     Lt = 'lt'
@@ -18,14 +19,15 @@ class Instructions(enum.Enum):
     Ge = 'ge'
     Le = 'le'
     Neq = 'neq'
+    Not = 'not'
 
     Add = 'add'
     Sub = 'sub'
     LShift = 'lshift'
     RShift = 'rshift'
-    BitAnd = 'bitand'
-    BitOr = 'bitor'
-    BitXor = 'bitxor'
+    BitAnd = 'and'
+    BitOr = 'or'
+    BitXor = 'xor'
 
 
 class Segment(enum.Enum):
@@ -33,6 +35,8 @@ class Segment(enum.Enum):
     argument = 'argument'
     constant = 'constant'
     temp = 'temp'
+    that = 'that'
+    data = 'data'
 
 
 class Datatypes(enum.Enum):
@@ -62,8 +66,8 @@ class Operators(enum.Enum):
     RightShift = '>>'
     LogicalAnd = '&&'
     LogicalOr = '||'
-    Gt = ['bgt','flt.s','special']
+    Gt = ['bgt', 'flt.s', 'special']
     Lt = ['blt', 'flt.s']
-    Ge = ['bge','fle.s','special']
+    Ge = ['bge', 'fle.s', 'special']
     Le = ['ble', 'fle.s']
     Eq = ['beq', 'feq.s']

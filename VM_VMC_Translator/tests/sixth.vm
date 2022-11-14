@@ -1,0 +1,131 @@
+function main 105 11 INT
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 100 INT
+push temp 0 INT
+pop local 101 INT
+push data 0 "\nOperations:\n1. Push back to the Queue\n2. Pop from the front of the Queue\n3. End\n\n" STR
+label #L0
+push constant 1 INT
+pop temp 1 INT
+push temp 1 INT
+if-goto #L1
+goto #L2
+label #L1
+push data 1 "Queue: " STR
+push data 1 STR
+print STR
+push local 101 INT
+pop local 102 INT
+label #L3
+push local 102 INT
+push local 100 INT
+lt INT
+pop temp 2 INT
+push temp 2 INT
+if-goto #L4
+goto #L5
+label #L6
+push local 102 INT
+push temp 1 INT
+add INT
+pop temp 2 INT
+push temp 2 INT
+pop local 102 INT
+goto #L3
+label #L4
+push constant 0 INT
+push local 102 INT
+push local 102 INT
+add INT
+push local 102 INT
+push local 102 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 2 INT
+push temp 2 INT
+print INT
+push data 2 " " STR
+push data 2 STR
+print STR
+goto #L6
+label #L5
+push data 0 STR
+print STR
+scan local 103 INT
+push local 103 INT
+pop temp 3 INT
+push constant 1 INT
+pop temp 4 INT
+push temp 3 INT
+push temp 4 INT
+eq INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L8
+goto #L9
+label #L8
+push data 3 "Enter the number: " STR
+push data 3 STR
+print STR
+scan local 104 INT
+push local 104 INT
+push constant 0 INT
+push local 100 INT
+push local 100 INT
+add INT
+push local 100 INT
+push local 100 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push local 100 INT
+push temp 1 INT
+add INT
+pop temp 6 INT
+push temp 6 INT
+pop local 100 INT
+goto #L7
+label #L9
+push constant 2 INT
+pop temp 7 INT
+push temp 3 INT
+push temp 7 INT
+eq INT
+pop temp 8 INT
+push temp 8 INT
+if-goto #L10
+goto #L11
+label #L10
+push local 101 INT
+push temp 1 INT
+add INT
+pop temp 6 INT
+push temp 6 INT
+pop local 101 INT
+goto #L7
+label #L11
+push constant 3 INT
+pop temp 9 INT
+push temp 3 INT
+push temp 9 INT
+eq INT
+pop temp 10 INT
+push temp 10 INT
+if-goto #L12
+goto #L13
+label #L12
+push temp 0 INT
+pop argument 0 INT
+return
+label #L13
+label #L7
+goto #L0
+label #L2
+push temp 0 INT
+pop argument 0 INT
+return

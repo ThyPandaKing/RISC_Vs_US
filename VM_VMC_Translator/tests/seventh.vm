@@ -1,0 +1,111 @@
+function nCr 0 13 INT
+push argument 0 INT
+print INT
+push data 0 "\n" STR
+push data 0 STR
+print STR
+push argument 0 INT
+push argument 1 INT
+lt INT
+pop temp 0 INT
+push temp 0 INT
+if-goto #L1
+goto #L2
+label #L1
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+return
+goto #L0
+label #L2
+push argument 0 INT
+push argument 1 INT
+eq INT
+pop temp 1 INT
+push temp 1 INT
+if-goto #L3
+goto #L4
+label #L3
+push constant 1 INT
+pop temp 1 INT
+push temp 1 INT
+return
+goto #L0
+label #L4
+push constant 0 INT
+pop temp 2 INT
+push argument 1 INT
+push temp 2 INT
+eq INT
+pop temp 3 INT
+push temp 3 INT
+if-goto #L6
+goto #L7
+label #L6
+push constant 1 INT
+pop temp 3 INT
+push temp 3 INT
+return
+goto #L5
+label #L7
+label #L5
+push constant 1 INT
+pop temp 4 INT
+push argument 0 INT
+push temp 4 INT
+sub INT
+pop temp 5 INT
+push temp 5 INT
+push constant 1 INT
+pop temp 6 INT
+push argument 1 INT
+push temp 6 INT
+sub INT
+pop temp 7 INT
+push temp 7 INT
+call nCr 2
+pop temp 8 INT
+push constant 1 INT
+pop temp 9 INT
+push argument 0 INT
+push temp 9 INT
+sub INT
+pop temp 10 INT
+push temp 10 INT
+push argument 1 INT
+call nCr 2
+pop temp 11 INT
+push temp 8 INT
+push temp 11 INT
+add INT
+pop temp 12 INT
+push temp 12 INT
+return
+label #L0
+function main 3 2 INT
+push data 1 "Enter n: " STR
+push data 1 STR
+print STR
+scan local 0 INT
+push data 2 "Enter r: " STR
+push data 2 STR
+print STR
+scan local 1 INT
+push local 0 INT
+push local 1 INT
+call nCr 2
+pop temp 0 INT
+push temp 0 INT
+pop local 2 INT
+push data 3 "nCr: " STR
+push data 3 STR
+print STR
+push local 2 INT
+print INT
+push data 4 "\n" STR
+push data 4 STR
+print STR
+push constant 0 INT
+pop temp 1 INT
+push temp 1 INT
+return

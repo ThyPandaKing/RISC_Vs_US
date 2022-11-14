@@ -1,0 +1,49 @@
+function main 4 3 INT
+push data 0 "Enter a float value:" STR
+push data 0 STR
+print STR
+scan local 0 FLOAT
+push local 0 FLOAT
+pop local 1 INT
+push local 1 INT
+pop local 2 FLOAT
+push local 0 FLOAT
+push local 2 FLOAT
+sub FLOAT
+pop temp 0 FLOAT
+push temp 0 FLOAT
+pop local 3 FLOAT
+push data 1 "Floor: " STR
+push data 1 STR
+print STR
+push local 2 FLOAT
+print FLOAT
+push constant 0 INT
+pop temp 0 FLOAT
+push local 3 FLOAT
+push temp 0 FLOAT
+gt FLOAT
+pop temp 1 FLOAT
+push temp 1 FLOAT
+if-goto #L1
+goto #L2
+label #L1
+push constant 1 INT
+pop temp 1 FLOAT
+push local 2 FLOAT
+push temp 1 FLOAT
+add FLOAT
+pop temp 2 FLOAT
+push temp 2 FLOAT
+pop local 2 FLOAT
+goto #L0
+label #L2
+label #L0
+push data 2 "Ceil:" STR
+push data 2 STR
+print STR
+push local 2 FLOAT
+print FLOAT
+push temp 0 FLOAT
+pop argument 0 FLOAT
+return
