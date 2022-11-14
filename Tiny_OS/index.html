@@ -34,6 +34,7 @@
     <button class="button1" type="button" id="saveButton" >Save</button>
     <button class="button1" type="button" id="runButton">Run</button>
     <button class="button1" type="button" id="clearButton" onclick="clear_file()">Clear</button>
+    <button class="button1" type="button" id="sendButton">Send</button>
   </div>
   <div style="height: 90vh; display: flex;">
 
@@ -134,6 +135,7 @@
   <script src="./Text-Editor/editor_functions.js" type="text/javascript" charset="utf-8"></script>
   <input type="hidden" name="hiddenCodeWriter" style="display: none;" id="hiddenCodeWriter">
   <input type="hidden" name="hiddenDisplay" style="display: none;" id="hiddenDisplay">
+  <input type="hidden" name="hiddenIp" style="display: none;" id="hiddenIp">
   <script>
     var editor = ace.edit('editor');
     editor.setTheme('ace/theme/cobalt');
@@ -171,25 +173,35 @@
         last.parentNode.removeChild(last);
         parent.append(container);
         parent.append(last);
-        if(input.value==="save")
+        var user_cmd = input.value;
+
+        if(user_cmd==="save")
         {
           input.value="";
           pout.innerHTML="Saved Successfully";
           var button=document.getElementById("saveButton");
           button.click();
         }
-        else if(input.value=="run")
+        else if(user_cmd=="run")
         {
           input.value="";
           pout.innerHTML="Command Succesfully executed";
           var button=document.getElementById("runButton");
           button.click();
         }
-        else if(input.value=="clear")
+        else if(user_cmd=="clear")
         {
           input.value="";
           pout.innerHTML="Successfully cleared the file";
           var button=document.getElementById("clearButton");
+          button.click();
+        }else if(user_cmd.startsWith('send')){
+          input.value = "";
+          var ip = user_cmd.split(' ')[1];
+          let ipHtml = document.getElementById('hiddenIp');
+          ipHtml.value = ip;
+          pout.innerHTML="File send Successfully";
+          var button=document.getElementById("sendButton");
           button.click();
         }
         else

@@ -162,6 +162,17 @@ window.addEventListener ('DOMContentLoaded', () => {
     ipcRenderer.send ('runCode', '../User/userCode.txt');
   });
 
+  let sendButton = document.getElementById('sendButton');
+
+  sendButton.addEventListener('click', () => {
+    console.log('Inside Send command');
+    let ip = document.getElementById ('hiddenIp');
+    const defaultIp = '0.0.0.0';
+
+    const destIp = ip.value == '' ? defaultIp : ip.value;
+    ipcRenderer.send('sendCode', destIp);
+  })
+
 
 
   // ------------------------------ Display stuff (D stuff) -------------------------------
