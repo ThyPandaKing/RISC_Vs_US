@@ -16,13 +16,13 @@ push temp 1 INT
 return
 goto #L0
 label #L2
-push local 0 INT
-push temp 1 INT
+push argument 0 INT
+push constant 1 INT
 sub INT
 pop temp 2 INT
 push temp 2 INT
 call factorial 1
-push argument 0 INT
+;push argument 0 INT
 pop temp 3 INT
 push constant 0 INT
 pop temp 4 INT
@@ -32,7 +32,7 @@ push constant 1 INT
 pop temp 6 INT
 label #L4
 push temp 5 INT
-push local 0 INT
+push argument 0 INT
 lt INT
 pop temp 7 INT
 push temp 7 INT
@@ -50,9 +50,10 @@ pop temp 5 INT
 goto #L4
 label #L6
 push temp 4 INT
-pop argument 0 INT
+;pop argument 0 INT
 return
 label #L0
+
 function main 2 2 INT
 push data 0 "Enter n: " STR
 push data 0 STR
@@ -60,7 +61,7 @@ print STR
 scan local 0 INT
 push local 0 INT
 call factorial 1
-push argument 0 INT
+;push argument 0 INT
 pop temp 0 INT
 push temp 0 INT
 pop local 1 INT
@@ -70,5 +71,5 @@ push data 1 "\n" STR
 push data 1 STR
 print STR
 push temp 1 INT
-pop argument 0 INT
+;pop argument 0 INT
 return
