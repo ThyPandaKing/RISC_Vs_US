@@ -1,43 +1,36 @@
+// Various operations using switch-case
 int main(){
 
-    int arr[5]={98,4,3,3,8};
+    int a;
+    int b;
+    int c;
+    
+    output("Enter \\\"a\\\" value = ");
+    input(a);
+    
+    output("Enter \\\"b\\\" value = ");
+    input(b);
 
-    //output("Enter array elements: ");
-    int i;
-    //for(i=0; i<5; i=i+1){
-    //    input(arr[i]);
-    //}
+    output("Select the operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n");
 
-    int j;
-    for(i=0; i<4; i=i+1){
-        int min_i = i;
-        //output(i);
-        for(j=i+1; j<5; j=j+1){
-            //output(j);
-            if(arr[j] < arr[min_i]){
-                min_i = j;
-            }
-        }
-        
-        int temp = arr[min_i];
-        arr[min_i] = arr[i];
-        arr[i] = temp;
+    int op;
+    input(op);
+
+    output("Result: ");
+
+    switch(op){
+        case(1):
+            c=a+b;
+            break;
+        case(2):
+            c=a*b;
+            break;
+        case(3):
+            c=a&b;
+            break;
+        default:
+            output("Invalid\n");
     }
-
-    //output(arr[0]);
-    //output(arr[1]);
-    //output(arr[2]);
-    //output(arr[3]);
-    //output(arr[4]);
-    output("here");
-
-    int k;
-    for(k=0; k<5; k=k+1){
-        output(arr[k]);
-        output(" ");
-    }
+    output(c);
     return 0;
-
-    // t0 = 0
-    // l5 = i
 }
