@@ -8,6 +8,9 @@ Table of contents
 * [Folder Structure](#folder-structure)
 * [Known issues and limitations](#known-issues-and-limitations)
 
+## Introduction
+1. In this project you can find a compiler for the programming language developed by #RISC_Vs_US team.
+
 
 ## Installation and Usage
 1. Clone the repository from (https://github.com/PandaKing9660/RISC_Vs_US.git).
