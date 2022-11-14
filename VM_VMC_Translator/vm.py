@@ -217,6 +217,7 @@ class VM:
         if (segment == Segment.that.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
+            # self.text_segment += f"li x28, 2\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"li x7, -{self.lcl}\n"

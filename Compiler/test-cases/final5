@@ -1,41 +1,57 @@
 // 3x3 matrix multiplication
-void main(){
+int main(){
 	
-	int a[9];
-	int b[9];
+	
+	int a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	int j;
+	for(j=0; j<9; j=j+1){
+		output(a[j]);
+	}
+	
+	int b[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
 
-	output("Enter the contents of matrix 1:\n");
+	for(j=0; j<9; j=j+1){
+		output(b[j]);
+	}
+	
+
+	//output("Enter the contents of matrix 1:\n");
 
 	int i;
 
-	for(i=0; i<9; i=i+1){
-		int t;
-		input(t);
-		a[i] = t;
-	}
+	//for(i=0; i<9; i=i+1){
+	//	int t;
+	//	input(t);
+	//	a[i] = t;
+	//}
 
-	output("Enter the contents of matrix 2:\n");
+	//output("Enter the contents of matrix 2:\n");
 	
-	for(i=0; i<9; i=i+1){
-		int t;
-		input(t);
-		b[i] = t;
-	}
+	//for(i=0; i<9; i=i+1){
+	//	int t;
+	//	input(t);
+	//	b[i] = t;
+	//}
 
 	int c[9];
     
-	int row;
-	for(row=0; row<3; row=row+1){
-		int col;
-		for(col=0; col<3; col=col+1){
-			int sum = 0;
-			int k;
-			for(k=0; k<3; k=k+1){
-				sum = sum + a[row*3+k]*b[k*3+col];
-			}
-			c[row*3+col] = sum;
-		}
+	// int row;
+	// for(row=0; row<3; row=row+1){
+	// 	int col;
+	// 	for(col=0; col<3; col=col+1){
+	// 		int sum = 0;
+	// 		int k;
+	// 		for(k=0; k<3; k=k+1){
+	// 			sum = sum + a[row*3+k]*b[k*3+col];
+	// 		}
+	// 		c[row*3+col] = sum;
+	// 	}
+	// }
+	int k;
+	for(k=0;k<9;k=k+1){
+		c[k]=a[k]+b[k];
 	}
+	output("\n");
     
 
 	for(i=0; i<9; i=i+1){
@@ -46,4 +62,5 @@ void main(){
 			output(" ");
 		}
 	}
+	return 0;
 }

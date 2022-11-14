@@ -116,10 +116,10 @@ sw x5, 0(x6)
 
 __L0:
 lui x5, 0x00000
-addi x5, x5, 33
-addi x5, x5, 33
-addi x5, x5, 33
-addi x5, x5, 1
+addi x5, x5, 21
+addi x5, x5, 21
+addi x5, x5, 21
+addi x5, x5, 0
 sw x5, 0(x2)
 addi x2, x2, -4
 addi x2, x2, 4

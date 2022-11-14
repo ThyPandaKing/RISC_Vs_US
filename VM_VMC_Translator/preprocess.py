@@ -18,7 +18,7 @@ class Preprocess:
         # Neq
         mod_vm_code = ''
         for line in generator:
-            if(line.split()[0] == 'function'):
+            if(line.split(' ')[0] == 'function'):
                 if(line.split(' ')[2] == '0' and line.split(' ')[3] == '0'):
                     line = line.split(' ')
                     mod_vm_code += f'function {line[1]} 1 1 {line[4]}\n'
