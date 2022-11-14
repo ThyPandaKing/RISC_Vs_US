@@ -49,4 +49,5 @@ Table of contents
     └── 
     
  ## Known issues and limitations
-
+1. Pointers and structures are not introduced to the programming language yet.
+2. Line numbers in error messages in case of giving multiple files is not dealt with.
