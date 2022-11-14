@@ -10,6 +10,8 @@ Table of contents
 
 ## Introduction
 1. In this project you can find a compiler for the programming language developed by <mark style="background-color: lightblue">RISC_Vs_US</mark> team.
+2. You may refer to the language manual here (https://docs.google.com/document/d/1IAW91fNMeh6gcIINUFF5NAg-Zl-5EekPPTUq8fAZZ5Q/edit?usp=sharing).
+3. One can also refer to the examples given in the test case folder(for more clarity refer to #folder-structure).
 
 
 ## Installation and Usage
