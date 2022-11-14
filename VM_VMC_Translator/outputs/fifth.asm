@@ -7,7 +7,7 @@ __main__data1:
 __main__data2:
 	.asciz "\n"
 __main__data3:
-	.asciz " "
+	.asciz " "
 
 .section
 .text
@@ -2865,10 +2865,63 @@ addi x5, x5, 1361
 addi x5, x5, 1
 add x5, x5, x8
 lw x5, 0(x5)
+addi x5, x5, -28
+lw x5, 0(x5)
+sw x5, 0(x2)
+addi x2, x2, -4
+lui x5, 0xffffd
+addi x5, x5, 1361
+addi x5, x5, 1361
+addi x5, x5, 1361
+addi x5, x5, 1
+add x5, x5, x8
+lw x5, 0(x5)
+addi x5, x5, -16
+lw x5, 0(x5)
+sw x5, 0(x2)
+addi x2, x2, -4
+addi x2, x2, 4
+lw x6, 0(x2)
+addi x2, x2, 4
+lw x5, 0(x2)
+bge x5, x6, ___CL20
+addi x7, x0, 0
+beq x0, x0, ___CL21
+___CL20:
+addi x7, x0, 1
+___CL21:
+sw x7, 0(x2)
+addi x2, x2, -4
+addi x2, x2, 4
+lw x5, 0(x2)
+lui x6, 0xffffd
+addi x6, x6, 1361
+addi x6, x6, 1361
+addi x6, x6, 1361
+addi x6, x6, 1
+add x6, x6, x8
+lw x6, 0(x6)
+addi x6, x6, -40
+sw x5, 0(x6)
+lui x5, 0xffffd
+addi x5, x5, 1361
+addi x5, x5, 1361
+addi x5, x5, 1361
+addi x5, x5, 1
+add x5, x5, x8
+lw x5, 0(x5)
 addi x5, x5, -40
 lw x5, 0(x5)
 sw x5, 0(x2)
 addi x2, x2, -4
+addi x2, x2, 4
+lw x5, 0(x2)
+lui x6, 0x00000
+addi x6, x6, 0
+addi x6, x6, 0
+addi x6, x6, 0
+addi x6, x6, 1
+beq x5, x6, __L43
 beq x0, x0, __L44
 __L43:
 lui x5, 0xffffd
@@ -2961,12 +3014,12 @@ addi x2, x2, 4
 lw x6, 0(x2)
 addi x2, x2, 4
 lw x5, 0(x2)
-beq x5, x6, ___CL20
+beq x5, x6, ___CL22
 addi x7, x0, 0
-beq x0, x0, ___CL21
-___CL20:
+beq x0, x0, ___CL23
+___CL22:
 addi x7, x0, 1
-___CL21:
+___CL23:
 sw x7, 0(x2)
 addi x2, x2, -4
 addi x2, x2, 4
@@ -3016,29 +3069,6 @@ ecall
 __L40:
 beq x0, x0, __L39
 __L38:
-lui x5, 0xffffd
-addi x5, x5, 1361
-addi x5, x5, 1361
-addi x5, x5, 1361
-addi x5, x5, 1
-add x5, x5, x8
-lw x5, 0(x5)
-addi x5, x5, -4
-lw x5, 0(x5)
-sw x5, 0(x2)
-addi x2, x2, -4
-addi x2, x2, 4
-lw x5, 0(x2)
-lui x6, 0xffffd
-addi x6, x6, 1362
-addi x6, x6, 1362
-addi x6, x6, 1362
-addi x6, x6, 2
-add x6, x6, x8
-lw x6, 0(x6)
-addi x6, x6, -4
-sw x5, 0(x6)
-beq x0, x0, __END__
 lui x5, 0x00000
 addi x5, x5, 0
 addi x5, x5, 0

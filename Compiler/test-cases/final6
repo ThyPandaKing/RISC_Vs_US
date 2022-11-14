@@ -3,6 +3,7 @@ int main(){
 	
 	int q[100];
 	int qs = 0;
+	int qst = 0;
 
 	string msg = "\nOperations:\n1. Push back to the Queue\n2. Pop from the front of the Queue\n3. End\n\n";
 
@@ -10,11 +11,10 @@ int main(){
 
 		output("Queue: ");
 		int i;
-		for(i=0; i<qs; i=i+1){
+		for(i=qst; i<qs; i=i+1){
 			output(q[i]);
 			output(" " );
 		}
-		output("\n");
 
 		output(msg);
 
@@ -30,14 +30,11 @@ int main(){
 				qs = qs+1;
                 break;
 			case(2):
-				for(i=1; i<qs; i=i+1){
-					q[i-1] = q[i];
-				}
-				qs = qs-1;
+				qst = qst + 1;
                 break;
 			case(3):
 				return 0;
 		}
-
 	}
+	return 0;
 }

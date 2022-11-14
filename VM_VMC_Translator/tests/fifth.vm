@@ -338,6 +338,10 @@ pop temp 6 INT
 push constant 1 INT
 pop temp 10 INT
 label #L42
+push temp 6 INT
+push temp 3 INT
+ge INT
+pop temp 9 INT
 push temp 9 INT
 if-goto #L43
 goto #L44
@@ -363,15 +367,12 @@ push data 2 STR
 print STR
 goto #L40
 label #L46
-push data 3 " " STR
+push data 3 " " STR
 push data 3 STR
 print STR
 label #L40
 goto #L39
 label #L38
-push temp 0 INT
-pop argument 0 INT
-return
 push constant 0 INT
 pop argument 0 INT
 return
