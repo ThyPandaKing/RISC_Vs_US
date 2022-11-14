@@ -22,6 +22,7 @@ OPERATIONS::OPERATIONS()
 		{"lw", 0b0000011},
 		{"lb", 0b0000011},
 		{"addi", 0b0010011},
+		{"jalr", 0b1100111},
 
 		// S - Type
 		{"sw", 0b0100011},
@@ -37,6 +38,9 @@ OPERATIONS::OPERATIONS()
 
 		// U - Type
 		{"lui", 0b0110111},
+
+		// J - Type
+		{"jal", 0b1101111},
 	};
 
 	funct3={
@@ -53,6 +57,7 @@ OPERATIONS::OPERATIONS()
 		{"lw", 0b010},
 		{"lb", 0b000},
 		{"addi", 0b000},
+		{"jalr", 0b000},
 
 		// S -Type
 		{"sw", 0b010},
@@ -96,6 +101,7 @@ OPERATIONS::OPERATIONS()
 		{"lw", 'I'},
 		{"lb", 'I'},
 		{"addi", 'I'},
+		{"jalr", 'I'},
 
 		// S -Type
 		{"sw", 'S'},
@@ -111,6 +117,9 @@ OPERATIONS::OPERATIONS()
 
 		// U - Type
 		{"lui", 'U'},
+
+		// J - Type
+		{"jal", 'J'},
 
 		{"ecall", 'N'},
 	};
@@ -173,13 +182,13 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 			reg=match.str();
 			
 			reg_code=stoi(reg.substr(1, 2));
-			if((reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
+			if((regs[0]=='x' && !(reg_code>=0 && reg_code<32)) || (regs[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (regs[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (regs[0]=='t' &&!(reg_code>=0 && reg_code<7)))
 			{
 				perror("Invalid Register Number");
 				regs.resize(i);
 				return regs;
 			}
-			switch(reg[0])
+			switch(regs[0])
 			{
 				case 'a':reg_code+=regcode["a"];break;
 				case 's':if(reg_code<2)
@@ -294,7 +303,7 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 	vector<int> regs=extractRegisters(reg, type);
 	if(type == 'I' || type=='S' || type=='U')
 		extractImmediate(regs, reg, type, 0);
-	if(type == 'B')
+	if(type == 'B' || type=='J')
 		extractLabel(regs, reg);
 	return regs;	
 }
@@ -316,8 +325,8 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 			perror("Invalid Syntax");
 			return 1;
 		}
-		// reg[0] is destination reg[1] and reg[2] are source
-		// reg[0] should not be x0 
+		// regs[0] is destination regs[1] and regs[2] are source
+		// regs[0] should not be x0 
 		if(regs[0]==0)
 		{
 			perror("Invalid Destination Register");
@@ -338,9 +347,9 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 			perror("Invalid Syntax");
 			return 1;
 		}
-		// reg[0] is destination reg[1] is source
-		// reg[0] should not be x0 
-		// reg[2] has the immediate value
+		// regs[0] is destination regs[1] is source
+		// regs[0] should not be x0 
+		// regs[2] has the immediate value
 		if(regs[0]==0)
 		{
 			perror("Invalid Destination Register");
@@ -361,8 +370,8 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 			perror("Invalid Syntax");
 			return 1;
 		}
-		// reg[0] is source(rs2) reg[1] is source(rs1)
-		// reg[2] has the immediate value
+		// regs[0] is source(rs2) regs[1] is source(rs1)
+		// regs[2] has the immediate value
 		
 		// rs1
 		ins=ins|(regs[1]<<15);
@@ -383,8 +392,8 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 			perror("Invalid Syntax");
 			return 1;
 		}
-		// reg[0] is source(rs1) reg[1] is source(rs2)
-		// reg[2] has the immediate value i.e. the line number to which jump has to be made
+		// regs[0] is source(rs1) regs[1] is source(rs2)
+		// regs[2] has the immediate value i.e. the line number to which jump has to be made
 
 		// rs1
 		ins=ins|(regs[0]<<15);
@@ -393,8 +402,8 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 
 		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
 		int offset=(regs[2]-linenumber)*4;
-		// imm
-		// imm is split into 4 segments
+		// offset
+		// offset is split into 4 segments
 		// bit 11 from LSB at index 7 of ins
 		// bits 1 to 4 from LSB - starting from index 8 of ins
 		// bits 5 to 10 from LSB - starting from index 25 of ins
@@ -411,8 +420,8 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 			perror("Invalid Syntax");
 			return 1;
 		}
-		// reg[0] is destination
-		// reg[1] has the immediate value
+		// regs[0] is destination
+		// regs[1] has the immediate value
 		if(regs[0]==0)
 		{
 			perror("Invalid Destination Register");
@@ -423,6 +432,37 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 		ins=ins|(regs[0]<<7);
 		// imm
 		ins=ins|(regs[1]<<12);
+	}
+	else if(type=='J')
+	{
+		if(regs.size() != 2)
+		{
+			perror("Invalid Syntax");
+			return 1;
+		}
+		// regs[0] is destination
+		// regs[1] has the immediate value
+		if(regs[0]==0)
+		{
+			perror("Invalid Destination Register");
+			return 2;
+		}
+
+		// rd
+		ins=ins|(regs[0]<<7);
+		
+		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
+		int offset=(regs[1]-linenumber)*4;
+		// offset
+		// offset is split into 4 segments
+		// bit 20 from LSB at index 31 of ins
+		// bits 1 to 10 from LSB - starting from index 21 of ins
+		// bit 11 from LSB at index 20 of ins
+		// bit 12 to 19 from LSB - starting from index 12 of ins
+		ins=ins|(((offset>>19)&1)<<31);
+		ins=ins|((offset&1023)<<21);
+		ins=ins|(((offset>>10)&1)<<20);
+		ins=ins|((offset&522240)>>11<<12);
 	}
 	return 0;
 }
