@@ -3,24 +3,37 @@ int main(){
 	
 	
 	int a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	// int j;
+	// for(j=0; j<9; j=j+1){
+	// 	output(a[j]);
+	// }
+	
 	int b[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
+	int j;
+	for(j=0; j<9; j=j+1){
+		output(b[j]);
+	}
+	
+
+	//output("Enter the contents of matrix 1:\n");
 
 	int i;
-	output("Enter the contents of matrix 1:\n");
+
+	//for(i=0; i<9; i=i+1){
+	//	int t;
+	//	input(t);
+	//	a[i] = t;
+	//}
+
+	//output("Enter the contents of matrix 2:\n");
 	
-	for(i=0; i<9; i=i+1){
-		int t;
-		input(t);
-		a[i] = t;
-	}
-	output("Enter the contents of matrix 2:\n");
-	
-	for(i=0; i<9; i=i+1){
-		int t;
-		input(t);
-		b[i] = t;
-	}
-	
+	//for(i=0; i<9; i=i+1){
+	//	int t;
+	//	input(t);
+	//	b[i] = t;
+	//}
+			int z;
+
 	int c[9];
     
 	int row;
