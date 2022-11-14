@@ -1,67 +1,15 @@
-function main 10 7 INT
-push constant 98 INT
-push constant 0 INT
-push constant 0 INT
-push constant 0 INT
-add INT
-push constant 0 INT
-push constant 0 INT
-add INT
-add INT
-add INT
-pop that 0 INT
-push constant 4 INT
-push constant 0 INT
-push constant 1 INT
-push constant 1 INT
-add INT
-push constant 1 INT
-push constant 1 INT
-add INT
-add INT
-add INT
-pop that 0 INT
-push constant 3 INT
-push constant 0 INT
-push constant 2 INT
-push constant 2 INT
-add INT
-push constant 2 INT
-push constant 2 INT
-add INT
-add INT
-add INT
-pop that 0 INT
-push constant 3 INT
-push constant 0 INT
-push constant 3 INT
-push constant 3 INT
-add INT
-push constant 3 INT
-push constant 3 INT
-add INT
-add INT
-add INT
-pop that 0 INT
-push constant 8 INT
-push constant 0 INT
-push constant 4 INT
-push constant 4 INT
-add INT
-push constant 4 INT
-push constant 4 INT
-add INT
-add INT
-add INT
-pop that 0 INT
+function main 15 14 INT
+push data 0 "Enter array elements: " STR
+push data 0 STR
+print STR
 push constant 0 INT
 pop temp 0 INT
 push temp 0 INT
-pop local 5 INT
+pop local 10 INT
 label #L0
-push constant 4 INT
+push constant 10 INT
 pop temp 1 INT
-push local 5 INT
+push local 10 INT
 push temp 1 INT
 lt INT
 pop temp 2 INT
@@ -71,173 +19,219 @@ goto #L2
 label #L3
 push constant 1 INT
 pop temp 2 INT
-push local 5 INT
+push local 10 INT
 push temp 2 INT
 add INT
 pop temp 3 INT
 push temp 3 INT
-pop local 5 INT
+pop local 10 INT
 goto #L0
 label #L1
-push local 5 INT
-pop local 7 INT
-push local 5 INT
-push temp 2 INT
-add INT
-pop temp 3 INT
-push temp 3 INT
-pop local 6 INT
-label #L4
-push constant 5 INT
-pop temp 3 INT
-push local 6 INT
-push temp 3 INT
-lt INT
-pop temp 4 INT
-push temp 4 INT
-if-goto #L5
-goto #L6
-label #L7
-push local 6 INT
-push temp 2 INT
-add INT
-pop temp 4 INT
-push temp 4 INT
-pop local 6 INT
-goto #L4
-label #L5
+scan local 11 INT
+push local 11 INT
 push constant 0 INT
-push local 6 INT
-push local 6 INT
+push local 10 INT
+push local 10 INT
 add INT
-push local 6 INT
-push local 6 INT
-add INT
-add INT
-add INT
-push that 0 INT
-pop temp 4 INT
-push constant 0 INT
-push local 7 INT
-push local 7 INT
-add INT
-push local 7 INT
-push local 7 INT
-add INT
-add INT
-add INT
-push that 0 INT
-pop temp 5 INT
-push temp 4 INT
-push temp 5 INT
-lt INT
-pop temp 6 INT
-push temp 6 INT
-if-goto #L9
-goto #L10
-label #L9
-push local 6 INT
-pop local 7 INT
-goto #L8
-label #L10
-label #L8
-goto #L7
-label #L6
-push constant 0 INT
-push local 7 INT
-push local 7 INT
-add INT
-push local 7 INT
-push local 7 INT
-add INT
-add INT
-add INT
-push that 0 INT
-pop temp 4 INT
-push temp 4 INT
-pop local 8 INT
-push constant 0 INT
-push local 5 INT
-push local 5 INT
-add INT
-push local 5 INT
-push local 5 INT
-add INT
-add INT
-add INT
-push that 0 INT
-pop temp 5 INT
-push temp 5 INT
-push constant 0 INT
-push local 7 INT
-push local 7 INT
-add INT
-push local 7 INT
-push local 7 INT
-add INT
-add INT
-add INT
-pop that 0 INT
-push local 8 INT
-push constant 0 INT
-push local 5 INT
-push local 5 INT
-add INT
-push local 5 INT
-push local 5 INT
+push local 10 INT
+push local 10 INT
 add INT
 add INT
 add INT
 pop that 0 INT
 goto #L3
-
-
-
-
 label #L2
-push data 0 "here" STR
-;push data 0 STR
-print STR
-;push temp 3 INT
-;print INT
-push temp 0 INT
-pop local 9 INT
-label #L11
-push local 9 INT
-;print INT
-push constant 5 INT
+push constant 0 INT
+pop temp 3 INT
+push temp 3 INT
+pop local 10 INT
+label #L4
+push constant 9 INT
+pop temp 4 INT
+push local 10 INT
+push temp 4 INT
 lt INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L5
+goto #L6
+label #L7
+push constant 1 INT
+pop temp 5 INT
+push local 10 INT
+push temp 5 INT
+add INT
 pop temp 6 INT
 push temp 6 INT
-if-goto #L12
-goto #L13
-label #L14
-push local 9 INT
+pop local 10 INT
+goto #L4
+label #L5
+push local 10 INT
+pop local 12 INT
 push constant 1 INT
+pop temp 6 INT
+push local 10 INT
+push temp 6 INT
 add INT
-pop temp 4 INT
-push temp 4 INT
-pop local 9 INT
-goto #L11
-label #L12
+pop temp 7 INT
+push temp 7 INT
+pop local 13 INT
+label #L8
+push constant 10 INT
+pop temp 7 INT
+push local 13 INT
+push temp 7 INT
+lt INT
+pop temp 8 INT
+push temp 8 INT
+if-goto #L9
+goto #L10
+label #L11
+push constant 1 INT
+pop temp 8 INT
+push local 13 INT
+push temp 8 INT
+add INT
+pop temp 9 INT
+push temp 9 INT
+pop local 13 INT
+goto #L8
+label #L9
 push constant 0 INT
-push local 9 INT
-push local 9 INT
+push local 13 INT
+push local 13 INT
 add INT
-push local 9 INT
-push local 9 INT
+push local 13 INT
+push local 13 INT
 add INT
 add INT
 add INT
 push that 0 INT
-pop temp 5 INT
-push temp 5 INT
-print INT
-push data 1 " " STR
-push data 1 STR
-print STR
+pop temp 9 INT
+push constant 0 INT
+push local 12 INT
+push local 12 INT
+add INT
+push local 12 INT
+push local 12 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 10 INT
+push temp 9 INT
+push temp 10 INT
+lt INT
+pop temp 11 INT
+push temp 11 INT
+if-goto #L13
 goto #L14
 label #L13
-push temp 0 INT
-pop argument 0 INT
+push local 13 INT
+pop local 12 INT
+goto #L12
+label #L14
+label #L12
+goto #L11
+label #L10
+push constant 0 INT
+push local 12 INT
+push local 12 INT
+add INT
+push local 12 INT
+push local 12 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 9 INT
+push temp 9 INT
+pop local 14 INT
+push constant 0 INT
+push local 10 INT
+push local 10 INT
+add INT
+push local 10 INT
+push local 10 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 10 INT
+push temp 10 INT
+push constant 0 INT
+push local 12 INT
+push local 12 INT
+add INT
+push local 12 INT
+push local 12 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+push local 14 INT
+push constant 0 INT
+push local 10 INT
+push local 10 INT
+add INT
+push local 10 INT
+push local 10 INT
+add INT
+add INT
+add INT
+pop that 0 INT
+goto #L7
+label #L6
+push data 1 "Sorted array: " STR
+push data 1 STR
+print STR
+push constant 0 INT
+pop temp 11 INT
+push temp 11 INT
+pop local 10 INT
+label #L15
+push constant 10 INT
+pop temp 9 INT
+push local 10 INT
+push temp 9 INT
+lt INT
+pop temp 10 INT
+push temp 10 INT
+if-goto #L16
+goto #L17
+label #L18
+push constant 1 INT
+pop temp 10 INT
+push local 10 INT
+push temp 10 INT
+add INT
+pop temp 12 INT
+push temp 12 INT
+pop local 10 INT
+goto #L15
+label #L16
+push constant 0 INT
+push local 10 INT
+push local 10 INT
+add INT
+push local 10 INT
+push local 10 INT
+add INT
+add INT
+add INT
+push that 0 INT
+pop temp 12 INT
+push temp 12 INT
+print INT
+push data 2 " " STR
+push data 2 STR
+print STR
+goto #L18
+label #L17
+push data 3 "\n" STR
+push data 3 STR
+print STR
+push constant 0 INT
+pop temp 13 INT
+push temp 13 INT
 return
