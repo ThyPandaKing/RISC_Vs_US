@@ -11,7 +11,7 @@ Table of contents
 
 
 ## Installation
-1. Clone the repository from (https://github.com/cs19b001iittp/RISC_Vs_US.git) [Link will be updated for final presentation, as of now we will be cloning from compiler-dev branch].
+1. Clone the repository from (https://github.com/PandaKing9660/RISC_Vs_US.git).
 2. To run the code, go to linux terminal under /{USER_PATH}/RISC_Vs_US/Compiler and type ```make```.
 3. Then enter filename. As of now all test cases are in test-cases folder. So one such filepath (or) filename can be ```test-cases/final1```. Also you can give multiple files at the same time ```test-cases/final1 test-cases/final2``` by just separating file names with spaces.
 4. The generated three address code will be stored in ```tac.txt``` file.
@@ -26,15 +26,21 @@ Table of contents
     │   ├── a.out                       # output file for layer1.cpp
     │   ├── layer1.cpp                  # mention ehat optimizations are done here...
     ├── test-cases                      # Test files
-    │   ├── input1.txt                  # write what is tested in this file...
-    │   ├── input2.txt                  # write what is tested in this file...
+    │   ├── final1                      # write what is tested in this file...
+    │   ├── final2                      # write what is tested in this file...
     │   └── ...                         # Some other test case files
+    ├── bundle                          # executable file to merge all code files
+    ├── bundle.cpp                      # Program to merge multiple user program files                        
+    ├── bundle.txt                      # Complete program dump file
     ├── Makefile                        # makefile
     ├── lex.yy.c                        
     ├── lexical-analyser.l              # Lexical code
     ├── parser                          # Parser code
-    ├── parser.y                        
-    ├── tac.txt                         # Final three address code stored here.
+    ├── parser.y  
+    ├── tac-vm                          # Executable to convert tac to vm
+    ├── tac-vm.cpp                      # Program to convert tac to vm
+    ├── tac.txt                         # Three address code stored here.
+    ├── vm.vm                           # Final vmcode stored here.
     ├── y.output                       
     ├── y.tab.c                         
     ├── y.tab.h                         
