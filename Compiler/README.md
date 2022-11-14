@@ -5,6 +5,7 @@ Table of contents
 
 * [Introduction](#introduction)
 * [Installation](#installation)
+* [Folder Structure](#folder-structure)
 * [Usage](#usage)
 * [Known issues and limitations](#known-issues-and-limitations)
 
@@ -38,4 +39,6 @@ Table of contents
     ├── y.tab.c                         
     ├── y.tab.h                         
     └── 
+    
+ ## Known issues and limitations
 
