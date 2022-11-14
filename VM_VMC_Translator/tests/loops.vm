@@ -1,0 +1,28 @@
+function main 10 10 INT
+
+push constant 0 INT
+pop local 0 INT
+push constant 5 INT
+pop local 1 INT
+
+label LOOP
+push constant 0 INT
+push local 1 INT
+eq INT
+
+; if (y == 0) goto END
+
+if-goto END
+push local 0 INT
+push local 1 INT
+add INT
+pop local 0 INT
+push constant 1 INT
+push local 1 INT
+sub INT
+pop local 1 INT
+goto LOOP
+
+label END
+push local 0 INT
+print INT

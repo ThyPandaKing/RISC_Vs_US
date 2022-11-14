@@ -1,0 +1,17 @@
+int main(int a, int b){
+    return  a+b;
+}
+
+int sub(int g, int h){
+    return g - h;
+}
+
+int main(){
+    int d = 5 + c;
+    int d;
+    //int case;
+    int e = 2;
+    int f = 1;
+    int i = sub(e, f);
+    return 0;
+}

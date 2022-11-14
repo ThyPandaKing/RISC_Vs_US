@@ -10,3 +10,9 @@ The current objective is to design the datapath for a multi cycle processor. The
 - [ ] Program Counter (Partly Done)
 
 As of now we will prepare designs for few of these components assuming a single cycle processor and later incorporate the extra components required for the multi-cycle component and finish off the design.
+
+## Version Info
+
+* v1.0 - Single Cycle CPU with limited instruction compatibility as defined in checkpoint 2
+* v1.1 - Reorganized and cleanup of v1.0 directory 
+* v1.2 - **(Not Done)** Design fixes and improved immediate generation component of v1.1
