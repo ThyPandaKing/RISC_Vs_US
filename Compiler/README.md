@@ -4,13 +4,12 @@ Table of contents
 -----------------
 
 * [Introduction](#introduction)
-* [Installation](#installation)
+* [Installation and Usage](#installation-and-usage)
 * [Folder Structure](#folder-structure)
-* [Usage](#usage)
 * [Known issues and limitations](#known-issues-and-limitations)
 
 
-## Installation
+## Installation and Usage
 1. Clone the repository from (https://github.com/PandaKing9660/RISC_Vs_US.git).
 2. To run the code, go to linux terminal under /{USER_PATH}/RISC_Vs_US/Compiler and type ```make```.
 3. Then enter filename. As of now all test cases are in test-cases folder. So one such filepath (or) filename can be ```test-cases/final1```. Also you can give multiple files at the same time ```test-cases/final1 test-cases/final2``` by just separating file names with spaces.
