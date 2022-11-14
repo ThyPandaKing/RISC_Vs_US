@@ -147,7 +147,7 @@ void conversion(){
                 fun_var_count[curr_fun_name] = {local_idx, temp_idx};
                 if(curr_ret_type == "void"){
                     vm.push_back("push constant 0 INT");
-                    vm.push_back("pop argument 0 INT");
+                    // vm.push_back("pop argument 0 INT");
                     vm.push_back("return");
                 }
                 local_idx = 0;
@@ -185,7 +185,7 @@ void conversion(){
                 if(tac[i][0] == "return"){
                     pair<pair<string, string>, string> type_a = get_type(tac[i][1], tac[i][2]);
                     vm.push_back("push " + type_a.second + " " + type_a.first.first + " " + type_a.first.second);
-                    vm.push_back("pop argument 0 " + type_a.first.second);
+                    // vm.push_back("pop argument 0 " + type_a.first.second);
                     vm.push_back("return");
                 }
                 else if(tac[i][0] == "-"){
@@ -223,8 +223,8 @@ void conversion(){
             else if(tac[i].size() == 4){
                 if(tac[i][1] == "arg"){
                     // function parameters
-                    argument[tac[i][2]].first = to_string(arg_idx++);
-                    argument[tac[i][2]].second = tac[i][2];
+                    argument[tac[i][3]].first = to_string(arg_idx++);
+                    argument[tac[i][3]].second = tac[i][2];
                 }
                 else{
                     // simple assign : t0 = t1 INT
@@ -259,7 +259,7 @@ void conversion(){
                 if(tac[i][2] == "@call"){
                     vm.push_back("call " + tac[i][3] + " " + tac[i][5]);
                     pair<pair<string, string>, string> a = get_type(tac[i][0], tac[i][4]);
-                    vm.push_back("push argument 0 " + tac[i][4]);
+                    // vm.push_back("push argument 0 " + tac[i][4]);
                     vm.push_back("pop " + a.second + " " + a.first.first + " " + a.first.second);
                 }
                 else if(tac[i][3] == "["){

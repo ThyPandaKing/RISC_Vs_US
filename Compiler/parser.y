@@ -703,18 +703,25 @@ primary_expr    :   ID {
                     }
                     | const {
                         strcpy($$.type, $1.type);
-                        if(temp_map[string($1.lexeme)] == ""){
-                            string t=get_temp();
-                            sprintf($$.lexeme, t.c_str());
-                            tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
-                            temp_map[string($1.lexeme)] = string($$.lexeme);
 
-                            const_temps.insert(t);
-                        }
-                        else{
-                            //tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
-                            strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
-                        }
+                        string t=get_temp();
+                        sprintf($$.lexeme, t.c_str());
+                        tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        temp_map[string($1.lexeme)] = string($$.lexeme);
+
+                        const_temps.insert(t);
+                        // if(temp_map[string($1.lexeme)] == ""){
+                        //     string t=get_temp();
+                        //     sprintf($$.lexeme, t.c_str());
+                        //     tac.push_back(string($$.lexeme) + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        //     temp_map[string($1.lexeme)] = string($$.lexeme);
+
+                        //     const_temps.insert(t);
+                        // }
+                        // else{
+                        //     //tac.push_back(temp_map[string($1.lexeme)] + " = " + string($1.lexeme) + " " + string($$.type)); 
+                        //     strcpy($$.lexeme, temp_map[string($1.lexeme)].c_str());
+                        // }
                     }
                     | OC expr CC {
                         strcpy($$.type, $2.type);

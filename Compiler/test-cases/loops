@@ -1,5 +1,5 @@
 // Queue
 int main(int x, char y){
-    output(7*2);
+    for(x=0; x<)
     return 0;
 }
