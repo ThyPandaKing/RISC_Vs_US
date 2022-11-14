@@ -1,0 +1,87 @@
+main: INT
+- INT arr [ 5 ] 
+arr [ 0 ] = 98 INT
+arr [ 1 ] = 4 INT
+arr [ 2 ] = 3 INT
+arr [ 3 ] = 3 INT
+arr [ 4 ] = 8 INT
+- INT i
+- INT j
+@t0 = 0 INT
+i = @t0 INT
+
+#L0:
+@t1 = 4 INT
+@t2 = i < @t1 INT
+
+if @t2 GOTO #L1 else GOTO #L2
+
+#L3:
+@t2 = 1 INT
+@t3 = i + @t2 INT
+i = @t3 INT
+GOTO #L0
+
+#L1:
+- INT min_i
+min_i = i INT
+@t3 = i + @t2 INT
+j = @t3 INT
+
+#L4:
+@t3 = 5 INT
+@t4 = j < @t3 INT
+
+if @t4 GOTO #L5 else GOTO #L6
+
+#L7:
+@t4 = j + @t2 INT
+j = @t4 INT
+GOTO #L4
+
+#L5:
+@t4 = arr [ j ] INT
+@t5 = arr [ min_i ] INT
+@t6 = @t4 < @t5 INT
+if @t6 GOTO #L9 else GOTO #L10
+#L9:
+min_i = j INT
+GOTO #L8
+#L10:
+#L8:
+GOTO #L7
+
+#L6:
+@t4 = arr [ min_i ] INT
+- INT temp
+temp = @t4 INT
+@t5 = arr [ i ] INT
+arr [ min_i ] = @t5 INT
+arr [ i ] = temp INT
+GOTO #L3
+
+#L2:
+output "here" STR
+- INT k
+k = @t0 INT
+
+#L11:
+@t6 = k < @t3 INT
+
+if @t6 GOTO #L12 else GOTO #L13
+
+#L14:
+@t4 = k + @t2 INT
+k = @t4 INT
+GOTO #L11
+
+#L12:
+@t5 = arr [ k ] INT
+output @t5 INT
+output " " STR
+GOTO #L14
+
+#L13:
+return @t0 INT
+end:
+
