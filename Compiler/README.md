@@ -14,6 +14,7 @@ Table of contents
 2. To run the code, go to linux terminal under /{USER_PATH}/RISC_Vs_US/Compiler and type ```make```.
 3. Then enter filename. As of now all test cases are in test-cases folder. So one such filepath (or) filename can be ```test-cases/final1```. Also you can give multiple files at the same time ```test-cases/final1 test-cases/final2``` by just separating file names with spaces.
 4. The generated three address code will be stored in ```tac.txt``` file.
+5. Output to given to the Virtual machine team(vm-code) will be stores in ```vm.vm``` file.
 
 
 
