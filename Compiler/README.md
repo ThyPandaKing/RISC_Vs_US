@@ -9,7 +9,9 @@ Table of contents
 * [Known issues and limitations](#known-issues-and-limitations)
 
 ## Introduction
-1. In this project you can find a compiler for the programming language developed by #RISC_Vs_US team.
+1. In this project you can find a compiler for the programming language developed by ```RISC_Vs_US``` team.
+2. You may refer to the language manual here (https://docs.google.com/document/d/1IAW91fNMeh6gcIINUFF5NAg-Zl-5EekPPTUq8fAZZ5Q/edit?usp=sharing).
+3. One can also refer to the examples given in the test case folder(for more clarity refer to ```Folder Structure```).
 
 
 ## Installation and Usage
@@ -49,4 +51,5 @@ Table of contents
     └── 
     
  ## Known issues and limitations
-
+1. Pointers and structures are not introduced to the programming language yet.
+2. Line numbers in error messages in case of giving multiple files is not dealt with.

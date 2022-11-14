@@ -3,7 +3,7 @@ int main(){
 
 	int tree[63]; // 6 levels
 	int i;
-	for(i=0; i<100; i=i+1){
+	for(i=0; i<63; i=i+1){
 		tree[i] = 0;
 	}
 

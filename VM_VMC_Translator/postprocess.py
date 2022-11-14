@@ -60,4 +60,25 @@ def postprocess(asm_code):
 
     mod_asm_code += f"__END__:\n"
 
+    # # final_asm_Code=''
+    # for line in mod_asm_code.splitlines():
+    #     # check for beq in line
+    #     if 'beq' in line:
+    #         # get the label
+    #         label = line.split(' ')[-1]
+    #         # get the line number of the label
+    #         line_num = mod_asm_code.splitlines().index(label+':')
+    #         # get the line number of the beq
+    #         beq_line_num = mod_asm_code.splitlines().index(line)
+    #         # get the offset
+    #         offset = line_num - beq_line_num
+    #         if(offset>1000):
+    #             code=f"{line.split(' ')[-1]}{line.split(' ')[-1]}:\n"
+    #             code+=f"beq x0, x0, {line.split(' ')[-1]}\n"
+    #             # insert code after 1000 lines
+    #             mod_asm_code = mod_asm_code.splitlines()
+    #             mod_asm_code.insert(beq_line_num+1000, code)
+
+
+
     return mod_asm_code

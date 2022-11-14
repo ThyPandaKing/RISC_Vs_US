@@ -1,0 +1,44 @@
+
+// int add(int a){
+//     int ans = a + 5;
+//     return ans;
+// }
+
+// int main(){
+//     int a;
+//     output("Enter a: ");
+//     input(a);
+
+//     int ans = add(a);
+
+//     output("5 + ");
+//     output(a);
+//     output(" = ");
+//     output(ans);
+//     output("\n");
+
+//     return 0;
+// }
+
+int factorial(int n){
+    if(n==0){
+        return 1;
+    }
+    else{
+        return factorial(n-1) + n;
+    }
+}
+
+int main(){
+
+    int n;
+    output("Enter n: ");
+    input(n);
+
+    int res = factorial(n);
+
+    output(res);
+    output("\n");
+
+    return 0;
+}

@@ -1,4 +1,4 @@
-function nCr 0 13 INT
+function nCr 1 13 INT
 push argument 0 INT
 print INT
 push data 0 "\n" STR
