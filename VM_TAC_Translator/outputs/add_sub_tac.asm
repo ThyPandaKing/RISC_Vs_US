@@ -17,7 +17,6 @@ sw x7, -12(x8)
 # ---- end of spill ----
 lw a0, -12(x8)
 addi a7, x0, 1
-ecall
 lw x5, -16(x8)
 lw x6, -4(x8)
 lw x7, -8(x8)
@@ -35,4 +34,4 @@ sw x28, -20(x8)
 # ---- end of spill ----
 lw a0, -12(x8)
 addi a7, x0, 1
-ecall
+nop
