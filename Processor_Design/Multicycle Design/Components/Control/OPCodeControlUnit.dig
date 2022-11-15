@@ -2776,16 +2776,6 @@
       <pos x="-940" y="1840"/>
     </visualElement>
     <visualElement>
-      <elementName>And</elementName>
-      <elementAttributes>
-        <entry>
-          <string>wideShape</string>
-          <boolean>true</boolean>
-        </entry>
-      </elementAttributes>
-      <pos x="-820" y="1800"/>
-    </visualElement>
-    <visualElement>
       <elementName>Tunnel</elementName>
       <elementAttributes>
         <entry>
@@ -2836,6 +2826,16 @@
         </entry>
       </elementAttributes>
       <pos x="-1900" y="1800"/>
+    </visualElement>
+    <visualElement>
+      <elementName>Or</elementName>
+      <elementAttributes>
+        <entry>
+          <string>wideShape</string>
+          <boolean>true</boolean>
+        </entry>
+      </elementAttributes>
+      <pos x="-820" y="1800"/>
     </visualElement>
   </visualElements>
   <wires>
