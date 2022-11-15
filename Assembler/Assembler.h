@@ -77,12 +77,14 @@ class Assembler
 		unordered_map<char, char> escapeChars;
 		string regex_labels;
 		string regex_comment;
+		string regex_asciz;
 
 	public:
 		Assembler();
 		int terminate(int code);
 		string extractLabel(string vm_line, bool sectionType);
 		string extractComment(string vm_line);
+		string extractAsciz(string vm_line);
 		int extractTypeAndValue(string label, string vm_line);
 		void printST();
 		// To create the symbol table
