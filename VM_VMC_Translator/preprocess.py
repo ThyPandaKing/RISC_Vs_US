@@ -21,13 +21,13 @@ class Preprocess:
             if(line.split(' ')[0] == 'function'):
                 if(line.split(' ')[2] == '0' and line.split(' ')[3] == '0'):
                     line = line.split(' ')
-                    mod_vm_code += f'function {line[1]} 1 1 {line[4]}\n'
+                    mod_vm_code += f'function {line[1]} 10 10 {line[4]}\n'
                 elif(line.split(' ')[2] == '0'):
                     line = line.split(' ')
-                    mod_vm_code += f'function {line[1]} 1 {line[3]} {line[4]}\n'
+                    mod_vm_code += f'function {line[1]} 10 {line[3]} {line[4]}\n'
                 elif(line.split(' ')[3] == '0'):
                     line = line.split(' ')
-                    mod_vm_code += f'function {line[1]} {line[2]} 1 {line[4]}\n'
+                    mod_vm_code += f'function {line[1]} {line[2]} 10 {line[4]}\n'
                 else:
                     mod_vm_code += line + '\n'
 

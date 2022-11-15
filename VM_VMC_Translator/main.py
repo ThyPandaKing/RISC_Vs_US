@@ -16,7 +16,7 @@ if __name__ == '__main__':
         asm_code = asm_generator.generate_target_code(vm_code)
 
     script_dir = os.path.dirname(__file__)
-    rel_path = 'outputs/'+sys.argv[1].split('/')[-1].split('.')[0]+'.asm'
+    rel_path = 'outputs/asm.asm'
     abs_file_path = os.path.join(script_dir, rel_path)
 
     with open(abs_file_path, 'w+') as file:
