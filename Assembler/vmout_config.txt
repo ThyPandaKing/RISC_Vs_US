@@ -1,0 +1,5 @@
+No spaces in register list
+No extra line after .section
+.data section should be defined consecutively without extra lines, in the below format
+<label_name>:
+		.<type>  <value>
