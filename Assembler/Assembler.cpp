@@ -142,7 +142,7 @@ REGISTERS::REGISTERS()
 		{"S", 16},
 	};
 	regex_reg="[xast](\\d)+";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\d)+"};
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\+|-)?(\\d)+"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -820,7 +820,13 @@ int Assembler::secondPass(string vmout, string asmout)
 			linenumber++;
 			continue;
 		}
-
+		if(ins_tac=="nop")
+		{
+			bitset<32> binary(ins);
+			fout<<binary<<endl;
+			linenumber++;
+			continue;
+		}
 
 		istringstream iss(ins_tac);
 
