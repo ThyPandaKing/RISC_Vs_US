@@ -1,0 +1,42 @@
+// Queue - push, pop
+int main(){
+	
+	int q[100];
+	int qs = 0;
+	int qst = 0;
+
+	string msg = "\nOperations:\n1. Push back to the Queue\n2. Pop from the front of the Queue\n3. End\n\n";
+
+	while(1){
+
+		output("Queue: ");
+		int i;
+		for(i=qst; i<qs; i=i+1){
+			output(q[i]);
+			output(" " );
+		}
+
+		output(msg);
+
+		int op;
+		input(op);
+
+		switch(op){
+			case(1):
+				output("Enter the number: ");
+				int t;
+				input(t);
+				q[qs] = t;
+				qs = qs+1;
+                break;
+			case(2):
+				if(qst < qs){
+					qst = qst + 1;
+				}
+                break;
+			case(3):
+				return 0;
+		}
+	}
+	return 0;
+}

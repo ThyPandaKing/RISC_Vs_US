@@ -35,6 +35,8 @@ def convert_rep(value):
 
 def postprocess(asm_code):
     mod_asm_code = ''
+    # print(asm_code[:50])
+    # print('llllll')
 
     for line in asm_code.splitlines():
         if (line.split(' ')[0] == 'li'):
@@ -59,6 +61,8 @@ def postprocess(asm_code):
 
     # mod_asm_code = asm_code + '\n'
 
+    # print(mod_asm_code[:50])
+
     mod_asm_code += f"__END__:\n"
     mod_asm_code += f"nop\n"
 
@@ -72,5 +76,13 @@ def postprocess(asm_code):
         final_asm_code += '\n'
 
     final_asm_code = re.sub(r'\n\n', '\n', final_asm_code)
-
-    return final_asm_code
+    # print(final_asm_code[:50])
+    final_code=''
+    for line in final_asm_code.splitlines():
+        if('0x' in line):
+            hex_val=line.split('0x')[-1]
+            int_val=int(hex_val,16)
+            final_code+=f"{line.split('0x')[0]}{int_val}\n"
+        else:
+            final_code+=f"{line}\n"
+    return ('.section'+final_code)

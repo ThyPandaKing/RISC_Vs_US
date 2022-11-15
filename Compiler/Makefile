@@ -1,5 +1,4 @@
 run: parser vm bundle
-	./bundle > bundle.txt
 	./parser < bundle.txt > tac.txt;\
 	./tac-vm > vm.vm
 

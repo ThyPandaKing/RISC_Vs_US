@@ -118,6 +118,73 @@ ipcMain.on ('runCode', (event, filePath) => {
 
 });
 
+ipcMain.on('findDisplayValues', (event) => {
+  
+    let result = "";
+    console.log("hello from here")
+
+    try {
+
+      let command = "head -2 /home/user/xilinx-projects/CPU/CPU.srcs/sim_1/new/memory_binary.mem | tail -4 > ../Device_Buffers/display_memory.txt";
+
+      exec (
+        command,
+        [],
+        (err, stdout, stderr) => {
+          if (err) {
+            console.error (`exec error: ${err}`);
+            return;
+          }
+          if (stderr) {
+            console.error (`std exec error: ${stderr}`);
+            return;
+          }
+          console.log (stdout);
+        }
+      );
+    
+
+        let data = fs.readFileSync('../Device_Buffers/display_memory.txt', 'utf8');
+        data = data.split('\n');
+        let start = Math.pow(2, 0)-1;
+        let end = Math.min(Math.pow(2,19), data.length);
+        
+
+
+      for(let i=start; i< end; i+=2){
+
+        let data_type = parseInt(data[i], 2);
+        let data_val = parseInt(data[i+1],2);
+        console.log(data_type, data_val)
+
+        if (data_type == 0)
+        {
+            result += data_val;
+            
+        }else if(data_type == 1){
+            result += String.fromCharCode(data_val)
+        }
+
+        
+      }
+
+
+    } catch (err) {
+      console.error(err);
+    }
+
+
+    try {
+      fs.writeFileSync('../Device_Buffers/memory_map.txt', result);
+      // file written successfully
+    } catch (err) {
+      console.error(err);
+    }
+
+
+})
+
+
 ipcMain.handle ('refreshDisplay', async event => {
   console.log ('yo yo yo');
   // Write code here to read the file with the updated display information

@@ -14,7 +14,7 @@ class VM:
         self.that = 8212
         # 8216 and 8220 for later use
         # start from 8224
-        self.text_segment = ".section\n.text\n.global main\njal x30, main\n"
+        self.text_segment = ".section\n.text\njal x30, main\n"
         self.prev_operator = None
         self.prev_datatype = None
         self.prev_push_segment = None
