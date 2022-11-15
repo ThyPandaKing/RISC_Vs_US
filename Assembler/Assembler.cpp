@@ -142,7 +142,7 @@ REGISTERS::REGISTERS()
 		{"S", 16},
 	};
 	regex_reg="[xast](\\d)+";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\d)+"};
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\+|-)?(\\d)+"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
