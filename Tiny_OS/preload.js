@@ -219,6 +219,9 @@ window.addEventListener ('DOMContentLoaded', () => {
     var pixel = returnPixelMap("");
     document.getElementById ('display').innerHTML = pixel;
     console.log ('Inside click event');
+
+    ipcRenderer.send('findDisplayValues');
+
     var interval = setInterval (async () => {
       // Write logic for reading file here - response from main.js
       var result_data = await ipcRenderer.invoke ('refreshDisplay');
@@ -339,6 +342,8 @@ window.addEventListener ('DOMContentLoaded', () => {
       display_div.style.display = 'block'
 
     }, 500);
+
+
   });
 });
 

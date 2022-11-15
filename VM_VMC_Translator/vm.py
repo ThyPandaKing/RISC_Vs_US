@@ -14,7 +14,7 @@ class VM:
         self.that = 8212
         # 8216 and 8220 for later use
         # start from 8224
-        self.text_segment = ".section\n.text\n.global main\nbeq x0, x0, main\n"
+        self.text_segment = ".section\n.text\njal x30, main\n"
         self.prev_operator = None
         self.prev_datatype = None
         self.prev_push_segment = None
@@ -73,7 +73,7 @@ class VM:
         """
         goto L0
         """
-        self.text_segment += f"beq x0, x0, {line[-1]}\n"
+        self.text_segment += f"jal x30, {line[-1]}\n"
 
     def push(self, line):
         """
@@ -135,12 +135,20 @@ class VM:
 
                     for i in self.data_segment_dict[var_name][1].lstrip('"').rstrip('"'):
                         self.text_segment += f"li x6, {ord(i)}\n"
-                        self.text_segment += f"sw x6, -{self.print_start}\n"
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"li x28, 1\n"
+                        self.text_segment += f"sw x28, 0(x7)\n"
                         self.print_start += 4
-                        self.text_segment += f"nop CHAR\n"
-                    self.text_segment += f"sw x0, -{self.print_start}\n"
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"sw x6, -0(x7)\n"
+                        self.print_start += 4
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"li x28, 1\n"
+                    self.text_segment += f"sw x28, 0(x7)\n"
                     self.print_start += 4
-                    self.text_segment += f"nop CHAR\n"
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"sw x0, -0(x7)\n"
+                    self.print_start += 4
 
         elif (segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
@@ -401,7 +409,7 @@ class VM:
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -418,7 +426,7 @@ class VM:
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -435,7 +443,7 @@ class VM:
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"add x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -456,7 +464,7 @@ class VM:
             self.text_segment += f"bne x28, x0, {label1}\n"
 
             self.text_segment += f"fadd.s f5, f0, f0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             # self.text_segment += f"add.s f5, f0, 1\n"
             self.text_segment += f"fli f5, 1\n"
@@ -486,7 +494,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -504,7 +512,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -522,7 +530,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -547,7 +555,7 @@ class VM:
             self.text_segment += f"bne x28, x0, {label1}\n"
 
             self.text_segment += f"fli f5, 0\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"fli f5, 1\n"
             self.text_segment += f"{label2}:\n"
@@ -576,7 +584,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 1\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"{label2}:\n"
@@ -594,7 +602,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 1\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"{label2}:\n"
@@ -612,7 +620,7 @@ class VM:
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 1\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"addi x7, x0, 0\n"
             self.text_segment += f"{label2}:\n"
@@ -637,7 +645,7 @@ class VM:
             self.text_segment += f"bne x28, x0, {label1}\n"
 
             self.text_segment += f"fli f5, 1\n"
-            self.text_segment += f"beq x0, x0, {label2}\n"
+            self.text_segment += f"jal x30, {label2}\n"
             self.text_segment += f"{label1}:\n"
             self.text_segment += f"fli f5, 0\n"
             self.text_segment += f"{label2}:\n"
@@ -724,15 +732,29 @@ class VM:
 
     def new_print_stmt(self, line):
         datatype = line[-1]
-        if (datatype == Datatypes.INT.value or datatype == Datatypes.CHAR.value or
+        if (datatype == Datatypes.INT.value or
                 datatype == Datatypes.BOOL.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 0\n"                     # int 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
             self.text_segment += f"li x5, -{self.print_start}\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"sw x6, 0(x5)\n"
             self.print_start += 4
-            self.text_segment += f"nop {datatype}\n"
+        elif (datatype == Datatypes.CHAR.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 1\n"                     #char 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x6, 0(x5)\n"
+            self.print_start += 4
         elif (datatype == Datatypes.STR.value):
             pass
 
@@ -818,7 +840,7 @@ class VM:
     def return_call(self, line):
 
         if (self.cur_function == 'main'):
-            self.text_segment += f"beq x0, x0, __END__\n"
+            self.text_segment += f"jal x30, __END__\n"
             return
 
         self.text_segment += f"addi x2, x2, 4\n"

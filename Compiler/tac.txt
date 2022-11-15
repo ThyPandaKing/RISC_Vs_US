@@ -1,0 +1,80 @@
+main: INT
+@t0 = 40 INT
+- INT a
+a = @t0 INT
+@t1 = 20 INT
+- INT b
+b = @t1 INT
+- INT c
+output "Value of a is " STR
+output a INT
+output "\n" STR
+output "Value of b is " STR
+output b INT
+output "Operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n" STR
+- INT i
+@t2 = 1 INT
+i = @t2 INT
+
+#L0:
+@t3 = 3 INT
+@t4 = i <= @t3 INT
+
+if @t4 GOTO #L1 else GOTO #L2
+
+#L3:
+@t4 = 1 INT
+@t5 = i + @t4 INT
+i = @t5 INT
+GOTO #L0
+
+#L1:
+output "Result for operation " STR
+output i INT
+output " is: " STR
+@t6 = i INT
+@t7 = 1 INT
+@t8 = @t6 == @t7 INT
+if @t8 GOTO #L5 else GOTO #L6
+#L5:
+@t5 = a + b INT
+c = @t5 INT
+GOTO #L4
+#L6:
+@t9 = 2 INT
+@t10 = @t6 == @t9 INT
+if @t10 GOTO #L7 else GOTO #L8
+#L7:
+@t5 = 0 INT
+@t11 = 0 INT
+@t13 = 1 INT
+#L10:
+@t12 = @t11 < b  INT
+if @t12 GOTO #L11 else GOTO #L12
+#L11:
+@t5 = @t5 + a  INT
+@t11 = @t11 + @t13  INT
+GOTO #L10
+#L12:
+c = @t5 INT
+GOTO #L4
+#L8:
+@t14 = 3 INT
+@t15 = @t6 == @t14 INT
+if @t15 GOTO #L13 else GOTO #L14
+#L13:
+@t11 = a & b INT
+c = @t11 INT
+GOTO #L4
+#L14:
+output "Invalid\n" STR
+#L4:
+output c INT
+output "\n" STR
+GOTO #L3
+
+#L2:
+@t12 = 0 INT
+return @t12 INT
+end:
+

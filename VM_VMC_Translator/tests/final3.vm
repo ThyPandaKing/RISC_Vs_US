@@ -1,0 +1,84 @@
+function main 2 7 INT
+push constant 97 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 0 INT
+push constant 2 INT
+pop temp 1 INT
+push temp 1 INT
+pop local 1 INT
+label #L0
+push local 1 INT
+push local 0 INT
+lt INT
+pop temp 2 INT
+push temp 2 INT
+if-goto #L1
+goto #L2
+label #L3
+push constant 1 INT
+pop temp 2 INT
+push local 1 INT
+push temp 2 INT
+add INT
+pop temp 3 INT
+push temp 3 INT
+pop local 1 INT
+goto #L0
+label #L1
+push constant 0 INT
+pop temp 3 INT
+push local 0 INT
+pop temp 4 INT
+push constant 1 INT
+pop temp 5 INT
+label #L6
+push temp 4 INT
+push local 1 INT
+ge INT
+pop temp 6 INT
+push temp 6 INT
+if-goto #L7
+goto #L8
+label #L7
+push temp 4 INT
+push local 1 INT
+sub INT
+pop temp 4 INT
+goto #L6
+label #L8
+push temp 4 INT
+pop temp 3 INT
+push constant 0 INT
+pop temp 4 INT
+push temp 3 INT
+push temp 4 INT
+eq INT
+pop temp 5 INT
+push temp 5 INT
+not INT
+pop temp 6 INT
+push temp 6 INT
+if-goto #L9
+goto #L10
+label #L9
+goto #L3
+goto #L4
+label #L10
+push data 0 "It is not a prime number.\n" STR
+push data 0 STR
+print STR
+push constant 0 INT
+pop temp 5 INT
+push temp 5 INT
+return
+label #L4
+goto #L3
+label #L2
+push data 1 "It is a prime number.\n" STR
+push data 1 STR
+print STR
+push constant 0 INT
+pop temp 3 INT
+push temp 3 INT
+return

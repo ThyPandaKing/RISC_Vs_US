@@ -1,0 +1,13 @@
+//floor and ceil of floating point integer
+
+int main(){
+	float f = 6235.124;
+	int a1 = f;
+	
+	output("The floor of ");
+	output(f);
+	output(" is ");
+	output(a1);
+
+	return 0;
+}
