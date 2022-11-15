@@ -1,4 +1,5 @@
 cd Compiler
+cp ../User/userCode.txt  bundle.txt 
 make run
 
 cd ..
@@ -12,4 +13,4 @@ cd ..
 cd Assembler
 cat ../asm.asm > vmout.asm
 g++ Assembler.cpp -o assemble.o
-cat assemble.o > ../assemble.o
+./assemble.o

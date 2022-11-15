@@ -1,0 +1,150 @@
+function main 4 16 INT
+push constant 40 INT
+pop temp 0 INT
+push temp 0 INT
+pop local 0 INT
+push constant 20 INT
+pop temp 1 INT
+push temp 1 INT
+pop local 1 INT
+push data 0 "Value of a is " STR
+push data 0 STR
+print STR
+push local 0 INT
+print INT
+push data 1 "\n" STR
+push data 1 STR
+print STR
+push data 2 "Value of b is " STR
+push data 2 STR
+print STR
+push local 1 INT
+print INT
+push data 3 "Operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n" STR
+push data 3 STR
+print STR
+push constant 1 INT
+pop temp 2 INT
+push temp 2 INT
+pop local 3 INT
+label #L0
+push constant 3 INT
+pop temp 3 INT
+push local 3 INT
+push temp 3 INT
+le INT
+pop temp 4 INT
+push temp 4 INT
+if-goto #L1
+goto #L2
+label #L3
+push constant 1 INT
+pop temp 4 INT
+push local 3 INT
+push temp 4 INT
+add INT
+pop temp 5 INT
+push temp 5 INT
+pop local 3 INT
+goto #L0
+label #L1
+push data 4 "Result for operation " STR
+push data 4 STR
+print STR
+push local 3 INT
+print INT
+push data 5 " is: " STR
+push data 5 STR
+print STR
+push local 3 INT
+pop temp 6 INT
+push constant 1 INT
+pop temp 7 INT
+push temp 6 INT
+push temp 7 INT
+eq INT
+pop temp 8 INT
+push temp 8 INT
+if-goto #L5
+goto #L6
+label #L5
+push local 0 INT
+push local 1 INT
+add INT
+pop temp 5 INT
+push temp 5 INT
+pop local 2 INT
+goto #L4
+label #L6
+push constant 2 INT
+pop temp 9 INT
+push temp 6 INT
+push temp 9 INT
+eq INT
+pop temp 10 INT
+push temp 10 INT
+if-goto #L7
+goto #L8
+label #L7
+push constant 0 INT
+pop temp 5 INT
+push constant 0 INT
+pop temp 11 INT
+push constant 1 INT
+pop temp 12 INT
+label #L10
+push temp 11 INT
+push local 1 INT
+lt INT
+pop temp 13 INT
+push temp 13 INT
+if-goto #L11
+goto #L12
+label #L11
+push temp 5 INT
+push local 0 INT
+add INT
+pop temp 5 INT
+push temp 11 INT
+push temp 12 INT
+add INT
+pop temp 11 INT
+goto #L10
+label #L12
+push temp 5 INT
+pop local 2 INT
+goto #L4
+label #L8
+push constant 3 INT
+pop temp 14 INT
+push temp 6 INT
+push temp 14 INT
+eq INT
+pop temp 15 INT
+push temp 15 INT
+if-goto #L13
+goto #L14
+label #L13
+push local 0 INT
+push local 1 INT
+and INT
+pop temp 11 INT
+push temp 11 INT
+pop local 2 INT
+goto #L4
+label #L14
+push data 6 "Invalid\n" STR
+push data 6 STR
+print STR
+label #L4
+push local 2 INT
+print INT
+push data 7 "\n" STR
+push data 7 STR
+print STR
+goto #L3
+label #L2
+push constant 0 INT
+pop temp 13 INT
+push temp 13 INT
+return
