@@ -135,12 +135,20 @@ class VM:
 
                     for i in self.data_segment_dict[var_name][1].lstrip('"').rstrip('"'):
                         self.text_segment += f"li x6, {ord(i)}\n"
-                        self.text_segment += f"sw x6, -{self.print_start}\n"
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"li x28, 1\n"
+                        self.text_segment += f"sw x28, 0(x7)\n"
                         self.print_start += 4
-                        self.text_segment += f"nop CHAR\n"
-                    self.text_segment += f"sw x0, -{self.print_start}\n"
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"sw x6, -0(x7)\n"
+                        self.print_start += 4
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"li x28, 1\n"
+                    self.text_segment += f"sw x28, 0(x7)\n"
                     self.print_start += 4
-                    self.text_segment += f"nop CHAR\n"
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"sw x0, -0(x7)\n"
+                    self.print_start += 4
 
         elif (segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
@@ -724,15 +732,29 @@ class VM:
 
     def new_print_stmt(self, line):
         datatype = line[-1]
-        if (datatype == Datatypes.INT.value or datatype == Datatypes.CHAR.value or
+        if (datatype == Datatypes.INT.value or
                 datatype == Datatypes.BOOL.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 0\n"                     # int 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
             self.text_segment += f"li x5, -{self.print_start}\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"sw x6, 0(x5)\n"
             self.print_start += 4
-            self.text_segment += f"nop {datatype}\n"
+        elif (datatype == Datatypes.CHAR.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 1\n"                     #char 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x6, 0(x5)\n"
+            self.print_start += 4
         elif (datatype == Datatypes.STR.value):
             pass
 
