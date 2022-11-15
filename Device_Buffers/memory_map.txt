@@ -1,6 +1,2 @@
-
-Hello World!
-
-*** Welcome ***
-
-This is the Virtual Display with Device Driver implemented using bit maps.
+a
+1

@@ -1203,20 +1203,28 @@ module OPCodeControlUnit (
   wire S_1_D;
   wire S_2_D;
   wire S_3_D;
-  wire ALUSrcB0_temp;
+  wire PCSource0_temp;
   wire State_1;
   wire State_2;
   wire s15;
   wire MemtoReg_temp;
   wire MemWrite_temp;
-  wire ALUOp1_temp;
+  wire State_6;
   wire State_7;
   wire ALUOp0_temp;
-  wire PCSource0_temp;
-  wire NextState_0;
+  wire ALUSrcB0_temp;
+  wire State_10;
+  wire NextState_9;
   wire NextState_3;
   wire NextState_5;
   wire NextState_6;
+  wire NextState_7;
+  wire NextState_10;
+  wire s16;
+  wire s17;
+  wire s18;
+  wire s19;
+  wire I_Type;
   assign s2 = ~ I6;
   assign s1 = ~ I3;
   assign s0 = ~ I2;
@@ -1236,6 +1244,10 @@ module OPCodeControlUnit (
   assign S_1_D = ~ S_1;
   assign S_2_D = ~ S_2;
   assign S_3_D = ~ S_3;
+  assign s19 = ~ I6;
+  assign s18 = ~ I5;
+  assign s17 = ~ I3;
+  assign s16 = ~ I2;
   // R-Front
   And7Bit And7Bit_i0 (
     .I0( I0 ),
@@ -1280,30 +1292,45 @@ module OPCodeControlUnit (
     .I6( I6 ),
     .O( beq )
   );
-  assign ALUSrcB0_temp = (S_0_D & S_1_D & S_2_D & S_3_D);
+  assign PCSource0_temp = (S_0_D & S_1_D & S_2_D & S_3_D);
   assign State_1 = (S_0 & S_1_D & S_2_D & S_3_D);
   assign State_2 = (S_0_D & S_1 & S_2_D & S_3_D);
   assign s15 = (S_0 & S_1 & S_2_D & S_3_D);
   assign MemtoReg_temp = (S_0_D & S_1_D & S_2 & S_3_D);
   assign MemWrite_temp = (S_0 & S_1_D & S_2 & S_3_D);
-  assign ALUOp1_temp = (S_0_D & S_1 & S_2 & S_3_D);
+  assign State_6 = (S_0_D & S_1 & S_2 & S_3_D);
   assign State_7 = (S_0 & S_1 & S_2 & S_3_D);
   assign ALUOp0_temp = (S_0_D & S_1_D & S_2_D & S_3);
-  assign PCSource0_temp = (S_0 & S_1_D & S_2_D & S_3);
+  assign ALUSrcB0_temp = (S_0 & S_1_D & S_2_D & S_3);
+  // I-Front
+  And7Bit And7Bit_i4 (
+    .I0( I0 ),
+    .I1( I1 ),
+    .I2( s16 ),
+    .I3( s17 ),
+    .I4( I4 ),
+    .I5( s18 ),
+    .I6( s19 ),
+    .O( I_Type )
+  );
+  assign State_10 = (S_0_D & S_1 & S_2_D & S_3);
   assign PCWrite = (ALUSrcB0_temp | PCSource0_temp);
   assign IorD = (s15 | MemWrite_temp);
   assign MemRead = (s15 | ALUSrcB0_temp);
-  assign ALUSrcB1 = (State_1 | State_2);
-  assign ALUSrcA = (State_2 | ALUOp1_temp | ALUOp0_temp);
+  assign ALUSrcB1 = (State_1 | State_10 | State_2);
+  assign ALUSrcA = (State_2 | State_6 | ALUOp0_temp | State_10);
   assign RegWrite = (MemtoReg_temp | State_7);
-  assign NextState_0 = (MemtoReg_temp | MemWrite_temp | State_7 | ALUOp0_temp | PCSource0_temp);
+  assign NextState_9 = (MemtoReg_temp | MemWrite_temp | State_7 | ALUOp0_temp | PCSource0_temp);
   assign NextState_3 = (State_2 & lw);
   assign NextState_5 = (State_2 & sw);
   assign NextState_6 = (State_1 & R_Type);
-  assign NS_3 = (State_1 & beq);
-  assign NS_0 = (ALUSrcB0_temp | NextState_3 | NextState_5 | ALUOp1_temp);
-  assign NS_1 = ((State_1 & (lw | sw)) | NextState_3 | NextState_6 | ALUOp1_temp);
-  assign NS_2 = (s15 | NextState_5 | NextState_6 | ALUOp1_temp);
+  assign NextState_10 = (State_1 & I_Type);
+  assign NextState_7 = (State_6 & State_10);
+  assign ALUOp1 = (State_6 | State_10);
+  assign NS_0 = (ALUSrcB0_temp | NextState_3 | NextState_9 | NextState_5 | NextState_7);
+  assign NS_1 = ((State_1 & (lw | sw)) | NextState_3 | NextState_10 | NextState_6 | NextState_7);
+  assign NS_2 = (s15 | NextState_5 | NextState_6 | NextState_7);
+  assign NS_3 = ((State_1 & beq) | NextState_10 | NextState_9);
   assign PCWriteCond = ALUOp0_temp;
   assign MemWrite = MemWrite_temp;
   assign IRWrite = ALUSrcB0_temp;
@@ -1311,7 +1338,6 @@ module OPCodeControlUnit (
   assign PCSource0 = PCSource0_temp;
   assign PCSource1 = ALUOp0_temp;
   assign ALUOp0 = ALUOp0_temp;
-  assign ALUOp1 = ALUOp1_temp;
   assign ALUSrcB0 = ALUSrcB0_temp;
 endmodule
 
