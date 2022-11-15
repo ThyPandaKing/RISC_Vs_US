@@ -161,7 +161,18 @@ window.addEventListener ('DOMContentLoaded', () => {
     console.log ('Inside click event');
     ipcRenderer.send ('runCode', '../User/userCode.txt');
   });
+  let runcButton = document.getElementById ('runcButton');
 
+  runButton.addEventListener ('click', () => {
+    console.log ('Inside click event');
+    ipcRenderer.send ('runcCode', '../User/userCode.txt');
+  });
+  let runvButton = document.getElementById ('runvButton');
+
+  runButton.addEventListener ('click', () => {
+    console.log ('Inside click event');
+    ipcRenderer.send ('runvCode', '../User/userCode.txt');
+  });
   let sendButton = document.getElementById('sendButton');
 
   sendButton.addEventListener('click', () => {
