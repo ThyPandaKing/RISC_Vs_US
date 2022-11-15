@@ -1,0 +1,4 @@
+// Various operations using switch-case
+void main(){
+	output(8%3);
+}

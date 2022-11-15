@@ -1,0 +1,32 @@
+function main 0 6 void
+push constant 8 INT
+pop temp 0 INT
+push constant 3 INT
+pop temp 1 INT
+push constant 0 INT
+pop temp 2 INT
+push temp 0 INT
+pop temp 3 INT
+push constant 1 INT
+pop temp 4 INT
+label #L1
+push temp 3 INT
+push temp 1 INT
+ge INT
+pop temp 5 INT
+push temp 5 INT
+if-goto #L2
+goto #L3
+label #L2
+push temp 3 INT
+push temp 1 INT
+sub INT
+pop temp 3 INT
+goto #L1
+label #L3
+push temp 3 INT
+pop temp 2 INT
+push temp 2 INT
+print INT
+push constant 0 INT
+return
