@@ -7,7 +7,7 @@ Simulates and translates VMC to RSIC V assembly.
 - Run **main.py** using Python 3 as shown:
 
 ```
-$ python3 main.py <path_to_input_tac>
+$ python3 main.py <path_to_input_vmcode>
 ```
 
 - Some example test cases are present in **tests** folder. For example:

@@ -1,0 +1,14 @@
+main: INT
+- FLOAT f
+output "Enter a float number: " STR
+input f FLOAT
+- INT a1
+a1 = f INT
+output "The floor of " STR
+output f FLOAT
+output " is " STR
+output a1 INT
+@t0 = 0 INT
+return @t0 INT
+end:
+

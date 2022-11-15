@@ -1,0 +1,21 @@
+function main 2 1 INT
+push data 0 "Enter a float number: " STR
+push data 0 STR
+print STR
+scan local 0 FLOAT
+push local 0 FLOAT
+pop local 1 INT
+push data 1 "The floor of " STR
+push data 1 STR
+print STR
+push local 0 FLOAT
+print FLOAT
+push data 2 " is " STR
+push data 2 STR
+print STR
+push local 1 INT
+print INT
+push constant 0 INT
+pop temp 0 INT
+push temp 0 INT
+return
