@@ -77,4 +77,12 @@ def postprocess(asm_code):
 
     final_asm_code = re.sub(r'\n\n', '\n', final_asm_code)
     # print(final_asm_code[:50])
-    return ('.section'+final_asm_code)
+    final_code=''
+    for line in final_asm_code.splitlines():
+        if('0x' in line):
+            hex_val=line.split('0x')[-1]
+            int_val=int(hex_val,16)
+            final_code+=f"{line.split('0x')[0]}{int_val}\n"
+        else:
+            final_code+=f"{line}\n"
+    return ('.section'+final_code)
