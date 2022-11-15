@@ -28,7 +28,7 @@ class VM:
         self.data_segment_dict = {}
         self.data_segment = ".section\n.data\n"
         self.print_start = 2**18
-        self.demo = True
+        self.demo = False
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
