@@ -85,7 +85,7 @@ ipcMain.on ('runCode', (event, filePath) => {
   );
 
   exec (
-    'cd ../Virtual_Machine/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    'cd ../VM_VMC_Translator/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
     [],
     (err, stdout, stderr) => {
       if (err) {
@@ -116,6 +116,59 @@ ipcMain.on ('runCode', (event, filePath) => {
   }
 );
 
+});
+
+ipcMain.on ('runcCode', (event, filePath) => {
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+});
+
+
+ipcMain.on ('runvCode', (event, filePath) => {
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+  exec (
+    'cd ../VM_VMC_Translator/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
 });
 
 ipcMain.on('findDisplayValues', (event) => {
