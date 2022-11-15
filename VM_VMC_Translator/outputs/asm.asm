@@ -20,61 +20,61 @@ __main__data7:
 .text
 jal x30,main
 main:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1354
 addi x5,x5,1354
 addi x5,x5,1354
 addi x5,x5,2
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,0
 add x6,x8,x6
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1184
 addi x5,x5,1184
 addi x5,x5,1184
 addi x5,x5,0
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1362
 addi x6,x6,1362
 addi x6,x6,1362
 addi x6,x6,2
 add x6,x8,x6
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1173
 addi x5,x5,1173
 addi x5,x5,1173
 addi x5,x5,1
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1
 add x6,x8,x6
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1002
 addi x5,x5,1002
 addi x5,x5,1002
 addi x5,x5,2
-lui x6,0xffffe
+lui x6,1048574
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
 add x6,x8,x6
 sw x5,0(x6)
-lui x2,0xffffd
+lui x2,1048573
 addi x2,x2,1002
 addi x2,x2,1002
 addi x2,x2,1002
 addi x2,x2,2
 add x2,x2,x8
-lui x5,0x00000
+lui x5,0
 addi x5,x5,13
 addi x5,x5,13
 addi x5,x5,13
@@ -83,7 +83,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -92,7 +92,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-4
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -105,7 +105,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -114,7 +114,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-4
 sw x5,0(x6)
-lui x5,0x00000
+lui x5,0
 addi x5,x5,6
 addi x5,x5,6
 addi x5,x5,6
@@ -123,7 +123,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -132,7 +132,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-8
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -145,7 +145,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -154,12 +154,12 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-8
 sw x5,0(x6)
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x00
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,0
 addi a7,x0,4
 ecall
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -174,23 +174,23 @@ addi x2,x2,4
 lw x5,0(x2)
 add a0,x5,x0
 addi x2,x2,-4
-lui a7,0x00000
+lui a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,1
 ecall
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x0f
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,15
 addi a7,x0,4
 ecall
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x11
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,17
 addi a7,x0,4
 ecall
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -205,18 +205,18 @@ addi x2,x2,4
 lw x5,0(x2)
 add a0,x5,x0
 addi x2,x2,-4
-lui a7,0x00000
+lui a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,1
 ecall
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x20
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,32
 addi a7,x0,4
 ecall
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -225,7 +225,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -234,7 +234,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-12
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -247,7 +247,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -257,7 +257,7 @@ lw x6,0(x6)
 addi x6,x6,-16
 sw x5,0(x6)
 __L0:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,1
 addi x5,x5,1
 addi x5,x5,1
@@ -266,7 +266,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -275,7 +275,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-16
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -286,7 +286,7 @@ addi x5,x5,-16
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -312,7 +312,7 @@ sw x7,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -321,7 +321,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-20
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -334,7 +334,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0x00000
+lui x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
@@ -342,7 +342,7 @@ addi x6,x6,1
 beq x5,x6,__L1
 jal x30,__L2
 __L3:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -351,7 +351,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -360,7 +360,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-20
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -371,7 +371,7 @@ addi x5,x5,-16
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -391,7 +391,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -400,7 +400,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-24
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -413,7 +413,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -424,12 +424,12 @@ addi x6,x6,-16
 sw x5,0(x6)
 jal x30,__L0
 __L1:
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x5a
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,90
 addi a7,x0,4
 ecall
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -444,18 +444,18 @@ addi x2,x2,4
 lw x5,0(x2)
 add a0,x5,x0
 addi x2,x2,-4
-lui a7,0x00000
+lui a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,1
 ecall
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x70
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,112
 addi a7,x0,4
 ecall
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -468,7 +468,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -477,7 +477,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-28
 sw x5,0(x6)
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -486,7 +486,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -495,7 +495,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-32
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -506,7 +506,7 @@ addi x5,x5,-28
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -531,7 +531,7 @@ sw x7,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -540,7 +540,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-36
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -553,7 +553,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0x00000
+lui x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
@@ -561,7 +561,7 @@ addi x6,x6,1
 beq x5,x6,__L5
 jal x30,__L6
 __L5:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -572,7 +572,7 @@ addi x5,x5,-4
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -592,7 +592,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -601,7 +601,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-24
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -614,7 +614,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -625,7 +625,7 @@ addi x6,x6,-12
 sw x5,0(x6)
 jal x30,__L4
 __L6:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -634,7 +634,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -643,7 +643,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-40
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -654,7 +654,7 @@ addi x5,x5,-28
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -679,7 +679,7 @@ sw x7,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -688,7 +688,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-44
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -701,7 +701,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0x00000
+lui x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
@@ -709,7 +709,7 @@ addi x6,x6,1
 beq x5,x6,__L7
 jal x30,__L8
 __L7:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -718,7 +718,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -727,7 +727,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-24
 sw x5,0(x6)
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -736,7 +736,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -745,7 +745,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-48
 sw x5,0(x6)
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -754,7 +754,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -764,7 +764,7 @@ lw x6,0(x6)
 addi x6,x6,-52
 sw x5,0(x6)
 __L10:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -775,7 +775,7 @@ addi x5,x5,-48
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -800,7 +800,7 @@ sw x7,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -809,7 +809,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-56
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -822,7 +822,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0x00000
+lui x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
@@ -830,7 +830,7 @@ addi x6,x6,1
 beq x5,x6,__L11
 jal x30,__L12
 __L11:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -841,7 +841,7 @@ addi x5,x5,-24
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -861,7 +861,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -870,7 +870,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-24
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -881,7 +881,7 @@ addi x5,x5,-48
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -901,7 +901,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -912,7 +912,7 @@ addi x6,x6,-48
 sw x5,0(x6)
 jal x30,__L10
 __L12:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -925,7 +925,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -936,7 +936,7 @@ addi x6,x6,-12
 sw x5,0(x6)
 jal x30,__L4
 __L8:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,1
 addi x5,x5,1
 addi x5,x5,1
@@ -945,7 +945,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -954,7 +954,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-60
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -965,7 +965,7 @@ addi x5,x5,-28
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -990,7 +990,7 @@ sw x7,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -999,7 +999,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-64
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -1012,7 +1012,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0x00000
+lui x6,0
 addi x6,x6,0
 addi x6,x6,0
 addi x6,x6,0
@@ -1020,7 +1020,7 @@ addi x6,x6,1
 beq x5,x6,__L13
 jal x30,__L14
 __L13:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -1031,7 +1031,7 @@ addi x5,x5,-4
 lw x5,0(x5)
 sw x5,0(x2)
 addi x2,x2,-4
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -1051,7 +1051,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -1060,7 +1060,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-48
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
@@ -1073,7 +1073,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1364
 addi x6,x6,1364
 addi x6,x6,1364
@@ -1084,13 +1084,13 @@ addi x6,x6,-12
 sw x5,0(x6)
 jal x30,__L4
 __L14:
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x76
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,118
 addi a7,x0,4
 ecall
 __L4:
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1364
 addi x5,x5,1364
 addi x5,x5,1364
@@ -1105,20 +1105,20 @@ addi x2,x2,4
 lw x5,0(x2)
 add a0,x5,x0
 addi x2,x2,-4
-lui a7,0x00000
+lui a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,0
 addi a7,a7,1
 ecall
-lui a0,0x10010
-addi a0,a0,0x0
-addi a0,a0,0x7f
+lui a0,65552
+addi a0,a0,0
+addi a0,a0,127
 addi a7,x0,4
 ecall
 jal x30,__L3
 __L2:
-lui x5,0x00000
+lui x5,0
 addi x5,x5,0
 addi x5,x5,0
 addi x5,x5,0
@@ -1127,7 +1127,7 @@ sw x5,0(x2)
 addi x2,x2,-4
 addi x2,x2,4
 lw x5,0(x2)
-lui x6,0xffffd
+lui x6,1048573
 addi x6,x6,1361
 addi x6,x6,1361
 addi x6,x6,1361
@@ -1136,7 +1136,7 @@ add x6,x6,x8
 lw x6,0(x6)
 addi x6,x6,-56
 sw x5,0(x6)
-lui x5,0xffffd
+lui x5,1048573
 addi x5,x5,1361
 addi x5,x5,1361
 addi x5,x5,1361
