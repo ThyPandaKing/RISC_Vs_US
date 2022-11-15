@@ -60,6 +60,7 @@ def postprocess(asm_code):
     # mod_asm_code = asm_code + '\n'
 
     mod_asm_code += f"__END__:\n"
+    mod_asm_code += f"nop\n"
 
     final_asm_code = ''
     enable = False
