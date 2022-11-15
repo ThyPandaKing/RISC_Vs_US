@@ -820,7 +820,13 @@ int Assembler::secondPass(string vmout, string asmout)
 			linenumber++;
 			continue;
 		}
-
+		if(ins_tac=="nop")
+		{
+			bitset<32> binary(ins);
+			fout<<binary<<endl;
+			linenumber++;
+			continue;
+		}
 
 		istringstream iss(ins_tac);
 
