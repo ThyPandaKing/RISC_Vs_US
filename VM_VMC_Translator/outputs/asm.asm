@@ -1,21 +1,5 @@
 .section
 .data
-__main__data0:
-	.asciz "Value of a is "
-__main__data1:
-	.asciz "\n"
-__main__data2:
-	.asciz "Value of b is "
-__main__data3:
-	.asciz "Operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n"
-__main__data4:
-	.asciz "Result for operation "
-__main__data5:
-	.asciz " is: "
-__main__data6:
-	.asciz "Invalid\n"
-__main__data7:
-	.asciz "\n"
 .section
 .text
 jal x30,main

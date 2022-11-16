@@ -14,4 +14,3 @@ cd Assembler
 cat ../asm.asm > vmout.asm
 g++ Assembler.cpp -o assemble.o
 ./assemble.o
-
