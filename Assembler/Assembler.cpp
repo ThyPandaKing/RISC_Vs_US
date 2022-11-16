@@ -141,8 +141,8 @@ REGISTERS::REGISTERS()
 		{"s", 8},
 		{"S", 16},
 	};
-	regex_reg="[xast](\\d)+";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", "(,0x[0-9a-f]+)|(,(\\+|-)?(\\d)+)"};
+	regex_reg="(^|\\(|,)[xast](\\d)+";
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)+\\)", "(,0x[0-9a-f]+)|(,(\\+|-)?(\\d)+)"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -179,16 +179,18 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 		while(next!=end)
 		{
 			smatch match = *next;
-			reg=match.str();
+			string temp_reg=match.str();
+			if(temp_reg[0]==',' || temp_reg[0]=='(')
+				temp_reg.erase(temp_reg.begin());
 			
-			reg_code=stoi(reg.substr(1, 2));
-			if((reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
+			reg_code=stoi(temp_reg.substr(1, 2));
+			if((temp_reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (temp_reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (temp_reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (temp_reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
 			{
 				perror("Invalid Register Number");
 				regs.resize(i);
 				return regs;
 			}
-			switch(reg[0])
+			switch(temp_reg[0])
 			{
 				case 'a':reg_code+=regcode["a"];break;
 				case 's':if(reg_code<2)
@@ -251,6 +253,7 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		}
 		regs.resize(regs.size()+1, immediate);
 		next++;
+		// cout<<"TEST#"<<imm_reg<<" "<<imm_type<<endl;
 		
 		if(next != end)
 		{
