@@ -178,20 +178,6 @@
       <pos x="-820" y="680"/>
     </visualElement>
     <visualElement>
-      <elementName>Const</elementName>
-      <elementAttributes>
-        <entry>
-          <string>Value</string>
-          <long>0</long>
-        </entry>
-        <entry>
-          <string>Bits</string>
-          <int>32</int>
-        </entry>
-      </elementAttributes>
-      <pos x="300" y="540"/>
-    </visualElement>
-    <visualElement>
       <elementName>ALU32Bit.dig</elementName>
       <elementAttributes>
         <entry>
@@ -735,7 +721,8 @@
           <string>Testdata</string>
           <testData>
             <dataString>Clock PC_val State_out I_out op_1 op_2 ALU_in Al_out MemDataRegOut
-program(0x1437,0x84a8a3)
+
+program(0x2a00513,0xa02da3,0xff1ff0ef)
 
 let i = 0;
 while (i &lt; 50)
@@ -1324,6 +1311,20 @@ end while</dataString>
       </elementAttributes>
       <pos x="120" y="-640"/>
     </visualElement>
+    <visualElement>
+      <elementName>Const</elementName>
+      <elementAttributes>
+        <entry>
+          <string>Value</string>
+          <long>0</long>
+        </entry>
+        <entry>
+          <string>Bits</string>
+          <int>32</int>
+        </entry>
+      </elementAttributes>
+      <pos x="240" y="540"/>
+    </visualElement>
   </visualElements>
   <wires>
     <wire>
@@ -1559,7 +1560,7 @@ end while</dataString>
       <p2 x="-1120" y="-1180"/>
     </wire>
     <wire>
-      <p1 x="300" y="540"/>
+      <p1 x="240" y="540"/>
       <p2 x="320" y="540"/>
     </wire>
     <wire>
