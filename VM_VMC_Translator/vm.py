@@ -14,7 +14,7 @@ class VM:
         self.that = 8212
         # 8216 and 8220 for later use
         # start from 8224
-        self.text_segment = ".section\n.text\n.global main\njal x30, main\n"
+        self.text_segment = ".section\n.text\njal x30, main\n"
         self.prev_operator = None
         self.prev_datatype = None
         self.prev_push_segment = None
@@ -27,6 +27,8 @@ class VM:
         self.data_segment_start = 0x10010000
         self.data_segment_dict = {}
         self.data_segment = ".section\n.data\n"
+        self.print_start = 2**18
+        self.demo = False
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
@@ -113,14 +115,40 @@ class VM:
                 self.data_segment_start += length+1
             else:
                 # perform printing here itself
-                var_name = f"__{self.cur_function}__data{index}"
-                total = hex(self.data_segment_dict[var_name][2])[2:]
-                upper, mid, lower = get_ieee_rep(None, total)
+                if (self.demo):
+                    var_name = f"__{self.cur_function}__data{index}"
+                    total = hex(self.data_segment_dict[var_name][2])[2:]
+                    upper, mid, lower = get_ieee_rep(None, total)
 
-                self.text_segment += f"lui a0, {upper}\n"
-                self.text_segment += f"addi a0, a0, {mid}\n"
-                self.text_segment += f"addi a0, a0, {lower}\n"
-                self.text_segment += "addi a7, x0, 4\necall\n"
+                    self.text_segment += f"lui a0, {upper}\n"
+                    self.text_segment += f"addi a0, a0, {mid}\n"
+                    self.text_segment += f"addi a0, a0, {lower}\n"
+                    self.text_segment += "addi a7, x0, 4\necall\n"
+                else:
+                    var_name = f"__{self.cur_function}__data{index}"
+                    total = hex(self.data_segment_dict[var_name][2])[2:]
+                    upper, mid, lower = get_ieee_rep(None, total)
+
+                    self.text_segment += f"lui x5, {upper}\n"
+                    self.text_segment += f"addi x5, x5, {mid}\n"
+                    self.text_segment += f"addi x5, x5, {lower}\n"
+
+                    for i in self.data_segment_dict[var_name][1].lstrip('"').rstrip('"'):
+                        self.text_segment += f"li x6, {ord(i)}\n"
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"li x28, 1\n"
+                        self.text_segment += f"sw x28, 0(x7)\n"
+                        self.print_start += 4
+                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"sw x6, -0(x7)\n"
+                        self.print_start += 4
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"li x28, 1\n"
+                    self.text_segment += f"sw x28, 0(x7)\n"
+                    self.print_start += 4
+                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"sw x0, -0(x7)\n"
+                    self.print_start += 4
 
         elif (segment != Segment.constant.value and segment != Segment.that.value):
             pointer = None
@@ -217,6 +245,7 @@ class VM:
         if (segment == Segment.that.value):
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
+            # self.text_segment += f"li x28, 2\n"
             self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"li x7, -{self.lcl}\n"
@@ -224,7 +253,7 @@ class VM:
             self.text_segment += f"sub x7, x7, x5\n"
             self.text_segment += f"sw x6, 0(x7)\n"
 
-            self.text_segment += '\n'
+            # self.text_segment += '\n'
             return
 
         if (datatype == Datatypes.INT.value):
@@ -280,7 +309,7 @@ class VM:
             self.text_segment += f"fsw f3, 0(x6)\n"
 
         self.prev_push_datatype = None
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def Operator(self, line):
         """
@@ -340,7 +369,7 @@ class VM:
                 self.text_segment += f"addi x2, x2, -4\n"
             # float does not have any other operations
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def Condtion_builtin(self, line):
         """
@@ -626,7 +655,7 @@ class VM:
             self.text_segment += f"addi x2, x2, -4\n"
             self.prev_datatype = Datatypes.FLOAT
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def if_goto(self, line):
         """
@@ -657,7 +686,7 @@ class VM:
             self.text_segment += f"fle.s x28, f3, f4\n"
             self.text_segment += f"bne x28, x0, {label}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
         # self.prev_datatype = None
         self.prev_operator = None
@@ -699,7 +728,35 @@ class VM:
         elif (datatype == Datatypes.STR.value):
             pass
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
+
+    def new_print_stmt(self, line):
+        datatype = line[-1]
+        if (datatype == Datatypes.INT.value or
+                datatype == Datatypes.BOOL.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 0\n"                     # int 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x6, 0(x5)\n"
+            self.print_start += 4
+        elif (datatype == Datatypes.CHAR.value):
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x28, 1\n"                     #char 
+            self.text_segment += f"sw x28, 0(x5)\n"
+            self.print_start += 4
+            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x6, 0(x5)\n"
+            self.print_start += 4
+        elif (datatype == Datatypes.STR.value):
+            pass
 
     def function_call(self, line):
         num_args = int(line[-1])
@@ -744,7 +801,7 @@ class VM:
 
         self.text_segment += f"jal x1, {line[1]}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def function_def(self, line):
         """
@@ -758,7 +815,7 @@ class VM:
         if (function == 'main'):
             self.text_segment += f"{function}:\n"
             self.init_mem()
-            self.text_segment += '\n'
+            # self.text_segment += '\n'
             return
 
         self.text_segment += f"{function}:\n"
@@ -778,7 +835,7 @@ class VM:
         # setting new working stack
         self.text_segment += f"addi x2, x2, -{(self.num_temp+self.num_local)*4}\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def return_call(self, line):
 
@@ -829,7 +886,7 @@ class VM:
 
         self.text_segment += f"jalr x28, x5, 0\n"
 
-        self.text_segment += '\n'
+        # self.text_segment += '\n'
 
     def scan(self, line):
         datatype = line[-1]
@@ -887,7 +944,10 @@ class VM:
             elif (line[0] == Instructions.label.value):
                 self.label(line)
             elif (line[0] == Instructions.print_stmt.value):
-                self.print_stmt(line)
+                if (self.demo):
+                    self.print_stmt(line)
+                else:
+                    self.new_print_stmt(line)
             elif (line[0] == Instructions.call.value):
                 self.function_call(line)
             elif (line[0] == Instructions.scan.value):
@@ -901,5 +961,5 @@ class VM:
         for var, (type, value, _, __) in sorted_list:
             self.data_segment += f"{var}:\n\t{type} \"{value}\"\n"
 
-        final_code = self.data_segment+'\n'+self.text_segment
+        final_code = self.data_segment + self.text_segment
         return final_code

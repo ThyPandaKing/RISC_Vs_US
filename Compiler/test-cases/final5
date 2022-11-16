@@ -1,19 +1,18 @@
 // 3x3 matrix multiplication
-void main(){
+int main(){
 	
-	int a[9];
-	int b[9];
-
-	output("Enter the contents of matrix 1:\n");
+	
+	int a[9] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+	int b[9] = {9, 8, 7, 6, 5, 4, 3, 2, 1};
 
 	int i;
-
+	output("Enter the contents of matrix 1:\n");
+	
 	for(i=0; i<9; i=i+1){
 		int t;
 		input(t);
 		a[i] = t;
 	}
-
 	output("Enter the contents of matrix 2:\n");
 	
 	for(i=0; i<9; i=i+1){
@@ -21,7 +20,7 @@ void main(){
 		input(t);
 		b[i] = t;
 	}
-
+	
 	int c[9];
     
 	int row;
@@ -36,6 +35,11 @@ void main(){
 			c[row*3+col] = sum;
 		}
 	}
+	// int k;
+	// for(k=0;k<9;k=k+1){
+	// 	c[k]=a[k]+b[k];
+	// }
+	output("\n");
     
 
 	for(i=0; i<9; i=i+1){
@@ -46,4 +50,5 @@ void main(){
 			output(" ");
 		}
 	}
+	return 0;
 }

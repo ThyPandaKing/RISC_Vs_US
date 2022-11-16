@@ -1,15 +1,16 @@
 cd Compiler
+cp ../User/userCode.txt  bundle.txt 
 make run
 
 cd ..
-cd VM_TAC_Translator
-python3 main.py  ../tac.txt
+cd VM_VMC_Translator
+python3 main.py  ../Compiler/vm.vm
 cd outputs 
-cat tac.asm > ../../tac.asm
+cat asm.asm > ../../asm.asm
 
 cd ..
 cd ..
 cd Assembler
-cat ../tac.asm > vmout.asm
+cat ../asm.asm > vmout.asm
 g++ Assembler.cpp -o assemble.o
-cat assemble.o > ../assemble.o
+./assemble.o

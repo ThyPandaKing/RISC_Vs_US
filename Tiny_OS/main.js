@@ -43,6 +43,30 @@ ipcMain.on ('saveCode', (event, myCode) => {
   });
 });
 
+ipcMain.on('sendCode', (event, destIp) => {
+  console.log(destIp);
+  // TODO: Put passwords and path dynamically
+  let destPath = ':/run/media/mmcblk0p2/binaries/RISC_Vs_US-main';
+  let password = "root";
+  let command = 'cd ../User && sshpass -p "'+ password +'" scp userCode.txt ' + 'root@' + destIp + destPath;
+  exec (
+    command,
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+})
+
 ipcMain.on ('runCode', (event, filePath) => {
   exec (
     'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
@@ -61,7 +85,7 @@ ipcMain.on ('runCode', (event, filePath) => {
   );
 
   exec (
-    'cd ../Virtual_Machine/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    'cd ../VM_VMC_Translator/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
     [],
     (err, stdout, stderr) => {
       if (err) {
@@ -77,7 +101,7 @@ ipcMain.on ('runCode', (event, filePath) => {
   );
 
   exec (
-  'cd ../Assembler/ && ./assemble.o < ../User/TAC.tac > ../User/byteCode.byte',
+  'cd ../Assembler/ && make all && ./assemble.o < ../User/Assembly.asm > ../User/byteCode.byte',
   [],
   (err, stdout, stderr) => {
     if (err) {
@@ -93,6 +117,132 @@ ipcMain.on ('runCode', (event, filePath) => {
 );
 
 });
+
+ipcMain.on ('runcCode', (event, filePath) => {
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+});
+
+
+ipcMain.on ('runvCode', (event, filePath) => {
+  exec (
+    'cd ../Compiler && ./parser < ../User/userCode.txt > ../User/TAC.tac',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+
+  exec (
+    'cd ../VM_VMC_Translator/ && python3 main.py ../User/TAC.tac > ../User/Assembly.asm',
+    [],
+    (err, stdout, stderr) => {
+      if (err) {
+        console.error (`exec error: ${err}`);
+        return;
+      }
+      if (stderr) {
+        console.error (`std exec error: ${stderr}`);
+        return;
+      }
+      console.log (stdout);
+    }
+  );
+});
+
+ipcMain.on('findDisplayValues', (event) => {
+  
+    let result = "";
+    console.log("hello from here")
+
+    try {
+      // let start = 1<<18;
+      // let end = 1<<19 - 1;
+
+      let start = 0;
+      let end = 44;
+
+      // Real
+      //let command = `awk 'NR >= ${start} && NR <= ${end}' /home/user/xilinx-projects/CPU/CPU.srcs/sim_1/new/memory_binary.mem > ../Device_Buffers/display_memory.txt`;
+      
+      // Testing
+      let command = `awk 'NR >= ${start} && NR <= ${end}' ../Device_Buffers/a.txt > ../Device_Buffers/display_memory.txt`;
+      
+      exec (
+        command,
+        [],
+        (err, stdout, stderr) => {
+          if (err) {
+            console.error (`exec error: ${err}`);
+            return;
+          }
+          if (stderr) {
+            console.error (`std exec error: ${stderr}`);
+            return;
+          }
+          console.log (stdout);
+        }
+      );
+
+      const myTimeout = setTimeout(find_val, 2000);
+
+      function find_val() {
+        let data = fs.readFileSync('../Device_Buffers/display_memory.txt', 'utf8');
+        data = data.split('\n');
+        let start = Math.pow(2, 0)-1;
+        let end = Math.min(Math.pow(2,19), data.length);
+        
+        console.log("Here is theDate:", data);
+
+        for(let i=start; i< end; i+=2){
+
+          let data_type = parseInt(data[i], 2);
+          let data_val = parseInt(data[i+1],2);
+          console.log(data_type, data_val)
+
+          if (data_type == 0)
+          {
+              result += data_val;
+              
+          }else if(data_type == 1){
+              result += String.fromCharCode(data_val)
+          }
+
+          
+        }
+        try {
+          fs.writeFileSync('../Device_Buffers/memory_map.txt', result);
+          // file written successfully
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+})
+
 
 ipcMain.handle ('refreshDisplay', async event => {
   console.log ('yo yo yo');

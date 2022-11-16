@@ -161,6 +161,28 @@ window.addEventListener ('DOMContentLoaded', () => {
     console.log ('Inside click event');
     ipcRenderer.send ('runCode', '../User/userCode.txt');
   });
+  let runcButton = document.getElementById ('runcButton');
+
+  runButton.addEventListener ('click', () => {
+    console.log ('Inside click event');
+    ipcRenderer.send ('runcCode', '../User/userCode.txt');
+  });
+  let runvButton = document.getElementById ('runvButton');
+
+  runButton.addEventListener ('click', () => {
+    console.log ('Inside click event');
+    ipcRenderer.send ('runvCode', '../User/userCode.txt');
+  });
+  let sendButton = document.getElementById('sendButton');
+
+  sendButton.addEventListener('click', () => {
+    console.log('Inside Send command');
+    let ip = document.getElementById ('hiddenIp');
+    const defaultIp = '0.0.0.0';
+
+    const destIp = ip.value == '' ? defaultIp : ip.value;
+    ipcRenderer.send('sendCode', destIp);
+  })
 
 
 
@@ -208,6 +230,9 @@ window.addEventListener ('DOMContentLoaded', () => {
     var pixel = returnPixelMap("");
     document.getElementById ('display').innerHTML = pixel;
     console.log ('Inside click event');
+
+    ipcRenderer.send('findDisplayValues');
+
     var interval = setInterval (async () => {
       // Write logic for reading file here - response from main.js
       var result_data = await ipcRenderer.invoke ('refreshDisplay');
@@ -328,6 +353,8 @@ window.addEventListener ('DOMContentLoaded', () => {
       display_div.style.display = 'block'
 
     }, 500);
+
+
   });
 });
 

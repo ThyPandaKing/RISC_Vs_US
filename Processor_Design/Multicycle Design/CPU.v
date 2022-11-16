@@ -1178,7 +1178,10 @@ module OPCodeControlUnit (
   output NS_0,
   output NS_1,
   output NS_2,
-  output NS_3
+  output NS_3,
+  output LuiSrc,
+  output JalControl,
+  output JalrControl
 );
   wire s0;
   wire s1;
@@ -1203,20 +1206,51 @@ module OPCodeControlUnit (
   wire S_1_D;
   wire S_2_D;
   wire S_3_D;
-  wire ALUSrcB0_temp;
+  wire PCSource0_temp;
   wire State_1;
   wire State_2;
   wire s15;
   wire MemtoReg_temp;
   wire MemWrite_temp;
-  wire ALUOp1_temp;
+  wire State_6;
   wire State_7;
   wire ALUOp0_temp;
-  wire PCSource0_temp;
-  wire NextState_0;
+  wire ALUSrcB0_temp;
+  wire State_12;
+  wire JalrControl_temp;
+  wire State_10;
+  wire NextState_9;
   wire NextState_3;
   wire NextState_5;
   wire NextState_6;
+  wire NextState_13;
+  wire NextState_7;
+  wire NextState_11;
+  wire NextState_10;
+  wire NextState_14;
+  wire NextState_12;
+  wire s16;
+  wire s17;
+  wire s18;
+  wire s19;
+  wire I_Type;
+  wire LuiSrc_temp;
+  wire s20;
+  wire s21;
+  wire lui;
+  wire s22;
+  wire jal;
+  wire s23;
+  wire s24;
+  wire jalr;
+  wire s25;
+  wire s26;
+  wire s27;
+  wire s28;
+  wire s29;
+  wire s30;
+  wire s31;
+  wire nop;
   assign s2 = ~ I6;
   assign s1 = ~ I3;
   assign s0 = ~ I2;
@@ -1236,6 +1270,22 @@ module OPCodeControlUnit (
   assign S_1_D = ~ S_1;
   assign S_2_D = ~ S_2;
   assign S_3_D = ~ S_3;
+  assign s19 = ~ I6;
+  assign s18 = ~ I5;
+  assign s17 = ~ I3;
+  assign s16 = ~ I2;
+  assign s21 = ~ I6;
+  assign s20 = ~ I3;
+  assign s22 = ~ I4;
+  assign s24 = ~ I4;
+  assign s23 = ~ I3;
+  assign s31 = ~ I6;
+  assign s30 = ~ I5;
+  assign s29 = ~ I4;
+  assign s28 = ~ I3;
+  assign s27 = ~ I2;
+  assign s26 = ~ I1;
+  assign s25 = ~ I0;
   // R-Front
   And7Bit And7Bit_i0 (
     .I0( I0 ),
@@ -1280,30 +1330,97 @@ module OPCodeControlUnit (
     .I6( I6 ),
     .O( beq )
   );
-  assign ALUSrcB0_temp = (S_0_D & S_1_D & S_2_D & S_3_D);
+  assign PCSource0_temp = (S_0_D & S_1_D & S_2_D & S_3_D);
   assign State_1 = (S_0 & S_1_D & S_2_D & S_3_D);
   assign State_2 = (S_0_D & S_1 & S_2_D & S_3_D);
   assign s15 = (S_0 & S_1 & S_2_D & S_3_D);
   assign MemtoReg_temp = (S_0_D & S_1_D & S_2 & S_3_D);
   assign MemWrite_temp = (S_0 & S_1_D & S_2 & S_3_D);
-  assign ALUOp1_temp = (S_0_D & S_1 & S_2 & S_3_D);
+  assign State_6 = (S_0_D & S_1 & S_2 & S_3_D);
   assign State_7 = (S_0 & S_1 & S_2 & S_3_D);
   assign ALUOp0_temp = (S_0_D & S_1_D & S_2_D & S_3);
-  assign PCSource0_temp = (S_0 & S_1_D & S_2_D & S_3);
-  assign PCWrite = (ALUSrcB0_temp | PCSource0_temp);
+  assign ALUSrcB0_temp = (S_0 & S_1_D & S_2_D & S_3);
+  // I-Front
+  And7Bit And7Bit_i4 (
+    .I0( I0 ),
+    .I1( I1 ),
+    .I2( s16 ),
+    .I3( s17 ),
+    .I4( I4 ),
+    .I5( s18 ),
+    .I6( s19 ),
+    .O( I_Type )
+  );
+  assign State_10 = (S_0_D & S_1 & S_2_D & S_3);
+  // LUI
+  And7Bit And7Bit_i5 (
+    .I0( I0 ),
+    .I1( I1 ),
+    .I2( I2 ),
+    .I3( s20 ),
+    .I4( I4 ),
+    .I5( I5 ),
+    .I6( s21 ),
+    .O( lui )
+  );
+  assign LuiSrc_temp = (S_0 & S_1 & S_2_D & S_3);
+  // JAL
+  And7Bit And7Bit_i6 (
+    .I0( I0 ),
+    .I1( I1 ),
+    .I2( I2 ),
+    .I3( I3 ),
+    .I4( s22 ),
+    .I5( I5 ),
+    .I6( I6 ),
+    .O( jal )
+  );
+  // JALR
+  And7Bit And7Bit_i7 (
+    .I0( I0 ),
+    .I1( I1 ),
+    .I2( I2 ),
+    .I3( s23 ),
+    .I4( s24 ),
+    .I5( I5 ),
+    .I6( I6 ),
+    .O( jalr )
+  );
+  assign State_12 = (S_0_D & S_1_D & S_2 & S_3);
+  assign JalrControl_temp = (S_0 & S_1_D & S_2 & S_3);
+  // NOP
+  And7Bit And7Bit_i8 (
+    .I0( s25 ),
+    .I1( s26 ),
+    .I2( s27 ),
+    .I3( s28 ),
+    .I4( s29 ),
+    .I5( s30 ),
+    .I6( s31 ),
+    .O( nop )
+  );
+  assign PCWrite = (ALUSrcB0_temp | State_12 | PCSource0_temp | JalrControl_temp);
   assign IorD = (s15 | MemWrite_temp);
   assign MemRead = (s15 | ALUSrcB0_temp);
-  assign ALUSrcB1 = (State_1 | State_2);
-  assign ALUSrcA = (State_2 | ALUOp1_temp | ALUOp0_temp);
-  assign RegWrite = (MemtoReg_temp | State_7);
-  assign NextState_0 = (MemtoReg_temp | MemWrite_temp | State_7 | ALUOp0_temp | PCSource0_temp);
+  assign ALUSrcB1 = (State_1 | State_12 | JalrControl_temp | State_2 | State_10);
+  assign ALUSrcA = (State_2 | State_6 | ALUOp0_temp | State_10 | JalrControl_temp);
+  assign RegWrite = (State_12 | MemtoReg_temp | JalrControl_temp | State_7 | PCSource0_temp);
+  assign NextState_9 = (State_12 | MemtoReg_temp | MemWrite_temp | JalrControl_temp | ALUOp0_temp | PCSource0_temp | State_7);
   assign NextState_3 = (State_2 & lw);
   assign NextState_5 = (State_2 & sw);
   assign NextState_6 = (State_1 & R_Type);
-  assign NS_3 = (State_1 & beq);
-  assign NS_0 = (ALUSrcB0_temp | NextState_3 | NextState_5 | ALUOp1_temp);
-  assign NS_1 = ((State_1 & (lw | sw)) | NextState_3 | NextState_6 | ALUOp1_temp);
-  assign NS_2 = (s15 | NextState_5 | NextState_6 | ALUOp1_temp);
+  assign NextState_10 = (State_1 & I_Type);
+  assign ALUOp1 = (State_6 | State_10);
+  assign NextState_7 = (State_6 | LuiSrc_temp | State_10);
+  assign NextState_11 = (State_1 & lui);
+  assign NextState_12 = (State_1 & jal);
+  assign JalControl = (State_12 | JalrControl_temp);
+  assign NextState_13 = (State_1 & jalr);
+  assign NextState_14 = ((State_1 & nop) | (S_0_D & S_1 & S_2 & S_3));
+  assign NS_0 = (ALUSrcB0_temp | NextState_3 | NextState_9 | NextState_13 | NextState_7 | NextState_5 | NextState_11);
+  assign NS_1 = ((State_1 & (lw | sw)) | NextState_3 | NextState_10 | NextState_14 | NextState_6 | NextState_7 | NextState_11);
+  assign NS_2 = (s15 | NextState_5 | NextState_12 | NextState_14 | NextState_6 | NextState_13 | NextState_7);
+  assign NS_3 = ((State_1 & beq) | NextState_10 | NextState_12 | NextState_14 | NextState_11 | NextState_9 | NextState_13);
   assign PCWriteCond = ALUOp0_temp;
   assign MemWrite = MemWrite_temp;
   assign IRWrite = ALUSrcB0_temp;
@@ -1311,8 +1428,9 @@ module OPCodeControlUnit (
   assign PCSource0 = PCSource0_temp;
   assign PCSource1 = ALUOp0_temp;
   assign ALUOp0 = ALUOp0_temp;
-  assign ALUOp1 = ALUOp1_temp;
   assign ALUSrcB0 = ALUSrcB0_temp;
+  assign LuiSrc = LuiSrc_temp;
+  assign JalrControl = JalrControl_temp;
 endmodule
 
 module And4bit (
@@ -1461,6 +1579,108 @@ module alu_control_unit_2 (
   assign Operation[3] = 1'b0;
 endmodule
 
+module branch_control_unit (
+  input zr,
+  input ng,
+  input Branch,
+  input [2:0] funct3,
+  output CBranch
+);
+  wire s0;
+  wire s1;
+  wire s2;
+  wire s3;
+  wire s4;
+  wire s5;
+  wire s6;
+  wire s7;
+  wire s8;
+  wire s9;
+  wire s10;
+  wire s11;
+  wire s12;
+  wire s13;
+  wire s14;
+  wire s15;
+  wire s16;
+  wire s17;
+  wire s18;
+  wire s19;
+  wire s20;
+  assign s7 = ~ zr;
+  assign s15 = (zr | ~ ng);
+  assign s6 = funct3[0];
+  assign s13 = funct3[1];
+  assign s9 = funct3[2];
+  assign s0 = ~ s9;
+  assign s1 = ~ s13;
+  assign s2 = ~ s6;
+  assign s4 = ~ s9;
+  assign s5 = ~ s13;
+  assign s10 = ~ s13;
+  assign s11 = ~ s6;
+  // BGEU
+  And4bit And4bit_i0 (
+    .a0( s9 ),
+    .a1( s13 ),
+    .a2( s6 ),
+    .a3( 1'b0 ),
+    .out( s19 )
+  );
+  assign s14 = ~ s13;
+  assign s17 = ~ s6;
+  // BEQ
+  And4bit And4bit_i1 (
+    .a0( s0 ),
+    .a1( s1 ),
+    .a2( s2 ),
+    .a3( zr ),
+    .out( s3 )
+  );
+  // BNE
+  And4bit And4bit_i2 (
+    .a0( s4 ),
+    .a1( s5 ),
+    .a2( s6 ),
+    .a3( s7 ),
+    .out( s8 )
+  );
+  // BLT
+  And4bit And4bit_i3 (
+    .a0( s9 ),
+    .a1( s10 ),
+    .a2( s11 ),
+    .a3( ng ),
+    .out( s12 )
+  );
+  // BGE
+  And4bit And4bit_i4 (
+    .a0( s9 ),
+    .a1( s14 ),
+    .a2( s6 ),
+    .a3( s15 ),
+    .out( s16 )
+  );
+  // BLTU
+  And4bit And4bit_i5 (
+    .a0( s9 ),
+    .a1( s13 ),
+    .a2( s17 ),
+    .a3( 1'b0 ),
+    .out( s18 )
+  );
+  Or6bit Or6bit_i6 (
+    .a0( s3 ),
+    .a1( s8 ),
+    .a2( s12 ),
+    .a3( s16 ),
+    .a4( s18 ),
+    .a5( s19 ),
+    .out( s20 )
+  );
+  assign CBranch = (s20 & Branch);
+endmodule
+
 module CPU (
   input Clock,
   output [31:0] PC_val,
@@ -1507,12 +1727,14 @@ module CPU (
   wire [31:0] Imm_temp;
   wire [31:0] op_2_temp;
   wire [3:0] ALU_in_temp;
-  wire [31:0] Al_out_temp;
-  wire s14;
+  wire [31:0] s14;
   wire s15;
   wire s16;
-  wire [6:0] s17;
-  wire s18;
+  wire [31:0] Al_out_temp;
+  wire [31:0] t_alu_out;
+  wire [31:0] s17;
+  wire [6:0] s18;
+  wire [2:0] Funct3;
   wire s19;
   wire s20;
   wire s21;
@@ -1525,20 +1747,30 @@ module CPU (
   wire s28;
   wire s29;
   wire s30;
+  wire PC_write_branch;
   wire s31;
+  wire s32;
   wire ALUOp0;
   wire ALUOp1;
-  wire s32;
   wire s33;
   wire s34;
   wire s35;
   wire s36;
   wire s37;
-  wire [3:0] s38;
+  wire s38;
+  wire LuiControl;
+  wire JalControl;
+  wire JalrControl;
+  wire [3:0] s39;
   wire [3:0] State_out_temp;
-  wire [1:0] s39;
-  wire [3:0] s40;
+  wire branch_out;
+  wire [1:0] s40;
+  wire [3:0] s41;
   wire I_Type;
+  wire s42;
+  wire [31:0] s43;
+  wire [31:0] lui_out;
+  wire [31:0] t_jal_tmp;
   // PC
   DIG_Register_BUS #(
     .Bits(32)
@@ -1660,8 +1892,8 @@ module CPU (
     .Operation( ALU_in_temp ),
     .a( op_1_temp ),
     .b( op_2_temp ),
-    .ALU_out( Al_out_temp ),
-    .zero( s14 )
+    .ALU_out( s14 ),
+    .zero( s15 )
   );
   Mux_2x1_NBits #(
     .Bits(32)
@@ -1669,8 +1901,8 @@ module CPU (
   Mux_2x1_NBits_i13 (
     .sel( s16 ),
     .in_0( Al_out_temp ),
-    .in_1( s7 ),
-    .out( s0 )
+    .in_1( t_alu_out ),
+    .out( s17 )
   );
   // ALU_out
   DIG_Register_BUS #(
@@ -1680,87 +1912,138 @@ module CPU (
     .D( Al_out_temp ),
     .C( Clock ),
     .en( 1'b1 ),
-    .Q( s7 )
+    .Q( t_alu_out )
   );
   // ControlUnit
   OPCodeControlUnit OPCodeControlUnit_i15 (
-    .I0( s18 ),
-    .I1( s19 ),
-    .I2( s20 ),
-    .I3( s21 ),
-    .I4( s22 ),
-    .I5( s23 ),
-    .I6( s24 ),
-    .S_0( s25 ),
-    .S_1( s26 ),
-    .S_2( s27 ),
-    .S_3( s28 ),
-    .PCWrite( s29 ),
-    .PCWriteCond( s15 ),
+    .I0( s19 ),
+    .I1( s20 ),
+    .I2( s21 ),
+    .I3( s22 ),
+    .I4( s23 ),
+    .I5( s24 ),
+    .I6( s25 ),
+    .S_0( s26 ),
+    .S_1( s27 ),
+    .S_2( s28 ),
+    .S_3( s29 ),
+    .PCWrite( s30 ),
+    .PCWriteCond( PC_write_branch ),
     .IorD( s2 ),
     .MemWrite( Mem_Write ),
     .MemRead( Mem_Read ),
     .IRWrite( IRWrite ),
     .MemtoReg( MemToReg ),
-    .PCSource0( s30 ),
-    .PCSource1( s31 ),
+    .PCSource0( s31 ),
+    .PCSource1( s32 ),
     .ALUOp0( ALUOp0 ),
     .ALUOp1( ALUOp1 ),
-    .ALUSrcB1( s32 ),
-    .ALUSrcB0( s33 ),
+    .ALUSrcB1( s33 ),
+    .ALUSrcB0( s34 ),
     .ALUSrcA( ALU_a_temp ),
     .RegWrite( RegWrite ),
-    .NS_0( s34 ),
-    .NS_1( s35 ),
-    .NS_2( s36 ),
-    .NS_3( s37 )
+    .NS_0( s35 ),
+    .NS_1( s36 ),
+    .NS_2( s37 ),
+    .NS_3( s38 ),
+    .LuiSrc( LuiControl ),
+    .JalControl( JalControl ),
+    .JalrControl( JalrControl )
   );
   // STATE_REG
   DIG_Register_BUS #(
     .Bits(4)
   )
   DIG_Register_BUS_i16 (
-    .D( s38 ),
+    .D( s39 ),
     .C( Clock ),
     .en( 1'b1 ),
     .Q( State_out_temp )
   );
-  assign s38[0] = s34;
-  assign s38[1] = s35;
-  assign s38[2] = s36;
-  assign s38[3] = s37;
-  assign s1 = (s29 | (s15 & s14));
-  assign ALU_b_temp[0] = s33;
-  assign ALU_b_temp[1] = s32;
+  assign s39[0] = s35;
+  assign s39[1] = s36;
+  assign s39[2] = s37;
+  assign s39[3] = s38;
+  assign s1 = (s30 | branch_out);
+  assign ALU_b_temp[0] = s34;
+  assign ALU_b_temp[1] = s33;
   alu_control_unit_2 alu_control_unit_2_i17 (
-    .ALUop( s39 ),
-    .F( s40 ),
+    .ALUop( s40 ),
+    .F( s41 ),
     .Itype( I_Type ),
     .Operation( ALU_in_temp )
   );
-  assign s39[0] = ALUOp0;
-  assign s39[1] = ALUOp1;
-  assign s40[2:0] = I_out_temp[14:12];
-  assign s40[3] = I_out_temp[30];
-  assign s16 = (s30 | s31);
-  assign s17 = I_out_temp[6:0];
+  assign s40[0] = ALUOp0;
+  assign s40[1] = ALUOp1;
+  assign s41[2:0] = Funct3;
+  assign s41[3] = I_out_temp[30];
+  branch_control_unit branch_control_unit_i18 (
+    .zr( s15 ),
+    .ng( s42 ),
+    .Branch( PC_write_branch ),
+    .funct3( Funct3 ),
+    .CBranch( branch_out )
+  );
+  assign s16 = (s31 | s32);
+  assign s43 = (s17 & ~ 32'b1);
+  Mux_2x1_NBits #(
+    .Bits(32)
+  )
+  Mux_2x1_NBits_i19 (
+    .sel( LuiControl ),
+    .in_0( s14 ),
+    .in_1( lui_out ),
+    .out( Al_out_temp )
+  );
+  // jal_tmp
+  DIG_Register_BUS #(
+    .Bits(32)
+  )
+  DIG_Register_BUS_i20 (
+    .D( t_alu_out ),
+    .C( Clock ),
+    .en( 1'b1 ),
+    .Q( t_jal_tmp )
+  );
+  Mux_2x1_NBits #(
+    .Bits(32)
+  )
+  Mux_2x1_NBits_i21 (
+    .sel( JalControl ),
+    .in_0( t_alu_out ),
+    .in_1( t_jal_tmp ),
+    .out( s7 )
+  );
+  Mux_2x1_NBits #(
+    .Bits(32)
+  )
+  Mux_2x1_NBits_i22 (
+    .sel( JalrControl ),
+    .in_0( s17 ),
+    .in_1( s43 ),
+    .out( s0 )
+  );
+  assign lui_out = (I_out_temp & 32'b11111111111111111111000000000000);
+  assign s18 = I_out_temp[6:0];
   assign s9 = I_out_temp[11:7];
+  assign Funct3 = I_out_temp[14:12];
   assign s10 = I_out_temp[19:15];
   assign s11 = I_out_temp[24:20];
   assign s3 = PC_val_temp[25:2];
-  assign s18 = s17[0];
-  assign s19 = s17[1];
-  assign s20 = s17[2];
-  assign s21 = s17[3];
-  assign s22 = s17[4];
-  assign s23 = s17[5];
-  assign s24 = s17[6];
-  assign s25 = State_out_temp[0];
-  assign s26 = State_out_temp[1];
-  assign s27 = State_out_temp[2];
-  assign s28 = State_out_temp[3];
+  assign s19 = s18[0];
+  assign s20 = s18[1];
+  assign s21 = s18[2];
+  assign s22 = s18[3];
+  assign s23 = s18[4];
+  assign s24 = s18[5];
+  assign s25 = s18[6];
+  assign s26 = State_out_temp[0];
+  assign s27 = State_out_temp[1];
+  assign s28 = State_out_temp[2];
+  assign s29 = State_out_temp[3];
   assign I_Type = I_out_temp[5];
   assign s4 = s7[23:0];
+  assign s42 = Al_out_temp[31];
   assign PC_val = PC_val_temp;
   assign State_out = State_out_temp;
   assign A_reg = A_reg_temp;

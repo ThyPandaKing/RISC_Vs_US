@@ -1,8 +1,6 @@
 // Combinations using recursion
 
 int nCr(int n, int r){
-	output(n);
-	output("\n");
 	if(n < r){
 		return 0;
 	}
@@ -19,17 +17,16 @@ int nCr(int n, int r){
 
 int main(){
 
-	output("Enter n: ");
-	int n;
-	input(n);
+	int n=10;
 
-	output("Enter r: ");
-	int r;
-	input(r);
+	int r=2;
 
 	int res = nCr(n, r);
 
-	output("nCr: ");
+	output(n);
+	output("C");
+	output(r);
+	output(" = ");
 	output(res);
 	output("\n");
 
