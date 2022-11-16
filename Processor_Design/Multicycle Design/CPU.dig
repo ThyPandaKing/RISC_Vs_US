@@ -722,10 +722,10 @@
           <testData>
             <dataString>Clock PC_val State_out I_out op_1 op_2 ALU_in Al_out MemDataRegOut
 
-program(0x2a50513,0xa02da3,0xff1ff0ef)
+program(0xa00413,0x0,0x84a023)
 
 let i = 0;
-while (i &lt; 50)
+while (i &lt; 100)
 0 x x x x x x x x
 1 x x x x x x x x
 let i = i + 1;
@@ -1345,6 +1345,10 @@ end while</dataString>
         <entry>
           <string>rotation</string>
           <rotation rotation="1"/>
+        </entry>
+        <entry>
+          <string>Bits</string>
+          <int>32</int>
         </entry>
       </elementAttributes>
       <pos x="1980" y="-720"/>
