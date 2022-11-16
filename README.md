@@ -13,7 +13,7 @@ To start the main pipeline refer to the OS README: [Tiny OS](Tiny_OS/README.md)
 2. [Compiler Design](Compiler/README.md)
 3. [Virtual Machine](Virtual_Machine/README.md)
 4. [Machine Code and Assembler](Assembler/README.md)
-5. [Processor Design](Processor_Design)
+5. [Processor Design](Processor_Design/README.md)
 6. [Tiny OS](Tiny_OS/README.md)
 7. [System Integration](System_Integration/README.md)
 
