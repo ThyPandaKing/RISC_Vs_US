@@ -66,72 +66,84 @@ end
   - In new terminal: sudo putty
   - In putty terminal window: boot. Account:root, password:root
 - Ethernet connection established!
-Keyboard power is coming , connect HDMI display
-Os-dnf package manager https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide/Package-Management 
-petalinux-package --boot --force --fsbl images/linux/<zynq_type>_fsbl.elf --fpga images/linux/system.bit --u-boot
-Make blink counter vivado project
-A software application will be created that utilizes hardware interrupts on the Zynq development board.
-This application will run on the Zynq processing system, communicating with the AXI GPIO blocks implemented in the PL.
-Project name: counter–book-eg2 from the zynq book
+- Keyboard power is coming , connect HDMI display
+- Os-dnf package manager https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide/Package-Management 
+- ![image](https://user-images.githubusercontent.com/66141447/202179757-67542117-f4ec-4f43-bcbf-35785ea0e56f.png)
+- Command: `petalinux-package --boot --force --fsbl images/linux/<zynq_type>_fsbl.elf --fpga images/linux/system.bit --u-boot`
+
+#### Make blink counter vivado project
+- A software application will be created that utilizes hardware interrupts on the Zynq development board.
+- This application will run on the Zynq processing system, communicating with the AXI GPIO blocks implemented in the PL.
+- Project name: counter–book-eg2 from the zynq book
+- ![image](https://user-images.githubusercontent.com/66141447/202180074-9b2d610d-9976-46cb-8f42-4954372cf27c.png)
+
+
+---
 
 
 
 
 
-Till Checkpoint 2
-Steps for init: https://www.realdigital.org/doc/4ddc6ee53d1a2d71b25eaccc29cdec4b 
-https://www.youtube.com/watch?v=_odNhKOZjEo (arty)
-https://www.youtube.com/watch?v=Mb-cStd4Tqs 
-Select Boards for project. 
-Create a simple Zynq embedded system which implements a General Purpose Input/Output (GPIO) controller in the PL of the Zynq device.
-A Verilog source file is created to define the circuits behavior.
-a constraints files is created to define how the Verilog circuit is mapped into the Xilinx logic device
-the Verilog source file and constraints file are synthesized into a “.bit” file that can be programmed onto your board; and
+## Till Checkpoint 2
+#### Steps for init:
+- Tutorial: 
+  - https://www.realdigital.org/doc/4ddc6ee53d1a2d71b25eaccc29cdec4b 
+  - https://www.youtube.com/watch?v=_odNhKOZjEo (arty)
+  - https://www.youtube.com/watch?v=Mb-cStd4Tqs 
+- Guide steps:
+  - Select Boards for project. 
+  - Create a simple Zynq embedded system which implements a General Purpose Input/Output (GPIO) controller in the PL of the Zynq device.
+  - A Verilog source file is created to define the circuits behavior.
+  - Aconstraints files is created to define how the Verilog circuit is mapped into the Xilinx logic device
+  - The Verilog source file and constraints file are synthesized into a “.bit” file that can be programmed onto your board; and
 the device is configured with the circuit.
 
-OS:
-https://github.com/Digilent/Petalinux-Zybo-Z7-10 
-https://github.com/Digilent/digilent-apps 
-https://digilent.com/reference/programmable-logic/zybo/reference-manual 
-load os into zybo znq
-https://jeremyherbert.net/get/digilent_zybo_zynq_getting_started 
-https://miscircuitos.com/tutorial-zybo-linux-i-how-to-load-linux-debian-in-zybo-zynq-with-a-sd-card/ 
-https://nuclearrambo.com/wordpress/running-petalinux-on-zynq-soc-from-scratch-zybo-board/ 
+#### OS Research:
+- https://github.com/Digilent/Petalinux-Zybo-Z7-10 
+- https://github.com/Digilent/digilent-apps 
+- https://digilent.com/reference/programmable-logic/zybo/reference-manual 
 
-Help for FPGA:
-https://www.fpga4fun.com/
-https://github.com/Digilent/Zybo-Z7-10-HDMI 
+#### Load os into zybo 
+- https://jeremyherbert.net/get/digilent_zybo_zynq_getting_started 
+- https://miscircuitos.com/tutorial-zybo-linux-i-how-to-load-linux-debian-in-zybo-zynq-with-a-sd-card/ 
+- https://nuclearrambo.com/wordpress/running-petalinux-on-zynq-soc-from-scratch-zybo-board/ 
+#### Help for FPGA:
+- https://www.fpga4fun.com/
+- https://github.com/Digilent/Zybo-Z7-10-HDMI 
+- https://www.mathworks.com/help/hdlcoder/ug/define-and-register-custom-board-and-reference-design-for-zynq-workflow.html 
+- https://www.instructables.com/Digital-Oscilloscope-using-Digilent-Zybo-Board/ 
 
-https://www.mathworks.com/help/hdlcoder/ug/define-and-register-custom-board-and-reference-design-for-zynq-workflow.html 
-https://www.instructables.com/Digital-Oscilloscope-using-Digilent-Zybo-Board/ 
-Till Checkpoint 1
 
-Main goal and features:
-Setting up the FPGA-based System -
+---
+
+## Till Checkpoint 1
+
+#### Main goal and features:
+1) **Setting up the FPGA-based System **-
  
-Installing and setting up Vivado, Vitis, and Digilent Board Files from XILINX.  The tool melds FPGA logic design and embedded ARM software development into a design flow
-Writing script and connecting HDMI cable to FPGA board for video display and running the script.
-Bitstream for Processor -
-Bitstream is a file which contains config details of FPGA board in binary format stored as human readable hex file.
-Last step of FPGA design flow before physically programming for FPGA.
-After “Bitstream Generation Completed” dialog we can see Implemented Design to view how your design will be placed onto the FPGA.
+- Installing and setting up Vivado, Vitis, and Digilent Board Files from XILINX.  The tool melds FPGA logic design and embedded ARM software development into a design flow
+- Writing script and connecting HDMI cable to FPGA board for video display and running the script.
+
+2) **Bitstream for Processor **-
+- Bitstream is a file which contains config details of FPGA board in binary format stored as human readable hex file.
+- Last step of FPGA design flow before physically programming for FPGA.
+- After “Bitstream Generation Completed” dialog we can see Implemented Design to view how your design will be placed onto the FPGA.
+
+3) **Connecting GPIO for Keyboard and Display **-
+- A GPIO pin is a generic pin which will be used for connecting devices and whose behavior can be programmed through software. 
+- Enable GPIO clock in register
+- Set the pin as input
+- Config the Pull-up pin
+- Connect AXI GPIO peripherals 
+- Change the block properties.
+- Make the GPIO external.
+- Add the Xilinx Design Constraint (XDC) file for your board.
 
 
-Connecting GPIO for Keyboard and Display-
-A GPIO pin is a generic pin which will be used for connecting devices and whose behavior can be programmed through software. 
-Enable GPIO clock in register
-set the pin as input
-Config the Pull-up pin
-
-
-Connect AXI GPIO peripherals 
-Change the block properties.
-Make the GPIO external.
-Add the Xilinx Design Constraint (XDC) file for your board.
-Booting Tiny OS -
-BIOS and setup program after switch on
-POST power on self test of components like memory, drivers etc by BIOS
-OS loading into main memory
-System Configuration and utility loading into memory
-Login
+4) **Booting Tiny OS **-
+- BIOS and setup program after switch on
+- POST power on self test of components like memory, drivers etc by BIOS
+- OS loading into main memory
+- System Configuration and utility loading into memory
+- Login
 
