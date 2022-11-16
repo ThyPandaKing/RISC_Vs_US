@@ -98,6 +98,9 @@ end
   - The Verilog source file and constraints file are synthesized into a “.bit” file that can be programmed onto your board; and
 the device is configured with the circuit.
 
+- ![image](https://user-images.githubusercontent.com/66141447/202181033-04ac1400-31df-4644-991f-2fa21fe319e7.png)
+
+
 #### OS Research:
 - https://github.com/Digilent/Petalinux-Zybo-Z7-10 
 - https://github.com/Digilent/digilent-apps 
@@ -123,6 +126,8 @@ the device is configured with the circuit.
  
 - Installing and setting up Vivado, Vitis, and Digilent Board Files from XILINX.  The tool melds FPGA logic design and embedded ARM software development into a design flow
 - Writing script and connecting HDMI cable to FPGA board for video display and running the script.
+- ![image](https://user-images.githubusercontent.com/66141447/202181096-d0d6a7bb-1c00-4d66-9b3e-76126584c6c6.png)
+
 
 2) **Bitstream for Processor **-
 - Bitstream is a file which contains config details of FPGA board in binary format stored as human readable hex file.
