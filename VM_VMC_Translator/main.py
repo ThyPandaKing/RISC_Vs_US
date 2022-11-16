@@ -1,6 +1,7 @@
 import sys
 import os
 from vm import VM
+from vm_demo import VM_Demo
 
 if __name__ == '__main__':
     script_dir = os.path.dirname(__file__)
@@ -11,7 +12,8 @@ if __name__ == '__main__':
     with open(abs_file_path) as file:
         vm_code = file.read()
 
-        asm_generator = VM()
+        # asm_generator = VM()
+        asm_generator = VM_Demo()
         # starting point of the virtual machine
         asm_code = asm_generator.generate_target_code(vm_code)
 

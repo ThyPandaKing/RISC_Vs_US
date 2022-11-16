@@ -4,7 +4,7 @@ from postprocess import *
 import shlex
 
 
-class VM:
+class VM_Demo:
     def __init__(self):
         self.sp = 8192
         self.lcl = 8196
@@ -32,35 +32,35 @@ class VM:
 
     def init_mem(self):
         # 8224 to 8735 (512, local)
-        self.text_segment += f"li x5, -8224\n"
-        self.text_segment += f"li x6, -{self.lcl}\n"
+        self.text_segment += f"li x5, 8224\n"
+        self.text_segment += f"li x6, {self.lcl}\n"
         self.text_segment += f"add x6, x8, x6\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
         # 8736 to 8767 (32, argument)
-        self.text_segment += f"li x5, -8736\n"
-        self.text_segment += f"li x6, -{self.arg}\n"
+        self.text_segment += f"li x5, 8736\n"
+        self.text_segment += f"li x6, {self.arg}\n"
         self.text_segment += f"add x6, x8, x6\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
         # 8768 to 9279 (512, temp)
-        self.text_segment += f"li x5, -8768\n"
-        self.text_segment += f"li x6, -{self.tmp}\n"
+        self.text_segment += f"li x5, 8768\n"
+        self.text_segment += f"li x6, {self.tmp}\n"
         self.text_segment += f"add x6, x8, x6\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
         # 9280 to 10303 (1024, stack)
-        self.text_segment += f"li x5, -9280\n"
-        self.text_segment += f"li x6, -{self.sp}\n"
+        self.text_segment += f"li x5, 9280\n"
+        self.text_segment += f"li x6, {self.sp}\n"
         self.text_segment += f"add x6, x8, x6\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"li x5, -262144\n"
-        self.text_segment += f"li x6, -{self.print_start}\n"
+        self.text_segment += f"li x5, 262144\n"
+        self.text_segment += f"li x6, {self.print_start}\n"
         self.text_segment += f"add x6, x8, x6\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"li x2, -9280\n"
+        self.text_segment += f"li x2, 9280\n"
         self.text_segment += f"add x2, x2, x8\n\n"
 
     def label(self, line):
@@ -140,24 +140,24 @@ class VM:
 
                     for i in self.data_segment_dict[var_name][1].lstrip('"').rstrip('"'):
                         self.text_segment += f"li x6, {ord(i)}\n"
-                        self.text_segment += f"li x7, -{self.print_start}\n"
+                        self.text_segment += f"li x7, {self.print_start}\n"
                         self.text_segment += f"lw x30, 0(x7)\n"
                         self.text_segment += f"li x28, 1\n"
                         self.text_segment += f"sw x28, 0(x30)\n"
-                        self.text_segment += f"addi x30, x30, -4\n"
+                        self.text_segment += f"addi x30, x30, 4\n"
                         
-                        self.text_segment += f"sw x6, -0(x30)\n"
-                        self.text_segment += f"addi x30, x30, -4\n"
+                        self.text_segment += f"sw x6, 0(x30)\n"
+                        self.text_segment += f"addi x30, x30, 4\n"
                         self.text_segment += f"sw x30, 0(x7)\n"
 
-                    self.text_segment += f"li x7, -{self.print_start}\n"
+                    self.text_segment += f"li x7, {self.print_start}\n"
                     self.text_segment += f"lw x30, 0(x7)\n"
                     self.text_segment += f"li x28, 1\n"
                     self.text_segment += f"sw x28, 0(x30)\n"
-                    self.text_segment += f"addi x30, x30, -4\n"
+                    self.text_segment += f"addi x30, x30, 4\n"
 
-                    self.text_segment += f"sw x0, -0(x30)\n"
-                    self.text_segment += f"addi x30, x30, -4\n"
+                    self.text_segment += f"sw x0, 0(x30)\n"
+                    self.text_segment += f"addi x30, x30, 4\n"
                     self.text_segment += f"sw x30, 0(x7)\n"
 
         elif (segment != Segment.constant.value and segment != Segment.that.value):
@@ -172,34 +172,34 @@ class VM:
             if (datatype == Datatypes.INT.value):
                 # self.text_segment += f"lw x5, {-(pointer)}(x8)\n"
 
-                self.text_segment += f"li x5, {-(pointer)}\n"
+                self.text_segment += f"li x5, {(pointer)}\n"
                 self.text_segment += f"add x5, x5, x8\n"
                 self.text_segment += f"lw x5, 0(x5)\n"
 
-                self.text_segment += f"addi x5, x5, {-(index*4+4)}\n"
+                self.text_segment += f"addi x5, x5, {(index*4+4)}\n"
                 self.text_segment += f"lw x5, 0(x5)\n"
                 self.text_segment += f"sw x5, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             elif (datatype == Datatypes.CHAR.value or datatype == Datatypes.BOOL.value):
                 # self.text_segment += f"lw x5, {-(pointer)}(x8)\n"
-                self.text_segment += f"li x5, {-(pointer)}\n"
+                self.text_segment += f"li x5, {(pointer)}\n"
                 self.text_segment += f"add x5, x5, x8\n"
                 self.text_segment += f"lw x5, 0(x5)\n"
 
-                self.text_segment += f"addi x5, x5, {-(index*4+4)}\n"
-                self.text_segment += f"lb x5, 0(x5)\n"
-                self.text_segment += f"sb x5, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x5, x5, {(index*4+4)}\n"
+                self.text_segment += f"lw x5, 0(x5)\n"
+                self.text_segment += f"sw x5, 0(x2)\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             elif (datatype == Datatypes.FLOAT.value):
                 # self.text_segment += f"lw x5, {-(pointer)}(x8)\n"
-                self.text_segment += f"li x5, {-(pointer)}\n"
+                self.text_segment += f"li x5, {(pointer)}\n"
                 self.text_segment += f"add x5, x5, x8\n"
                 self.text_segment += f"lw x5, 0(x5)\n"
 
-                self.text_segment += f"addi x5, x5, {-(int(index)*4+4)}\n"
+                self.text_segment += f"addi x5, x5, {(int(index)*4+4)}\n"
                 self.text_segment += f"flw f3, 0(x5)\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x2, x2, 4\n"
 
             # self.text_segment += "\n"
 
@@ -208,30 +208,30 @@ class VM:
             if (datatype == Datatypes.INT.value):
                 self.text_segment += f"li x5, {constant}\n"
                 self.text_segment += f"sw x5, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             elif (datatype == Datatypes.CHAR.value):
                 self.text_segment += f"li x5, {constant}\n"
-                self.text_segment += f"sb x5, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"sw x5, 0(x2)\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             elif (datatype == Datatypes.BOOL.value):
                 self.text_segment += f"li x5, {1 if line[2]=='true' else 0}\n"
-                self.text_segment += f"sb x5, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"sw x5, 0(x2)\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             elif (datatype == Datatypes.FLOAT.value):
                 self.text_segment += f"fli f3, {constant}\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x2, x2, 4\n"
 
             # self.text_segment += "\n"
         else:
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
-            self.text_segment += f"li x6, -{self.lcl}\n"
+            self.text_segment += f"li x6, {self.lcl}\n"
             self.text_segment += f"lw x6, 0(x6)\n"
-            self.text_segment += f"sub x6, x6, x5\n"
+            self.text_segment += f"add x6, x6, x5\n"
             self.text_segment += f"lw x7, 0(x6)\n"
             self.text_segment += f"sw x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
 
         # self.text_segment += "\n"
 
@@ -253,21 +253,21 @@ class VM:
             pointer = self.arg
 
         if (segment == Segment.that.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
             # self.text_segment += f"li x28, 2\n"
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
-            self.text_segment += f"li x7, -{self.lcl}\n"
+            self.text_segment += f"li x7, {self.lcl}\n"
             self.text_segment += f"lw x7, 0(x7)\n"
-            self.text_segment += f"sub x7, x7, x5\n"
+            self.text_segment += f"add x7, x7, x5\n"
             self.text_segment += f"sw x6, 0(x7)\n"
 
             # self.text_segment += '\n'
             return
 
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
 
             if (self.prev_push_datatype == Datatypes.FLOAT.value):
                 self.text_segment += f"flw f3, 0(x2)\n"
@@ -277,45 +277,45 @@ class VM:
 
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
 
-            self.text_segment += f"li x6, {-pointer}\n"
+            self.text_segment += f"li x6, {pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
             self.text_segment += f"lw x6, 0(x6)\n"
 
-            self.text_segment += f"addi x6, x6, {-(index*4+4)}\n"
+            self.text_segment += f"addi x6, x6, {(index*4+4)}\n"
             self.text_segment += f"sw x5, 0(x6)\n"
         elif (datatype == Datatypes.CHAR.value or datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             if (self.prev_push_datatype == Datatypes.FLOAT.value):
                 self.text_segment += f"flw f3, 0(x2)\n"
                 self.text_segment += f"fcvt.w.s x5, f3\n"
-                self.text_segment += f"sb x5, 0(x2)\n"
-                self.text_segment += f"lb x5, 0(x2)\n"
+                self.text_segment += f"sw x5, 0(x2)\n"
+                self.text_segment += f"lw x5, 0(x2)\n"
             else:
-                self.text_segment += f"lb x5, 0(x2)\n"
+                self.text_segment += f"lw x5, 0(x2)\n"
 
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
-            self.text_segment += f"li x6, {-pointer}\n"
+            self.text_segment += f"li x6, {pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
             self.text_segment += f"lw x6, 0(x6)\n"
 
-            self.text_segment += f"addi x6, x6, {-(index*4+4)}\n"
-            self.text_segment += f"sb x5, 0(x6)\n"
+            self.text_segment += f"addi x6, x6, {(index*4+4)}\n"
+            self.text_segment += f"sw x5, 0(x6)\n"
         elif (datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             if (self.prev_push_datatype == Datatypes.INT.value):
                 self.text_segment += f"lw x5, 0(x2)\n"
                 self.text_segment += f"fcvt.s.w f3, x5\n"
             elif (self.prev_push_datatype == Datatypes.CHAR.value or self.prev_push_datatype == Datatypes.BOOL.value):
-                self.text_segment += f"lb x5, 0(x2)\n"
+                self.text_segment += f"lw x5, 0(x2)\n"
                 self.text_segment += f"fcvt.s.w f3, x5\n"
             else:
                 self.text_segment += f"flw f3, 0(x2)\n"
             # self.text_segment += f"lw x6, {-(pointer)}(x8)\n"
-            self.text_segment += f"li x6, {-pointer}\n"
+            self.text_segment += f"li x6, {pointer}\n"
             self.text_segment += f"add x6, x6, x8\n"
             self.text_segment += f"lw x6, 0(x6)\n"
 
-            self.text_segment += f"addi x6, x6, {-(index*4+4)}\n"
+            self.text_segment += f"addi x6, x6, {(index*4+4)}\n"
             self.text_segment += f"fsw f3, 0(x6)\n"
 
         self.prev_push_datatype = None
@@ -345,38 +345,38 @@ class VM:
             instruction = Operators.BitXor.value
 
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"{instruction[0]} x5, x6, x5\n"
             self.text_segment += f"sw x5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
-            self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
+            self.text_segment += f"sw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
         elif (datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"
-            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
-            self.text_segment += f"sb x5, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"{instruction[0]} x5, x6, x5\n"
+            self.text_segment += f"sw x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
         elif (datatype == Datatypes.FLOAT.value):
             if (operator == Instructions.Add.value or operator == Instructions.Sub.value):
-                self.text_segment += f"addi x2, x2, 4\n"
+                self.text_segment += f"addi x2, x2, -4\n"
                 self.text_segment += f"flw f3, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, 4\n"
+                self.text_segment += f"addi x2, x2, -4\n"
                 self.text_segment += f"flw f4, 0(x2)\n"
                 self.text_segment += f"{instruction[1]} f3, f4, f3\n"
                 self.text_segment += f"fsw f3, 0(x2)\n"
-                self.text_segment += f"addi x2, x2, -4\n"
+                self.text_segment += f"addi x2, x2, 4\n"
             # float does not have any other operations
 
         # self.text_segment += '\n'
@@ -412,9 +412,9 @@ class VM:
         label2 = self.get_new_label()
 
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x6, 0(x2)\n"      # RHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"      # LHS
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
@@ -426,13 +426,13 @@ class VM:
 
             # self.text_segment += f"sub x5, x5, x6\n"
             self.text_segment += f"sw x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.INT
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
@@ -442,14 +442,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.CHAR
         elif (datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"{branch[0]} x5, x6, {label1}\n"
             self.text_segment += f"addi x7, x0, 0\n"
@@ -459,14 +459,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.BOOL
         # (need to check this conversion properly)
         elif (datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f4, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
             # self.text_segment += f"{branch[1]} f3, f4, {label1}\n"
@@ -482,7 +482,7 @@ class VM:
 
             # self.text_segment += f"fsub.s x5, x5, x6\n"
             self.text_segment += f"fsw f5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.FLOAT
 
     def LessThanOrEquals(self, line):
@@ -496,9 +496,9 @@ class VM:
         label2 = self.get_new_label()
 
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
@@ -511,13 +511,13 @@ class VM:
 
             # self.text_segment += f"sub x5, x5, x6\n"
             self.text_segment += f"sw x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.INT
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
@@ -528,14 +528,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.CHAR
         elif (datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
@@ -546,14 +546,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.BOOL
         # (need to check this conversion properly)
         elif (datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f4, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
             # self.text_segment += f"flt.s f3, f4, {label1}\n"
@@ -572,7 +572,7 @@ class VM:
 
             # self.text_segment += f"fsub.s x5, x5, x6\n"
             self.text_segment += f"fsw f5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.FLOAT
 
     def GreaterThan(self, line):
@@ -586,9 +586,9 @@ class VM:
         label2 = self.get_new_label()
 
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
@@ -601,13 +601,13 @@ class VM:
 
             # self.text_segment += f"sub x5, x5, x6\n"
             self.text_segment += f"sw x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.INT
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
@@ -618,14 +618,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.CHAR
         elif (datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x6, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"      # RHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"      # LHS
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"      # RHS
 
             self.text_segment += f"blt x5, x6, {label1}\n"
             self.text_segment += f"beq x5, x6, {label1}\n"
@@ -636,14 +636,14 @@ class VM:
             self.text_segment += f"{label2}:\n"
 
             # self.text_segment += f"sub x5, x5, x6\n"
-            self.text_segment += f"sb x7, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"sw x7, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.BOOL
         # (need to check this conversion properly)
         elif (datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f4, 0(x2)\n"      # LHS
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f3, 0(x2)\n"      # RHS
 
             # self.text_segment += f"flt.s f3, f4, {label1}\n"
@@ -662,7 +662,7 @@ class VM:
 
             # self.text_segment += f"fsub.s x5, x5, x6\n"
             self.text_segment += f"fsw f5, 0(x2)\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.prev_datatype = Datatypes.FLOAT
 
         # self.text_segment += '\n'
@@ -674,18 +674,18 @@ class VM:
         datatype = self.prev_datatype
         label = line[-1]
         if (datatype == Datatypes.INT or datatype == None):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"li x6, 1\n"
             self.text_segment += f"beq x5, x6, {label}\n"
         elif (datatype == Datatypes.CHAR or datatype == Datatypes.BOOL):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"li x6, 1\n"
             self.text_segment += f"beq x5, x6, {label}\n"
         # Has to be re-done (the implementation has been changed for eq, lt, ... )
         elif (datatype == Datatypes.FLOAT):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"flw f3, 0(x2)\n"
             # the top of the stack does not store the subtracted value
             # if (len(self.prev_operator.value) == 3):
@@ -708,67 +708,67 @@ class VM:
         """
         datatype = line[-1]
         if (datatype == Datatypes.INT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
+            self.text_segment += f"addi x2, x2, -4\n"
             self.text_segment += f"lw x5, 0(x2)\n"
             self.text_segment += f"add a0, x5, x0\n"
-            self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"li a7, 1\n"
             self.text_segment += f"ecall\n"
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"add a0, x5, x0\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"add a0, x5, x0\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"li a7, 11\n"
             self.text_segment += f"ecall\n"
         elif (datatype == Datatypes.BOOL.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            # self.text_segment += f"li x5, 0\n"
-            self.text_segment += f"lb x5, 0(x2)\n"
-            self.text_segment += f"add a0, x5, x0\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            # self.text_segment += f"li x5, 0\n"
+            self.text_segment += f"lw x5, 0(x2)\n"
+            self.text_segment += f"add a0, x5, x0\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"li a7, 4\n"
             self.text_segment += f"ecall\n"
         elif (datatype == Datatypes.FLOAT.value):
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"flw fa0, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"flw fa0, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"li a7, 2\n"
             self.text_segment += f"ecall\n"
         elif (datatype == Datatypes.STR.value):
             pass
 
-        # self.text_segment += '\n'
+        self.text_segment += '\n'
 
     def new_print_stmt(self, line):
         datatype = line[-1]
         if (datatype == Datatypes.INT.value or
                 datatype == Datatypes.BOOL.value):
-            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x5, {self.print_start}\n"
             self.text_segment += f"li x28, 0\n"                     # int 
             self.text_segment += f"lw x30, 0(x5)\n"
             self.text_segment += f"sw x28, 0(x30)\n"
-            self.text_segment += f"addi x30, x30, -4\n"
+            self.text_segment += f"addi x30, x30, 4\n"
 
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"sw x6, 0(x30)\n"
-            self.text_segment += f"addi x30, x30, -4\n"
+            self.text_segment += f"addi x30, x30, 4\n"
             self.text_segment += f"sw x30, 0(x5)\n"
             
         elif (datatype == Datatypes.CHAR.value):
-            self.text_segment += f"li x5, -{self.print_start}\n"
+            self.text_segment += f"li x5, {self.print_start}\n"
             self.text_segment += f"li x28, 1\n"                     # char 
             self.text_segment += f"lw x30, 0(x5)\n"
             self.text_segment += f"sw x28, 0(x30)\n"
-            self.text_segment += f"addi x30, x30, -4\n"
+            self.text_segment += f"addi x30, x30, 4\n"
 
-            self.text_segment += f"addi x2, x2, 4\n"
-            self.text_segment += f"lw x6, 0(x2)\n"
             self.text_segment += f"addi x2, x2, -4\n"
+            self.text_segment += f"lw x6, 0(x2)\n"
+            self.text_segment += f"addi x2, x2, 4\n"
             self.text_segment += f"sw x6, 0(x30)\n"
-            self.text_segment += f"addi x30, x30, -4\n"
+            self.text_segment += f"addi x30, x30, 4\n"
             self.text_segment += f"sw x30, 0(x5)\n"
 
         elif (datatype == Datatypes.STR.value):
@@ -781,39 +781,39 @@ class VM:
             self.push('push constant 0 INT'.split(' '))
 
         # storing current arg pointer in x7 register
-        self.text_segment += f"li x5, -{self.arg}\n"
+        self.text_segment += f"li x5, {self.arg}\n"
         self.text_segment += f"lw x7, 0(x5)\n"
 
         # setting arg pointer
-        self.text_segment += f"addi x5, x2, {(num_args+1)*4}\n"
-        self.text_segment += f"li x6, -{self.arg}\n"
+        self.text_segment += f"addi x5, x2, {-(num_args+1)*4}\n"
+        self.text_segment += f"li x6, {self.arg}\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
         # pushing context
-        self.text_segment += f"li x5, -{self.lcl}\n"
+        self.text_segment += f"li x5, {self.lcl}\n"
         self.text_segment += f"lw x6, 0(x5)\n"
         self.text_segment += f"sw x6, 0(x2)\n"
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
         # self.text_segment += f"li x5, -{self.arg}\n"
         # self.text_segment += f"lw x6, 0(x5)\n"
         self.text_segment += f"sw x7, 0(x2)\n"
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
-        self.text_segment += f"li x5, -{self.tmp}\n"
+        self.text_segment += f"li x5, {self.tmp}\n"
         self.text_segment += f"lw x6, 0(x5)\n"
         self.text_segment += f"sw x6, 0(x2)\n"
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
-        self.text_segment += f"li x5, -{self.this}\n"
+        self.text_segment += f"li x5, {self.this}\n"
         self.text_segment += f"lw x6, 0(x5)\n"
         self.text_segment += f"sw x6, 0(x2)\n"
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
-        self.text_segment += f"li x5, -{self.that}\n"
+        self.text_segment += f"li x5, {self.that}\n"
         self.text_segment += f"lw x6, 0(x5)\n"
         self.text_segment += f"sw x6, 0(x2)\n"
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
         self.text_segment += f"jal x1, {line[1]}\n"
 
@@ -839,17 +839,17 @@ class VM:
         self.text_segment += f"sw x1, 0(x2)\n"
 
         # setting new LCL
-        self.text_segment += f"addi x2, x2, -4\n"
-        self.text_segment += f"li x5, -{self.lcl}\n"
+        self.text_segment += f"addi x2, x2, 4\n"
+        self.text_segment += f"li x5, {self.lcl}\n"
         self.text_segment += f"sw x2, 0(x5)\n"
 
         # setting new TMP
-        self.text_segment += f"addi x6, x2, -{self.num_local*4}\n"
-        self.text_segment += f"li x5, -{self.tmp}\n"
+        self.text_segment += f"addi x6, x2, {self.num_local*4}\n"
+        self.text_segment += f"li x5, {self.tmp}\n"
         self.text_segment += f"sw x2, 0(x5)\n"
 
         # setting new working stack
-        self.text_segment += f"addi x2, x2, -{(self.num_temp+self.num_local)*4}\n"
+        self.text_segment += f"addi x2, x2, {(self.num_temp+self.num_local)*4}\n"
 
         # self.text_segment += '\n'
 
@@ -859,45 +859,45 @@ class VM:
             self.text_segment += f"jal x30, __END__\n"
             return
 
-        self.text_segment += f"addi x2, x2, 4\n"
+        self.text_segment += f"addi x2, x2, -4\n"
         self.text_segment += f"lw x5, 0(x2)\n"
-        self.text_segment += f"li x6, -{self.arg}\n"
+        self.text_segment += f"li x6, {self.arg}\n"
         self.text_segment += f"lw x6, 0(x6)\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
         # self.text_segment += f"addi x2, x2, {(self.num_local+self.num_temp)*4}\n"
-        self.text_segment += f"li x5, -{self.lcl}\n"
+        self.text_segment += f"li x5, {self.lcl}\n"
         self.text_segment += f"lw x2, 0(x5)\n"
 
-        self.text_segment += f"lw x5, 8(x2)\n"
-        self.text_segment += f"li x6, -{self.that}\n"
+        self.text_segment += f"lw x5, -8(x2)\n"
+        self.text_segment += f"li x6, {self.that}\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"lw x5, 12(x2)\n"
-        self.text_segment += f"li x6, -{self.this}\n"
+        self.text_segment += f"lw x5, -12(x2)\n"
+        self.text_segment += f"li x6, {self.this}\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"lw x5, 16(x2)\n"
-        self.text_segment += f"li x6, -{self.tmp}\n"
+        self.text_segment += f"lw x5, -16(x2)\n"
+        self.text_segment += f"li x6, {self.tmp}\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"lw x7, 20(x2)\n"
+        self.text_segment += f"lw x7, -20(x2)\n"
         # self.text_segment += f"li x6, -{self.arg}\n"
         # self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"lw x5, 24(x2)\n"
-        self.text_segment += f"li x6, -{self.lcl}\n"
+        self.text_segment += f"lw x5, -24(x2)\n"
+        self.text_segment += f"li x6, {self.lcl}\n"
         self.text_segment += f"sw x5, 0(x6)\n"
 
-        self.text_segment += f"lw x5, 4(x2)\n"
+        self.text_segment += f"lw x5, -4(x2)\n"
 
-        self.text_segment += f"li x6, -{self.arg}\n"
+        self.text_segment += f"li x6, {self.arg}\n"
         self.text_segment += f"lw x2, 0(x6)\n"
 
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
 
         # self.text_segment += f"lw x5, 20(x2)\n"
-        self.text_segment += f"li x6, -{self.arg}\n"
+        self.text_segment += f"li x6, {self.arg}\n"
         self.text_segment += f"sw x7, 0(x6)\n"
 
         self.text_segment += f"jalr x28, x5, 0\n"
@@ -921,7 +921,7 @@ class VM:
             self.text_segment += "addi a7, x0, 6\necall\n"
             self.text_segment += f"fsw fa0, 0(x2)\n"
 
-        self.text_segment += f"addi x2, x2, -4\n"
+        self.text_segment += f"addi x2, x2, 4\n"
         self.pop(f"pop {line[1]} {line[2]} {line[3]}".split(' '))
 
     def generate_target_code(self, vm_code):
@@ -962,12 +962,14 @@ class VM:
             elif (line[0] == Instructions.print_stmt.value):
                 if (self.demo):
                     self.print_stmt(line)
+                    # pass
                 else:
                     self.new_print_stmt(line)
             elif (line[0] == Instructions.call.value):
                 self.function_call(line)
             elif (line[0] == Instructions.scan.value):
                 self.scan(line)
+                # pass
 
         self.text_segment = postprocess(self.text_segment)
 
