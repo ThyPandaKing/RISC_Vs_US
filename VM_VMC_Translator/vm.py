@@ -735,7 +735,7 @@ class VM:
         if (datatype == Datatypes.INT.value or
                 datatype == Datatypes.BOOL.value):
             self.text_segment += f"li x5, -{self.print_start}\n"
-            self.text_segment += f"li x28, 2\n"                     # int 
+            self.text_segment += f"li x28, 0\n"                     # int 
             self.text_segment += f"sw x28, 0(x5)\n"
             self.print_start += 4
             self.text_segment += f"li x5, -{self.print_start}\n"

@@ -177,9 +177,18 @@ ipcMain.on('findDisplayValues', (event) => {
     console.log("hello from here")
 
     try {
+      // let start = 1<<18;
+      // let end = 1<<19 - 1;
 
-      let command = "head -2 /home/user/xilinx-projects/CPU/CPU.srcs/sim_1/new/memory_binary.mem | tail -4 > ../Device_Buffers/display_memory.txt";
+      let start = 0;
+      let end = 44;
 
+      // Real
+      //let command = `awk 'NR >= ${start} && NR <= ${end}' /home/user/xilinx-projects/CPU/CPU.srcs/sim_1/new/memory_binary.mem > ../Device_Buffers/display_memory.txt`;
+      
+      // Testing
+      let command = `awk 'NR >= ${start} && NR <= ${end}' ../Device_Buffers/a.txt > ../Device_Buffers/display_memory.txt`;
+      
       exec (
         command,
         [],
@@ -195,46 +204,43 @@ ipcMain.on('findDisplayValues', (event) => {
           console.log (stdout);
         }
       );
-    
 
+      const myTimeout = setTimeout(find_val, 2000);
+
+      function find_val() {
         let data = fs.readFileSync('../Device_Buffers/display_memory.txt', 'utf8');
         data = data.split('\n');
         let start = Math.pow(2, 0)-1;
         let end = Math.min(Math.pow(2,19), data.length);
         
+        console.log("Here is theDate:", data);
 
+        for(let i=start; i< end; i+=2){
 
-      for(let i=start; i< end; i+=2){
+          let data_type = parseInt(data[i], 2);
+          let data_val = parseInt(data[i+1],2);
+          console.log(data_type, data_val)
 
-        let data_type = parseInt(data[i], 2);
-        let data_val = parseInt(data[i+1],2);
-        console.log(data_type, data_val)
+          if (data_type == 0)
+          {
+              result += data_val;
+              
+          }else if(data_type == 1){
+              result += String.fromCharCode(data_val)
+          }
 
-        if (data_type == 0)
-        {
-            result += data_val;
-            
-        }else if(data_type == 1){
-            result += String.fromCharCode(data_val)
+          
         }
-
-        
+        try {
+          fs.writeFileSync('../Device_Buffers/memory_map.txt', result);
+          // file written successfully
+        } catch (err) {
+          console.error(err);
+        }
       }
-
-
     } catch (err) {
       console.error(err);
     }
-
-
-    try {
-      fs.writeFileSync('../Device_Buffers/memory_map.txt', result);
-      // file written successfully
-    } catch (err) {
-      console.error(err);
-    }
-
-
 })
 
 
