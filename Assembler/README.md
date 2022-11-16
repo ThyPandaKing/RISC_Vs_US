@@ -23,7 +23,7 @@ bitset<32> was used to output the integer to the .asm file
 
 ## Installation and Usage
 1. Clone the repository from (https://github.com/PandaKing9660/RISC_Vs_US.git).
-2. The input three address code is stored as ```vmout.asm``` file.
+2. The input RISC-V code is stored as ```vmout.asm``` file.
 3. Use ```make all``` to compile the code.
 4. Use ```make run``` to run the code.
 5. The generated machine code output will be stored in ```asmout.o``` file.
