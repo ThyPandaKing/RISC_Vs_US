@@ -1,7 +1,32 @@
-## System Integration
+## System Integration Notes
 
-System Integration Notes
+Final PPT
 
+https://support.xilinx.com/s/question/0D52E00006hplq6SAA/why-fopen-command-not-work-in-sdk?language=en_US
+https://support.xilinx.com/s/question/0D52E00006iHm9LSAS/vivado-cannot-find-data-file-for-my-system-verilog-simulation?language=en_US 
+/home/user/Documents/xilinx/CPU/CPU.sim/sim_1/behav/xsim - output.txt copied in this path.
+There is something called vivado.log file which stores all the output.
+
+Run verilog code directly: done!!!
+https://www.youtube.com/watch?v=aPDT0sPr4jE bitstream done
+Remember to install cable driver - `bash ~/xilinx/Vivado/2022.1/data/xicom/cable_drivers/lin64/install_script/install_drivers/install_drivers.sh`
+
+
+https://www.youtube.com/watch?v=aeMQJEfGsPY MUX Simulation ONLY
+Codes: https://verilogcodes.blogspot.com/ 
+Old- https://students.iitk.ac.in/eclub/assets/tutorials/Verilog-xilinx.pdf 
+https://www.rs-online.com/designspark/lab1-verilog 
+Slide data: http://www.ioe.nchu.edu.tw/Pic/CourseItem/4468_20_Zynq_Architecture.pdf 
+Full adder:
+
+
+CPU.v run from processor team
+
+Make sure to read input from file like this: 
+
+  initial begin    $readmemb("/home/user/Documents/xilinx/CPU/CPU.srcs/sim_1/new/ram_data.mem", memory, 0, 63);
+end 
+  
 Till Checkpoint 3
 HDMI and micro usb port for Display(mpi7002 v2.4: http://www.lcdwiki.com/7inch_HDMI_Display-C )
 https://digilent.com/reference/programmable-logic/zybo-z7/demos/hdmi 
@@ -33,11 +58,6 @@ Project name: counter–book-eg2 from the zynq book
 
 
 
-Run verilog code directly: try!!!
-https://www.youtube.com/watch?v=aeMQJEfGsPY 
-Old- https://students.iitk.ac.in/eclub/assets/tutorials/Verilog-xilinx.pdf 
-https://www.rs-online.com/designspark/lab1-verilog 
-Slide data: http://www.ioe.nchu.edu.tw/Pic/CourseItem/4468_20_Zynq_Architecture.pdf 
 
 
 Till Checkpoint 2
