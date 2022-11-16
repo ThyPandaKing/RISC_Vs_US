@@ -141,8 +141,8 @@ REGISTERS::REGISTERS()
 		{"s", 8},
 		{"S", 16},
 	};
-	regex_reg="[xast](\\d)+";
-	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)++\\)", ",(\\+|-)?(\\d)+"};
+	regex_reg="(^|\\(|,)[xast](\\d)+";
+	regex_reg_imm={"(\\+|-)?(\\d)+\\([xast](\\d)+\\)", "(,0x[0-9a-f]+)|(,(\\+|-)?(\\d)+)"};
 	regex_labels="[a-zA-Z_][a-zA-Z_0-9]*";
 }
 Map::Map()
@@ -179,16 +179,18 @@ vector<int> REGISTERS::extractRegisters(string reg, unsigned char type)
 		while(next!=end)
 		{
 			smatch match = *next;
-			reg=match.str();
+			string temp_reg=match.str();
+			if(temp_reg[0]==',' || temp_reg[0]=='(')
+				temp_reg.erase(temp_reg.begin());
 			
-			reg_code=stoi(reg.substr(1, 2));
-			if((regs[0]=='x' && !(reg_code>=0 && reg_code<32)) || (regs[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (regs[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (regs[0]=='t' &&!(reg_code>=0 && reg_code<7)))
+			reg_code=stoi(temp_reg.substr(1, 2));
+			if((temp_reg[0]=='x' && !(reg_code>=0 && reg_code<32)) || (temp_reg[0]=='a' &&!(reg_code>=0 && reg_code<8)) || (temp_reg[0]=='s' &&!(reg_code>=0 && reg_code<12)) || (temp_reg[0]=='t' &&!(reg_code>=0 && reg_code<7)))
 			{
 				perror("Invalid Register Number");
 				regs.resize(i);
 				return regs;
 			}
-			switch(regs[0])
+			switch(temp_reg[0])
 			{
 				case 'a':reg_code+=regcode["a"];break;
 				case 's':if(reg_code<2)
@@ -241,10 +243,17 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		else if(imm_type==1)
 		{
 			imm_reg.erase(imm_reg.begin());
-			immediate=stoi(imm_reg);
+			if(imm_reg[0]=='0' && imm_reg[1]=='x')
+			{
+				imm_reg.erase(imm_reg.begin(), imm_reg.begin()+2);
+				immediate=stoi(imm_reg, 0, 16);					
+			}
+			else
+				immediate=stoi(imm_reg);
 		}
 		regs.resize(regs.size()+1, immediate);
 		next++;
+		// cout<<"TEST#"<<imm_reg<<" "<<imm_type<<endl;
 		
 		if(next != end)
 		{
@@ -402,6 +411,7 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 
 		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
 		int offset=(regs[2]-linenumber)*4;
+		// cout<<offset<<"#TEST#\n";
 		// offset
 		// offset is split into 4 segments
 		// bit 11 from LSB at index 7 of ins
@@ -453,6 +463,7 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 		
 		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
 		int offset=(regs[1]-linenumber)*4;
+		// cout<<offset<<"#TEST#\n";
 		// offset
 		// offset is split into 4 segments
 		// bit 20 from LSB at index 31 of ins
@@ -529,6 +540,7 @@ Assembler::Assembler()
 	};
 	regex_labels="^[a-zA-Z_][a-zA-Z_0-9]*";
 	regex_comment="^# (.)*";
+	regex_asciz="\"(.)*\"";
 }
 int Assembler::terminate(int code)
 {
@@ -597,6 +609,29 @@ string Assembler::extractComment(string vm_line)
 	}
 	return comment;
 }
+string Assembler::extractAsciz(string vm_line)
+{
+	string asciz="";
+	try
+	{
+		regex regexp(regex_asciz);
+		sregex_iterator next(vm_line.begin(), vm_line.end(), regexp);
+		sregex_iterator end;
+		
+		if(next==end)
+			return "";
+
+		smatch match = *next;
+		asciz=match.str();
+		next++;
+	}
+	catch (const regex_error& e)
+	{
+    	perror("Invalid Syntax for Labels");
+		return "";
+	}
+	return asciz;
+}
 int Assembler::extractTypeAndValue(string label, string vm_line)
 {
 	string type, value;
@@ -609,6 +644,7 @@ int Assembler::extractTypeAndValue(string label, string vm_line)
 
 	if(type==".asciz" || type==".string")
 	{
+		value=extractAsciz(vm_line);
 		int l=value.length();
 		if(value[0]!='\"' || value[l-1]!='\"')
 		{
@@ -657,6 +693,7 @@ int Assembler::extractTypeAndValue(string label, string vm_line)
 }
 void Assembler::printST()
 {
+	cout<<"\nSYMBOL TABLE\n";
 	for(pair<string, ST_Entry> entry : symbol_table)
 	{
 		cout<<"\n______________________________________\n\n";
@@ -890,8 +927,8 @@ int main()
 	int flag=A.firstPass(vmout);
 	if(flag==0)
 	{
-		cout<<"\nFIRST PASS COMPLETE\n";
 		A.printST();
+		cout<<"\nFIRST PASS COMPLETE\n\n";
 		flag=A.secondPass(vmout, asmout);
 	}
 

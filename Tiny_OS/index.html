@@ -33,6 +33,8 @@
 
     <button class="button1" type="button" id="saveButton" >Save</button>
     <button class="button1" type="button" id="runButton">Run</button>
+    <button class="button1" type="button" id="runcButton">Runc</button>
+    <button class="button1" type="button" id="runvButton">Runv</button>
     <button class="button1" type="button" id="clearButton" onclick="clear_file()">Clear</button>
     <button class="button1" type="button" id="sendButton">Send</button>
   </div>
@@ -187,6 +189,20 @@
           input.value="";
           pout.innerHTML="Command Succesfully executed";
           var button=document.getElementById("runButton");
+          button.click();
+        }
+        else if(user_cmd=="run -c")
+        {
+          input.value="";
+          pout.innerHTML="Command Succesfully executed";
+          var button=document.getElementById("runcButton");
+          button.click();
+        }
+        else if(user_cmd=="run -v")
+        {
+          input.value="";
+          pout.innerHTML="Command Succesfully executed";
+          var button=document.getElementById("runvButton");
           button.click();
         }
         else if(user_cmd=="clear")
