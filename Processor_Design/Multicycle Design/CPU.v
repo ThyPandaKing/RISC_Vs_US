@@ -169,14 +169,13 @@ module ImmGenJ (
   input [31:0] in,
   output [31:0] out
 );
-  wire [20:0] s0;
-  assign s0[0] = 1'b0;
-  assign s0[10:1] = in[30:21];
-  assign s0[11] = in[20];
-  assign s0[19:12] = in[19:12];
-  assign s0[20] = in[31];
+  wire [19:0] s0;
+  assign s0[9:0] = in[30:21];
+  assign s0[10] = in[20];
+  assign s0[18:11] = in[19:12];
+  assign s0[19] = in[31];
   DIG_BitExtender #(
-    .inputBits(21),
+    .inputBits(20),
     .outputBits(32)
   )
   DIG_BitExtender_i0 (
@@ -189,14 +188,13 @@ module ImmGenB (
   input [31:0] in,
   output [31:0] out
 );
-  wire [12:0] s0;
-  assign s0[0] = 1'b0;
-  assign s0[4:1] = in[11:8];
-  assign s0[10:5] = in[30:25];
-  assign s0[11] = in[7];
-  assign s0[12] = in[31];
+  wire [11:0] s0;
+  assign s0[3:0] = in[11:8];
+  assign s0[9:4] = in[30:25];
+  assign s0[10] = in[7];
+  assign s0[11] = in[31];
   DIG_BitExtender #(
-    .inputBits(13),
+    .inputBits(12),
     .outputBits(32)
   )
   DIG_BitExtender_i0 (

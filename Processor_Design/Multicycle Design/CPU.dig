@@ -722,10 +722,10 @@
           <testData>
             <dataString>Clock PC_val State_out I_out op_1 op_2 ALU_in Al_out MemDataRegOut
 
-program(0xa00413,0x0,0x84a023)
+program(0x93,0x2a40413,0x802523,0xfe0004e3)
 
 let i = 0;
-while (i &lt; 100)
+while (i &lt; 200)
 0 x x x x x x x x
 1 x x x x x x x x
 let i = i + 1;

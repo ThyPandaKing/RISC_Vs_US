@@ -54,7 +54,7 @@
       <elementAttributes>
         <entry>
           <string>inputBits</string>
-          <int>21</int>
+          <int>20</int>
         </entry>
         <entry>
           <string>outputBits</string>
@@ -72,19 +72,14 @@
         </entry>
         <entry>
           <string>Input Splitting</string>
-          <string>1,10,1,8,1</string>
+          <string>10,1,8,1</string>
         </entry>
         <entry>
           <string>Output Splitting</string>
-          <string>21</string>
+          <string>20</string>
         </entry>
       </elementAttributes>
-      <pos x="460" y="220"/>
-    </visualElement>
-    <visualElement>
-      <elementName>Ground</elementName>
-      <elementAttributes/>
-      <pos x="440" y="260"/>
+      <pos x="460" y="200"/>
     </visualElement>
   </visualElements>
   <wires>
@@ -121,10 +116,6 @@
       <p2 x="580" y="220"/>
     </wire>
     <wire>
-      <p1 x="440" y="220"/>
-      <p2 x="460" y="220"/>
-    </wire>
-    <wire>
       <p1 x="260" y="220"/>
       <p2 x="400" y="220"/>
     </wire>
@@ -141,12 +132,12 @@
       <p2 x="400" y="220"/>
     </wire>
     <wire>
-      <p1 x="260" y="160"/>
-      <p2 x="260" y="220"/>
+      <p1 x="480" y="200"/>
+      <p2 x="480" y="220"/>
     </wire>
     <wire>
-      <p1 x="440" y="220"/>
-      <p2 x="440" y="260"/>
+      <p1 x="260" y="160"/>
+      <p2 x="260" y="220"/>
     </wire>
   </wires>
   <measurementOrdering/>

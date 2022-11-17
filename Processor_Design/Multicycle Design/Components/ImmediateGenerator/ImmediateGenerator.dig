@@ -28,6 +28,10 @@
           <string>Bits</string>
           <int>32</int>
         </entry>
+        <entry>
+          <string>intFormat</string>
+          <intFormat>bin</intFormat>
+        </entry>
       </elementAttributes>
       <pos x="0" y="80"/>
     </visualElement>
