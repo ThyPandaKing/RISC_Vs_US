@@ -1,80 +1,239 @@
 main: INT
-@t0 = 40 INT
-- INT a
-a = @t0 INT
-@t1 = 20 INT
-- INT b
-b = @t1 INT
-- INT c
-output "Value of a is " STR
-output a INT
-output "\n" STR
-output "Value of b is " STR
-output b INT
-output "Operation: \n1. Sum (+)\n2. Product (*)\n3. Bitwise And (&)\n" STR
+- INT a [ 9 ] 
+a [ 0 ] = 1 INT
+a [ 1 ] = 2 INT
+a [ 2 ] = 3 INT
+a [ 3 ] = 4 INT
+a [ 4 ] = 5 INT
+a [ 5 ] = 6 INT
+a [ 6 ] = 7 INT
+a [ 7 ] = 8 INT
+a [ 8 ] = 9 INT
+- INT b [ 9 ] 
+b [ 0 ] = 9 INT
+b [ 1 ] = 8 INT
+b [ 2 ] = 7 INT
+b [ 3 ] = 6 INT
+b [ 4 ] = 5 INT
+b [ 5 ] = 4 INT
+b [ 6 ] = 3 INT
+b [ 7 ] = 2 INT
+b [ 8 ] = 1 INT
 - INT i
-@t2 = 1 INT
-i = @t2 INT
+output "The contents of matrix 1:\n" STR
+@t0 = 0 INT
+i = @t0 INT
 
 #L0:
-@t3 = 3 INT
-@t4 = i <= @t3 INT
+@t1 = 9 INT
+@t2 = i < @t1 INT
 
-if @t4 GOTO #L1 else GOTO #L2
+if @t2 GOTO #L1 else GOTO #L2
 
 #L3:
-@t4 = 1 INT
-@t5 = i + @t4 INT
-i = @t5 INT
+@t2 = 1 INT
+@t3 = i + @t2 INT
+i = @t3 INT
 GOTO #L0
 
 #L1:
-output "Result for operation " STR
-output i INT
-output " is: " STR
-@t6 = i INT
-@t7 = 1 INT
-@t8 = @t6 == @t7 INT
-if @t8 GOTO #L5 else GOTO #L6
-#L5:
-@t5 = a + b INT
-c = @t5 INT
-GOTO #L4
-#L6:
-@t9 = 2 INT
-@t10 = @t6 == @t9 INT
-if @t10 GOTO #L7 else GOTO #L8
-#L7:
-@t5 = 0 INT
-@t11 = 0 INT
-@t13 = 1 INT
-#L10:
-@t12 = @t11 < b  INT
-if @t12 GOTO #L11 else GOTO #L12
-#L11:
-@t5 = @t5 + a  INT
-@t11 = @t11 + @t13  INT
-GOTO #L10
-#L12:
-c = @t5 INT
-GOTO #L4
-#L8:
-@t14 = 3 INT
-@t15 = @t6 == @t14 INT
-if @t15 GOTO #L13 else GOTO #L14
-#L13:
-@t11 = a & b INT
-c = @t11 INT
-GOTO #L4
-#L14:
-output "Invalid\n" STR
-#L4:
-output c INT
-output "\n" STR
+- INT t
+@t3 = a [ i ] INT
+output @t3 INT
+output " " STR
 GOTO #L3
 
 #L2:
-@t12 = 0 INT
-return @t12 INT
+output "\n" STR
+output "The contents of matrix 2:\n" STR
+@t4 = 0 INT
+i = @t4 INT
+
+#L4:
+@t5 = 9 INT
+@t6 = i < @t5 INT
+
+if @t6 GOTO #L5 else GOTO #L6
+
+#L7:
+@t6 = 1 INT
+@t7 = i + @t6 INT
+i = @t7 INT
+GOTO #L4
+
+#L5:
+- INT t
+@t7 = b [ i ] INT
+output @t7 INT
+output " " STR
+GOTO #L7
+
+#L6:
+- INT c [ 9 ] 
+- INT row
+@t8 = 0 INT
+row = @t8 INT
+
+#L8:
+@t9 = 3 INT
+@t10 = row < @t9 INT
+
+if @t10 GOTO #L9 else GOTO #L10
+
+#L11:
+@t10 = 1 INT
+@t11 = row + @t10 INT
+row = @t11 INT
+GOTO #L8
+
+#L9:
+- INT col
+@t11 = 0 INT
+col = @t11 INT
+
+#L12:
+@t12 = 3 INT
+@t13 = col < @t12 INT
+
+if @t13 GOTO #L13 else GOTO #L14
+
+#L15:
+@t13 = 1 INT
+@t14 = col + @t13 INT
+col = @t14 INT
+GOTO #L12
+
+#L13:
+@t14 = 0 INT
+- INT sum
+sum = @t14 INT
+- INT k
+@t15 = 0 INT
+k = @t15 INT
+
+#L16:
+@t16 = 3 INT
+@t17 = k < @t16 INT
+
+if @t17 GOTO #L17 else GOTO #L18
+
+#L19:
+@t17 = 1 INT
+@t18 = k + @t17 INT
+k = @t18 INT
+GOTO #L16
+
+#L17:
+@t18 = 3 INT
+@t19 = 0 INT
+@t20 = 0 INT
+@t22 = 1 INT
+#L21:
+@t21 = @t20 < @t18  INT
+if @t21 GOTO #L22 else GOTO #L23
+#L22:
+@t19 = @t19 + row  INT
+@t20 = @t20 + @t22  INT
+GOTO #L21
+#L23:
+@t20 = @t19 + k INT
+@t21 = a [ @t20 ] INT
+@t22 = 3 INT
+@t19 = 0 INT
+@t20 = 0 INT
+@t24 = 1 INT
+#L25:
+@t23 = @t20 < @t22  INT
+if @t23 GOTO #L26 else GOTO #L27
+#L26:
+@t19 = @t19 + k  INT
+@t20 = @t20 + @t24  INT
+GOTO #L25
+#L27:
+@t20 = @t19 + col INT
+@t23 = b [ @t20 ] INT
+@t24 = 0 INT
+@t19 = 0 INT
+@t25 = 1 INT
+#L29:
+@t20 = @t19 < @t23  INT
+if @t20 GOTO #L30 else GOTO #L31
+#L30:
+@t24 = @t24 + @t21  INT
+@t19 = @t19 + @t25  INT
+GOTO #L29
+#L31:
+@t19 = sum + @t24 INT
+sum = @t19 INT
+GOTO #L19
+
+#L18:
+@t20 = 3 INT
+@t25 = 0 INT
+@t21 = 0 INT
+@t24 = 1 INT
+#L33:
+@t23 = @t21 < @t20  INT
+if @t23 GOTO #L34 else GOTO #L35
+#L34:
+@t25 = @t25 + row  INT
+@t21 = @t21 + @t24  INT
+GOTO #L33
+#L35:
+@t19 = @t25 + col INT
+c [ @t19 ] = sum INT
+GOTO #L15
+
+#L14:
+GOTO #L11
+
+#L10:
+output "\n" STR
+@t21 = 0 INT
+i = @t21 INT
+
+#L36:
+@t23 = 9 INT
+@t24 = i < @t23 INT
+
+if @t24 GOTO #L37 else GOTO #L38
+
+#L39:
+@t25 = 1 INT
+@t24 = i + @t25 INT
+i = @t24 INT
+GOTO #L36
+
+#L37:
+@t24 = c [ i ] INT
+output @t24 INT
+@t26 = 1 INT
+@t27 = i + @t26 INT
+@t28 = 3 INT
+@t29 = 0 INT
+@t30 = @t27 INT
+@t32 = 1 INT
+#L42:
+@t31 = @t30 >= @t28  INT
+if @t31 GOTO #L43 else GOTO #L44
+#L43:
+@t30 = @t30 - @t28  INT
+GOTO #L42
+#L44:
+@t29 = @t30  INT
+@t30 = 0 INT
+@t31 = @t29 == @t30 INT
+if @t31 GOTO #L45 else GOTO #L46
+#L45:
+output "\n" STR
+GOTO #L40
+#L46:
+output " " STR
+#L40:
+GOTO #L39
+
+#L38:
+@t32 = 0 INT
+return @t32 INT
 end:
 
