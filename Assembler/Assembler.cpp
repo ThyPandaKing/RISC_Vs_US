@@ -253,7 +253,6 @@ int REGISTERS::extractImmediate(vector<int> &regs, string reg, unsigned char typ
 		}
 		regs.resize(regs.size()+1, immediate);
 		next++;
-		// cout<<"TEST#"<<imm_reg<<" "<<imm_type<<endl;
 		
 		if(next != end)
 		{
@@ -318,14 +317,8 @@ vector<int> REGISTERS::matchReg(string reg, unsigned char type)
 }
 int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumber)
 {
-	cout<<reg<<endl;
-	
 	char reg_code;
 	vector<int> regs=matchReg(reg, type);
-
-	for(int i: regs)
-		cout<<i<<"  ";
-	cout<<endl;
 	
 	if(type=='R')
 	{
@@ -410,8 +403,7 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 		ins=ins|(regs[1]<<20);
 
 		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
-		int offset=(regs[2]-linenumber)*4;
-		// cout<<offset<<"#TEST#\n";
+		int offset=(regs[2]-linenumber-1)<<2;
 		// offset
 		// offset is split into 4 segments
 		// bit 11 from LSB at index 7 of ins
@@ -462,8 +454,7 @@ int REGISTERS::setRegCode(int &ins, string reg, unsigned char type, int linenumb
 		ins=ins|(regs[0]<<7);
 		
 		// imm should be modified to find offset value which is (imm - linenumber) * 4 i.e. (ST_Entry of label - current linenumber) * 4
-		int offset=(regs[1]-linenumber)*4;
-		// cout<<offset<<"#TEST#\n";
+		int offset=(regs[1]-linenumber-1)<<2;
 		// offset
 		// offset is split into 4 segments
 		// bit 20 from LSB at index 31 of ins
@@ -870,7 +861,6 @@ int Assembler::secondPass(string vmout, string asmout)
 		if(!(iss>>op>>reg_list))
 		{
 			perror("Invalid Syntax");
-			cout<<ins_tac<<endl;
 			return terminate(2);
 		}
 		
@@ -928,7 +918,7 @@ int main()
 	if(flag==0)
 	{
 		A.printST();
-		cout<<"\nFIRST PASS COMPLETE\n\n";
+		cout<<"\nFIRST PASS COMPLETE\n\nSECOND PASS STARTED...\n";
 		flag=A.secondPass(vmout, asmout);
 	}
 
@@ -941,5 +931,5 @@ int main()
 		return 1;
 	}
 
-	cout<<"ENDED------\n";
+	cout<<"\nENDED------\n";
 }
